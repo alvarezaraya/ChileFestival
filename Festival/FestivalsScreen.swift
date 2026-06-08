@@ -8,11 +8,13 @@ struct FestivalsScreen: View {
 
     var body: some View {
         TabView {
-            ForEach(feed.festivals) { festival in
-                FestivalPage(festival: festival, player: player)
+            ForEach(Array(feed.festivals.enumerated()), id: \.element.id) { index, festival in
+                FestivalPage(festival: festival, player: player,
+                             pageIndex: index, pageCount: feed.festivals.count)
             }
         }
-        .tabViewStyle(.page(indexDisplayMode: .always))
+        // Indicador propio (debajo del botón); se oculta el del TabView.
+        .tabViewStyle(.page(indexDisplayMode: .never))
         .background(.black)
         .onDisappear { player.stop() }
     }
@@ -23,6 +25,8 @@ struct FestivalsScreen: View {
 struct FestivalPage: View {
     let festival: Festival
     @ObservedObject var player: FestivalPlayer
+    let pageIndex: Int
+    let pageCount: Int
     @State private var selectedDay: Int? = nil   // nil = todos los días
     @State private var selectedArtist: LineupArtist?
 
@@ -40,6 +44,7 @@ struct FestivalPage: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             playBar
+            if pageCount > 1 { pageDots }
         }
         .padding()
         .background(
@@ -54,6 +59,18 @@ struct FestivalPage: View {
                              player: player)
                 .preferredColorScheme(.dark)
         }
+    }
+
+    // Indicador de página propio, ubicado bajo la barra de reproducción.
+    private var pageDots: some View {
+        HStack(spacing: 7) {
+            ForEach(0..<pageCount, id: \.self) { i in
+                Circle()
+                    .fill(.white.opacity(i == pageIndex ? 0.95 : 0.35))
+                    .frame(width: 7, height: 7)
+            }
+        }
+        .padding(.top, 2)
     }
 
     private var header: some View {
