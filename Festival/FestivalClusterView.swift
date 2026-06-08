@@ -158,12 +158,9 @@ struct ArtistBubble: View {
                     LinearGradient(colors: [.clear, .clear, .black.opacity(0.6)],
                                    startPoint: .top, endPoint: .bottom))
 
-                VStack {
-                    Spacer()
-                    nameLabel
-                        .padding(.horizontal, 5)
-                        .padding(.bottom, max(5, circle.radius * 0.14))
-                }
+                // Nombre curvado siguiendo la curvatura inferior del círculo.
+                CurvedBottomText(text: circle.artist.name, radius: circle.radius)
+                    .frame(width: diameter, height: diameter)
             } else {
                 // Sin foto: gradiente de acento + texto centrado.
                 centeredLabel
@@ -179,17 +176,6 @@ struct ArtistBubble: View {
     }
 
     private var label: String { showsFullName ? circle.artist.name : initials }
-
-    /// Nombre como subtítulo sobre la foto (anclado abajo).
-    private var nameLabel: some View {
-        Text(circle.artist.name)
-            .font(.system(size: max(8, circle.radius * 0.24), weight: .semibold))
-            .multilineTextAlignment(.center)
-            .minimumScaleFactor(0.6)
-            .lineLimit(2)
-            .foregroundStyle(.white)
-            .shadow(color: .black.opacity(0.55), radius: 2, y: 1)
-    }
 
     /// Texto centrado cuando no hay foto.
     private var centeredLabel: some View {
@@ -214,5 +200,68 @@ struct ArtistBubble: View {
             .split(separator: " ").prefix(2)
             .compactMap { $0.first }
             .map(String.init).joined().uppercased()
+    }
+}
+
+// MARK: - Texto curvado sobre el borde inferior del círculo
+
+/// Dibuja `text` letra por letra a lo largo de un arco interior, centrado en la
+/// parte inferior del círculo (las letras siguen la curvatura). Usa `Canvas`
+/// para medir cada glifo y rotarlo según su posición angular.
+struct CurvedBottomText: View {
+    let text: String
+    let radius: CGFloat
+    var weight: Font.Weight = .semibold
+
+    var body: some View {
+        Canvas { context, size in
+            let trimmed = text.trimmingCharacters(in: .whitespaces)
+            guard !trimmed.isEmpty, radius > 12 else { return }
+            let chars = trimmed.map(String.init)
+            let center = CGPoint(x: size.width / 2, y: size.height / 2)
+
+            let baseSize = max(7, radius * 0.24)
+            // Radio del arco: hacia adentro desde el borde, dejando margen.
+            let arcRadius = radius - baseSize * 0.5 - radius * 0.10
+            guard arcRadius > 4 else { return }
+
+            let probe = CGSize(width: 1000, height: 1000)
+            func resolve(_ s: String, _ fs: CGFloat) -> GraphicsContext.ResolvedText {
+                context.resolve(Text(s)
+                    .font(.system(size: fs, weight: weight))
+                    .foregroundColor(.white))
+            }
+            func widths(_ fs: CGFloat) -> [CGFloat] {
+                chars.map { resolve($0, fs).measure(in: probe).width }
+            }
+
+            // Achica la fuente si el nombre no cabe en ~150° de arco.
+            let maxArc: CGFloat = 2.6
+            var fontSize = baseSize
+            var ws = widths(fontSize)
+            var total = ws.reduce(0, +)
+            if total / arcRadius > maxArc {
+                fontSize *= maxArc * arcRadius / total
+                ws = widths(fontSize)
+                total = ws.reduce(0, +)
+            }
+
+            var shadowed = context
+            shadowed.addFilter(.shadow(color: .black.opacity(0.6), radius: 2, y: 1))
+
+            // θ se mide desde el fondo (0 = punto más bajo), creciendo a la derecha.
+            let totalAngle = total / arcRadius
+            var angle = -totalAngle / 2
+            for (i, ch) in chars.enumerated() {
+                let theta = angle + ws[i] / (2 * arcRadius)
+                let pos = CGPoint(x: center.x + arcRadius * sin(theta),
+                                  y: center.y + arcRadius * cos(theta))
+                var glyph = shadowed
+                glyph.translateBy(x: pos.x, y: pos.y)
+                glyph.rotate(by: .radians(Double(theta)))
+                glyph.draw(resolve(ch, fontSize), at: .zero, anchor: .center)
+                angle += ws[i] / arcRadius
+            }
+        }
     }
 }
