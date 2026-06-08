@@ -1,0 +1,246 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-07",
+  "festivals": [
+    {
+      "id": "lollapalooza-chile-2026",
+      "name": "Lollapalooza Chile",
+      "edition": "2026",
+      "venue": "Parque O'Higgins",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2026-03-13",
+        "2026-03-14",
+        "2026-03-15"
+      ],
+      "accentColorHex": "#E4002B",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "sabrina-carpenter",
+          "name": "Sabrina Carpenter",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "pop"
+          ],
+          "appleMusicArtistID": "390647681",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/b8/94/67/b8946780-17ee-7897-960b-4365afa4aeae/ami-identity-cc64ebed2010125d7f6cfc205f49983d-2025-06-11T16-08-39.460Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "deftones",
+          "name": "Deftones",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "alternative metal",
+            "rock"
+          ],
+          "appleMusicArtistID": "1092903",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/d7/2f/bf/d72fbf06-393a-defd-3848-4022b3d13837/ami-identity-dbba30dcf87b3bfd29853a50772ee237-2025-07-09T21-11-55.837Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "lewis-capaldi",
+          "name": "Lewis Capaldi",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop"
+          ],
+          "appleMusicArtistID": "1213405916",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/56/1c/6d/561c6dea-ea1a-1b6a-e686-fd83058082a7/ami-identity-0695df847f31eee237f30b0199060c4b-2025-06-26T22-54-53.972Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "los-bunkers",
+          "name": "Los Bunkers",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "rock chileno"
+          ],
+          "appleMusicArtistID": "41216290",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/98/4b/a3/984ba3c3-47bb-5144-e14c-4b24f443e33c/770421cd-8728-4719-8cbd-26825b4fb46f_ami-identity-38b971341a23009ef79d8a624958240a-2024-08-26T21-31-35.490Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "tyler-the-creator",
+          "name": "Tyler, The Creator",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "hip hop"
+          ],
+          "appleMusicArtistID": "420368335",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/67/28/88/672888f9-ed18-c353-8873-eabd049ae370/ami-identity-5220889b0ae102bdc4b0b3549da4382c-2025-07-21T02-00-38.393Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "lorde",
+          "name": "Lorde",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "pop",
+            "art pop"
+          ],
+          "appleMusicArtistID": "602767352",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/b5/c6/27/b5c627e6-edb4-1210-c5a3-d59e47f67a1a/ami-identity-2d92b3a772aa3368c092544fed8cac42-2025-04-23T22-05-55.142Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "peggy-gou",
+          "name": "Peggy Gou",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "house",
+            "electronic"
+          ],
+          "appleMusicArtistID": "1068912248",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/b0/fa/08/b0fa083e-d5b9-7da4-4575-bef8918b46f1/937a7e46-f30e-46e6-b1a7-87bed7f2efd0_ami-identity-31a954c200a5c5c449bf5faedb6bd2b7-2024-04-04T09-50-52.362Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "chappell-roan",
+          "name": "Chappell Roan",
+          "tier": "headliner",
+          "day": 3,
+          "genres": [
+            "pop"
+          ],
+          "appleMusicArtistID": "1264818718",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/4d/41/7c/4d417c40-49bc-97c0-9134-46445259e221/ami-identity-e951cbe6257d56c0062ece492544e0ae-2025-07-31T16-22-20.291Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "skrillex",
+          "name": "Skrillex",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "electronic",
+            "dubstep"
+          ],
+          "appleMusicArtistID": "356545647",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/93/f3/73/93f373fd-38ae-2e10-15f7-10efee99594d/ami-identity-44981d563b78877d931a269f426e6dd7-2025-04-06T03-38-45.632Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "fauna-primavera-2026",
+      "name": "Fauna Primavera",
+      "edition": "2026",
+      "venue": "Parque Ciudad Empresarial",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2026-11-26",
+        "2026-11-27",
+        "2026-11-28"
+      ],
+      "accentColorHex": "#1F7A4D",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "the-strokes",
+          "name": "The Strokes",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "indie rock",
+            "garage rock"
+          ],
+          "appleMusicArtistID": "560289",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/9a/de/94/9ade94be-3ab2-93c8-f70b-cdfaf4cecc21/b5873a19-6bca-4fce-a703-b3fb2f3b4951_ami-identity-d31a7440413bd74cc4f8deaa85535d15-2024-01-26T20-09-12.951Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "fka-twigs",
+          "name": "FKA twigs",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "art pop",
+            "electronic",
+            "alternative r&b"
+          ],
+          "appleMusicArtistID": "679661890",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/83/2a/e0/832ae0a6-c805-c77f-f323-fe7f4f83f154/ami-identity-263f44f93d85f2ecfe4fd41e2976277c-2026-02-03T23-11-00.565Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "godspeed-you-black-emperor",
+          "name": "Godspeed You! Black Emperor",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "post-rock"
+          ],
+          "appleMusicArtistID": "40884339",
+          "setlistfmMBID": null,
+          "imageURL": "https://music.apple.com/assets/meta/apple-music.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "new-order",
+          "name": "New Order",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "new wave",
+            "electronic",
+            "post-punk"
+          ],
+          "appleMusicArtistID": "176722",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/ad/f7/71/adf77190-5651-fecf-3632-014a3d03b7b9/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "johnny-marr",
+          "name": "Johnny Marr",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "indie rock",
+            "alternative rock"
+          ],
+          "appleMusicArtistID": "2969059",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/ac/70/91/ac70919e-e1d5-e46a-aafe-2c1ae6c52c02/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "tricky",
+          "name": "Tricky",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "trip hop",
+            "electronic"
+          ],
+          "appleMusicArtistID": "254458",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/8e/a4/12/8ea41254-e37c-3642-f405-402d7c39899b/mzl.msgyepng.jpg/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    }
+  ]
+}
