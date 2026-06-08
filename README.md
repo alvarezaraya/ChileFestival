@@ -38,21 +38,23 @@ flowchart LR
 
 | Archivo | Rol |
 |---|---|
-| `FestivalesApp.swift` | `@main`, `RootView`, `FeedViewModel` (estados cargando/cargado/error), `ErrorView`. |
-| `FestivalModels.swift` | Modelos Codable (`FestivalFeed`, `Festival`, `LineupArtist`, `Tier`), `FestivalLoader` (remoto + bundle), `Color(hex:)`. |
-| `FestivalsScreen.swift` | Paginado horizontal de festivales, página con chips por día, barra inferior. |
-| `FestivalClusterView.swift` | `CirclePacker` (packing por relajación), vista del cúmulo y `ArtistBubble`. |
-| `FestivalPlayer.swift` | Reproductor MusicKit: top songs, mezcla intercalada, metadata en vivo, controles, fallback de previews. |
-| `MiniPlayerView.swift` | Mini-player con carátula y controles (anterior / play-pausa / siguiente). |
+| `Festival/FestivalApp.swift` | `@main`, `RootView`, `FeedViewModel` (estados cargando/cargado/error), `ErrorView`. (Aloja lo que en el diseño original era `FestivalesApp.swift`.) |
+| `Festival/FestivalModels.swift` | Modelos Codable (`FestivalFeed`, `Festival`, `LineupArtist`, `Tier`), `FestivalLoader` (remoto + bundle), `Color(hex:)`. |
+| `Festival/FestivalsScreen.swift` | Paginado horizontal de festivales, página con chips por día, barra inferior, sheet de detalle. |
+| `Festival/FestivalClusterView.swift` | `CirclePacker` (packing por relajación), cúmulo y `ArtistBubble` (foto del artista como contenido). |
+| `Festival/FestivalPlayer.swift` | Reproductor MusicKit: top songs, mezcla intercalada, metadata en vivo, controles, fallback de previews. |
+| `Festival/MiniPlayerView.swift` | Mini-player con carátula y controles (anterior / play-pausa / siguiente). |
+| `Festival/ArtistDetailView.swift` | Detalle al tocar una burbuja (foto, tier/día/géneros, top songs) + `ArtistCatalog` (fetch de catálogo compartido). |
 
 ### Pipeline de datos (Python + CI)
 
 | Archivo | Rol |
 |---|---|
-| `festivals.json` | Feed de muestra (Lollapalooza y Fauna Primavera 2026). |
-| `scrape_festivals.py` | Scaffold de scrapers; fusiona preservando IDs ya resueltos. |
-| `resolve_apple_music_ids.py` | Resuelve `appleMusicArtistID` nulos vía Apple Music API (developer token). |
-| `.github/workflows/update-festivals.yml` | CI: scrape → resolver → commit si hay cambios. |
+| `festivals.json` (raíz) | Feed canónico servido por GitHub raw. Copia espejo en `Festival/festivals.json` para el bundle/offline. |
+| `scripts/resolve_artist_images.py` | **Recomendado.** Resuelve `appleMusicArtistID` + `imageURL` SIN developer token (iTunes Search API + `og:image` de la página del artista). |
+| `scripts/resolve_apple_music_ids.py` | Alternativa: resuelve `appleMusicArtistID` vía Apple Music API (requiere developer token). No trae fotos. |
+| `scripts/scrape_festivals.py` | Scaffold de scrapers (STUBS); fusiona preservando IDs ya resueltos. |
+| `.github/workflows/update-festivals.yml` | CI: refresca IDs + fotos semanalmente con `resolve_artist_images.py` (sin secrets) y espeja al bundle. El scraper stub queda fuera del cron. |
 
 ---
 
@@ -76,23 +78,23 @@ flowchart LR
 ## 4. Configuración requerida (antes de correr)
 
 ### Xcode
-- [ ] Activar capability **MusicKit** (Signing & Capabilities) y registrar el App ID con MusicKit.
-- [ ] `Info.plist`: agregar **`NSAppleMusicUsageDescription`** con un texto de propósito.
-- [ ] Arrastrar **`festivals.json` al target** (Copy if needed) para `loadBundled()`.
-- [ ] Cambiar `USUARIO/REPO` en `FestivalLoader.feedURL`.
-- [ ] Mantener un solo `@main`; no redefinir `Color(hex:)` (ya está en el modelo).
+- [x] `Info.plist`: **`NSAppleMusicUsageDescription`** (vía `INFOPLIST_KEY_…` en el target).
+- [x] **`festivals.json` en el bundle** (synchronized group; copia en `Festival/`).
+- [x] `FestivalLoader.feedURL` apunta a `alvarezaraya/ChileFestival`.
+- [x] Un solo `@main` (`FestivalApp.swift`); `Color(hex:)` solo en el modelo.
+- [ ] Activar capability **MusicKit** (Signing & Capabilities) y registrar el App ID con MusicKit. **Sin esto, la reproducción y las top songs del detalle fallan con "Failed to request developer token".** (Las fotos de las burbujas NO lo necesitan: vienen cacheadas en el feed.)
 
 ### GitHub (Secrets → Actions)
-- [ ] Crear una **MusicKit Key** en developer.apple.com (Keys → MusicKit) → obtienes `.p8` y Key ID.
-- [ ] Cargar secrets: `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY_P8` (contenido del `.p8`).
+- El CI por defecto usa `resolve_artist_images.py`, que **no requiere secrets**.
+- Opcional, solo si prefieres `resolve_apple_music_ids.py` (API con token): crear una **MusicKit Key** (Keys → MusicKit) y cargar `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY_P8`.
 
 ---
 
 ## 5. Pendiente por hacer
 
-- [ ] **Completar los scrapers reales** en `scrape_festivals.py` (hoy son stubs). Sin esto, el cron sobrescribe el feed con carteles incompletos.
+- [x] **Resolución de `appleMusicArtistID` + `imageURL`** (token-free) para el feed de muestra.
+- [ ] **Completar los scrapers reales** en `scripts/scrape_festivals.py` (hoy son stubs); recién entonces agregarlos al cron, antes del resolver.
 - [ ] **Verificar la asignación de días** del JSON de muestra (es placeholder) y los colores de acento.
-- [ ] **Correr la resolución de IDs**: hoy todos los `appleMusicArtistID` están en `null`, así que el reproductor cae a búsqueda por nombre.
 - [ ] Validar en device que `Entry.subtitle` / `Entry.artwork` llegan poblados en modo completo; si no, forzar metadata desde el `Song`.
 - [ ] Cachear en runtime la resolución de artistas y sus top songs (evitar re-buscar en cada Play).
 - [ ] Manejo de errores de red más fino y estado "sin festivales próximos".
