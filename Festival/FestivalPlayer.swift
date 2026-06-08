@@ -27,8 +27,12 @@ final class FestivalPlayer: ObservableObject {
         }
     }
 
-    private let player = ApplicationMusicPlayer.shared
+    // SystemMusicPlayer = el reproductor de la app Música del sistema. La cola y
+    // el "now playing" se comparten: lo que encolamos suena en Música, y lo que
+    // el usuario haga en Música (cambiar de tema, pausar) se refleja aquí.
+    private let player = SystemMusicPlayer.shared
     private var cancellables = Set<AnyCancellable>()
+    private var observingSystem = false
 
     // Backend de previews (sin suscripción).
     private var previewQueue: AVQueuePlayer?
@@ -36,6 +40,16 @@ final class FestivalPlayer: ObservableObject {
     private var previewURLs: [URL] = []
     private var previewIndex = 0
     private var previewEndToken: NSObjectProtocol?
+
+    // MARK: - Sincronización con la app Música
+
+    /// Empieza a reflejar lo que suena en la app Música. No pide permiso si el
+    /// usuario aún no lo concedió (para no lanzar el prompt al abrir la app):
+    /// solo engancha los observers cuando ya está autorizado.
+    func startSyncingWithMusicApp() {
+        guard MusicAuthorization.currentStatus == .authorized else { return }
+        observeSystemPlayback()
+    }
 
     // MARK: - Acción principal
 
@@ -92,10 +106,13 @@ final class FestivalPlayer: ObservableObject {
     }
 
     func stop() {
-        player.stop()
+        // No detenemos el reproductor del sistema (= app Música): su cola es
+        // compartida y el usuario espera que Música siga sonando al salir.
+        // Solo soltamos nuestro backend de previews y los observers.
         previewQueue?.pause()
         previewQueue = nil
         teardownObservers()
+        observingSystem = false
         isPlaying = false
         nowPlayingTitle = nil; nowPlayingArtist = nil; artworkURL = nil
         mode = .idle
@@ -124,37 +141,56 @@ final class FestivalPlayer: ObservableObject {
 
     private func playFull(_ songs: [Song]) async throws {
         previewQueue = nil
-        player.queue = ApplicationMusicPlayer.Queue(for: songs)
+        player.queue = SystemMusicPlayer.Queue(for: songs)
         player.state.shuffleMode = .off
         try await player.play()
         mode = .fullPlayback
-        observeFullPlayback()
+        observeSystemPlayback()
     }
 
-    private func observeFullPlayback() {
+    /// Engancha los observers del reproductor del sistema (idempotente). A partir
+    /// de aquí, cualquier cambio en la app Música —tema, play/pause, carátula—
+    /// se refleja en la UI, y nuestros controles manejan esa misma reproducción.
+    private func observeSystemPlayback() {
+        guard !observingSystem else { syncFromSystem(); return }
+        observingSystem = true
+
         // Título/carátula en vivo: la cola es Observable.
         player.queue.objectWillChange
             .receive(on: RunLoop.main)
-            .sink { [weak self] in self?.refreshFullMetadata() }
+            .sink { [weak self] in self?.syncFromSystem() }
             .store(in: &cancellables)
         // Estado play/pause en vivo.
         player.state.objectWillChange
             .receive(on: RunLoop.main)
-            .sink { [weak self] in
-                guard let self else { return }
-                self.isPlaying = self.player.state.playbackStatus == .playing
-            }
+            .sink { [weak self] in self?.syncFromSystem() }
             .store(in: &cancellables)
 
-        isPlaying = player.state.playbackStatus == .playing
-        refreshFullMetadata()
+        syncFromSystem()
     }
 
-    private func refreshFullMetadata() {
+    /// Vuelca el estado actual de la app Música a las propiedades publicadas.
+    private func syncFromSystem() {
+        // Si estamos en modo preview (sin suscripción), ese backend manda.
+        guard previewQueue == nil else { return }
+
+        isPlaying = player.state.playbackStatus == .playing
         let entry = player.queue.currentEntry
         nowPlayingTitle = entry?.title
         nowPlayingArtist = entry?.subtitle
         artworkURL = entry?.artwork?.url(width: 120, height: 120)
+
+        // Muestra/oculta el mini-player según haya algo cargado en Música.
+        if entry != nil {
+            if !isFullPlayback { mode = .fullPlayback }
+        } else if isFullPlayback {
+            mode = .idle
+        }
+    }
+
+    private var isFullPlayback: Bool {
+        if case .fullPlayback = mode { return true }
+        return false
     }
 
     // MARK: - Previews de 30 s (sin suscripción)
@@ -209,6 +245,7 @@ final class FestivalPlayer: ObservableObject {
 
     private func teardownObservers() {
         cancellables.removeAll()
+        observingSystem = false
         removePreviewObserver()
     }
 
