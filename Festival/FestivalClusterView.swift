@@ -258,7 +258,7 @@ struct CurvedBottomText: View {
                                   y: center.y + arcRadius * cos(theta))
                 var glyph = shadowed
                 glyph.translateBy(x: pos.x, y: pos.y)
-                glyph.rotate(by: .radians(Double(theta)))
+                glyph.rotate(by: .radians(-Double(theta)))
                 glyph.draw(resolve(ch, fontSize), at: .zero, anchor: .center)
                 angle += ws[i] / arcRadius
             }
