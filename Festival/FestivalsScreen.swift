@@ -1,34 +1,128 @@
 import SwiftUI
 
-// MARK: - Pantalla raíz: paginado horizontal (un festival por página)
+// MARK: - Pantalla raíz
 
+/// Paginado horizontal de festivales. Cada página muestra un **póster** (silueta
+/// rectangular tipo Apple Invites) que encierra el cúmulo con física. Un único
+/// botón de reproducir, compartido por todos los eventos, vive fuera de la
+/// silueta y cambia de color / selección musical según el festival visible.
 struct FestivalsScreen: View {
     let feed: FestivalFeed
+
     @StateObject private var player = FestivalPlayer()
+    @StateObject private var physicsStore = PhysicsStore()
+    @State private var selectedIndex = 0
+    @State private var expandedIndex: Int? = nil
+    @State private var zoomArtist: LineupArtist? = nil
+    @Namespace private var ns
+
+    private var safeIndex: Int { min(max(selectedIndex, 0), feed.festivals.count - 1) }
+    private var current: Festival { feed.festivals[safeIndex] }
+    private var isExpanded: Bool { expandedIndex != nil }
 
     var body: some View {
-        TabView {
-            ForEach(Array(feed.festivals.enumerated()), id: \.element.id) { index, festival in
-                FestivalPage(festival: festival, player: player,
-                             pageIndex: index, pageCount: feed.festivals.count)
+        ZStack(alignment: .bottom) {
+            background
+
+            // Carrusel de pósters (silueta colapsada).
+            TabView(selection: $selectedIndex) {
+                ForEach(Array(feed.festivals.enumerated()), id: \.element.id) { i, festival in
+                    FestivalPosterPage(
+                        festival: festival,
+                        physics: physicsStore.model(for: festival.id),
+                        namespace: ns,
+                        isExpanded: expandedIndex == i,
+                        onExpand: { withAnimation(.spring(response: 0.5, dampingFraction: 0.82)) {
+                            expandedIndex = i
+                        } }
+                    )
+                    .tag(i)
+                    .opacity(expandedIndex == i ? 0 : 1)   // se oculta al expandir (matchedGeometry)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .disabled(isExpanded)
+
+            // Botón dinámico compartido + indicador de página (fuera de la silueta).
+            if zoomArtist == nil {
+                VStack(spacing: 10) {
+                    SharedPlayButton(festival: current, player: player) { festival in
+                        Task { await player.playMix(for: festival.clusterOrdered) }
+                    }
+                    if feed.festivals.count > 1, !isExpanded { pageDots }
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 8)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+
+            // Overlay a pantalla completa (silueta expandida, círculos tappables).
+            if let i = expandedIndex {
+                let festival = feed.festivals[i]
+                FullscreenClusterOverlay(
+                    festival: festival,
+                    physics: physicsStore.model(for: festival.id),
+                    namespace: ns,
+                    zoomedArtistID: zoomArtist?.id,
+                    onClose: { withAnimation(.spring(response: 0.5, dampingFraction: 0.82)) {
+                        expandedIndex = nil
+                    } },
+                    onSelect: { artist in
+                        withAnimation(.spring(response: 0.55, dampingFraction: 0.85)) {
+                            zoomArtist = artist
+                        }
+                    }
+                )
+                .transition(.opacity)
+            }
+
+            // Zoom seamless hacia el artista seleccionado.
+            if let artist = zoomArtist {
+                ArtistZoomView(
+                    artist: artist,
+                    festivalAccent: current.accentColor,
+                    player: player,
+                    namespace: ns,
+                    onClose: { withAnimation(.spring(response: 0.5, dampingFraction: 0.85)) {
+                        zoomArtist = nil
+                    } }
+                )
+                .zIndex(2)
             }
         }
-        // Indicador propio (debajo del botón); se oculta el del TabView.
-        .tabViewStyle(.page(indexDisplayMode: .never))
         .background(.black)
+        .task { player.startSyncingWithMusicApp() }
         .onDisappear { player.stop() }
+    }
+
+    private var background: some View {
+        LinearGradient(colors: [current.accentColor.opacity(0.35), .black],
+                       startPoint: .top, endPoint: .bottom)
+            .ignoresSafeArea()
+            .animation(.easeInOut(duration: 0.6), value: current.accentColorHex)
+    }
+
+    private var pageDots: some View {
+        HStack(spacing: 7) {
+            ForEach(feed.festivals.indices, id: \.self) { i in
+                Circle()
+                    .fill(.white.opacity(i == safeIndex ? 0.95 : 0.35))
+                    .frame(width: 7, height: 7)
+            }
+        }
     }
 }
 
-// MARK: - Página de un festival
+// MARK: - Página de póster (silueta colapsada)
 
-struct FestivalPage: View {
+struct FestivalPosterPage: View {
     let festival: Festival
-    @ObservedObject var player: FestivalPlayer
-    let pageIndex: Int
-    let pageCount: Int
-    @State private var selectedDay: Int? = nil   // nil = todos los días
-    @State private var selectedArtist: LineupArtist?
+    @ObservedObject var physics: ClusterPhysics
+    let namespace: Namespace.ID
+    let isExpanded: Bool
+    let onExpand: () -> Void
+
+    @State private var selectedDay: Int? = nil
 
     private var dayArtists: [LineupArtist] {
         festival.artists(onDay: selectedDay)
@@ -39,38 +133,49 @@ struct FestivalPage: View {
         VStack(spacing: 12) {
             header
             daySelector
-            FestivalClusterView(artists: dayArtists, accent: festival.accentColor) { artist in
-                selectedArtist = artist
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            playBar
-            if pageCount > 1 { pageDots }
+            silhouette
+            Spacer(minLength: 96)   // deja sitio al botón compartido flotante
         }
         .padding()
-        .background(
-            LinearGradient(colors: [festival.accentColor.opacity(0.35), .black],
-                           startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
-        )
         .foregroundStyle(.white)
-        .sheet(item: $selectedArtist) { artist in
-            ArtistDetailView(artist: artist,
-                             festivalAccent: festival.accentColor,
-                             player: player)
-                .preferredColorScheme(.dark)
-        }
     }
 
-    // Indicador de página propio, ubicado bajo la barra de reproducción.
-    private var pageDots: some View {
-        HStack(spacing: 7) {
-            ForEach(0..<pageCount, id: \.self) { i in
-                Circle()
-                    .fill(.white.opacity(i == pageIndex ? 0.95 : 0.35))
-                    .frame(width: 7, height: 7)
+    // La silueta rectangular que encierra los círculos (póster Apple Invites).
+    private var silhouette: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 34, style: .continuous)
+                .fill(festival.accentColor.gradient)
+                .matchedGeometryEffect(id: "silhouette-\(festival.id)",
+                                       in: namespace, isSource: !isExpanded)
+
+            PhysicsClusterView(
+                artists: dayArtists,
+                physics: physics,
+                accent: festival.accentColor,
+                interactive: false,
+                isActive: !isExpanded,
+                onTapBackground: onExpand
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
+
+            // Pista de que es tocable / expandible.
+            VStack {
+                Spacer()
+                Label("Toca para explorar", systemImage: "arrow.up.left.and.arrow.down.right")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.white.opacity(0.85))
+                    .padding(.horizontal, 12).padding(.vertical, 6)
+                    .background(.black.opacity(0.25), in: Capsule())
+                    .padding(.bottom, 12)
             }
+            .allowsHitTesting(false)
         }
-        .padding(.top, 2)
+        .overlay(
+            RoundedRectangle(cornerRadius: 34, style: .continuous)
+                .stroke(.white.opacity(0.18), lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.4), radius: 18, y: 10)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var header: some View {
@@ -93,31 +198,110 @@ struct FestivalPage: View {
             .padding(.horizontal, 2)
         }
     }
+}
 
-    @ViewBuilder private var playBar: some View {
-        if player.isActive {
-            MiniPlayerView(player: player, accent: festival.accentColor)
-        } else {
-            Button {
-                Task { await player.playMix(for: dayArtists) }
-            } label: {
-                HStack {
-                    Image(systemName: "play.fill")
-                    Text(idleLabel).fontWeight(.semibold).lineLimit(1)
+// MARK: - Overlay a pantalla completa
+
+struct FullscreenClusterOverlay: View {
+    let festival: Festival
+    @ObservedObject var physics: ClusterPhysics
+    let namespace: Namespace.ID
+    var zoomedArtistID: String?
+    let onClose: () -> Void
+    let onSelect: (LineupArtist) -> Void
+
+    private var artists: [LineupArtist] {
+        festival.clusterOrdered
+    }
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 0, style: .continuous)
+                .fill(festival.accentColor.gradient)
+                .matchedGeometryEffect(id: "silhouette-\(festival.id)",
+                                       in: namespace, isSource: true)
+                .ignoresSafeArea()
+
+            PhysicsClusterView(
+                artists: artists,
+                physics: physics,
+                accent: festival.accentColor,
+                interactive: true,
+                isActive: true,
+                zoomedArtistID: zoomedArtistID,
+                matchNamespace: namespace,
+                onSelect: onSelect
+            )
+            .ignoresSafeArea(edges: .bottom)
+
+            if zoomedArtistID == nil {
+                VStack {
+                    HStack {
+                        Button(action: onClose) {
+                            Image(systemName: "xmark")
+                                .font(.headline)
+                                .foregroundStyle(.white)
+                                .padding(12)
+                                .background(.black.opacity(0.3), in: Circle())
+                        }
+                        Spacer()
+                        Text(festival.name)
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 14).padding(.vertical, 8)
+                            .background(.black.opacity(0.25), in: Capsule())
+                        Spacer()
+                        Color.clear.frame(width: 44, height: 44)
+                    }
+                    .padding(.horizontal)
+                    Spacer()
+                    Text("Toca un artista")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.white.opacity(0.8))
+                        .padding(.horizontal, 12).padding(.vertical, 6)
+                        .background(.black.opacity(0.25), in: Capsule())
+                        .padding(.bottom, 24)
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(festival.accentColor, in: Capsule())
-                .foregroundStyle(.white)
+                .transition(.opacity)
             }
         }
+    }
+}
+
+// MARK: - Botón de reproducir dinámico (único, compartido)
+
+struct SharedPlayButton: View {
+    let festival: Festival
+    @ObservedObject var player: FestivalPlayer
+    var play: (Festival) -> Void
+
+    var body: some View {
+        Group {
+            if player.isActive {
+                MiniPlayerView(player: player, accent: festival.accentColor)
+            } else {
+                Button { play(festival) } label: {
+                    HStack {
+                        Image(systemName: "play.fill")
+                        Text(idleLabel).fontWeight(.semibold).lineLimit(1)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(festival.accentColor.gradient, in: Capsule())
+                    .foregroundStyle(.white)
+                }
+            }
+        }
+        // Cambio de color sutil al pasar de un evento a otro.
+        .animation(.easeInOut(duration: 0.5), value: festival.accentColorHex)
+        .foregroundStyle(.white)
     }
 
     private var idleLabel: String {
         switch player.mode {
         case .needsAuthorization: "Autoriza Apple Music"
         case .error(let msg):     msg
-        default:                  "Reproducir cartel"
+        default:                  "Reproducir \(festival.name)"
         }
     }
 }

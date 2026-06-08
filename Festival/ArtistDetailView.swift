@@ -56,72 +56,140 @@ final class ArtistDetailViewModel: ObservableObject {
     }
 }
 
-// MARK: - Detalle de artista
+// MARK: - Zoom de artista (seamless desde el círculo)
+//
+// Se presenta como overlay encima del cúmulo expandido. El héroe usa
+// `matchedGeometryEffect` con el mismo id que la burbuja, de modo que la vista
+// hace zoom *hacia* el círculo tocado mientras el resto se atenúa por detrás.
+// La primera pantalla es el círculo enfocado sobre el cúmulo atenuado; el resto
+// del detalle continúa hacia abajo (scroll), insinuado con un indicador sutil.
 
-struct ArtistDetailView: View {
+struct ArtistZoomView: View {
     let artist: LineupArtist
     let festivalAccent: Color
     @ObservedObject var player: FestivalPlayer
+    let namespace: Namespace.ID
+    let onClose: () -> Void
 
     @StateObject private var model = ArtistDetailViewModel()
-    @Environment(\.dismiss) private var dismiss
+    @State private var scrolled = false
+    @State private var hintBounce = false
 
     private var accent: Color { artist.accentColor ?? festivalAccent }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                hero
-                metadata
-                playButton
-                topSongsSection
-            }
-            .padding()
-            .padding(.bottom, 24)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(
-            LinearGradient(colors: [accent.opacity(0.45), .black],
-                           startPoint: .top, endPoint: .bottom)
+        GeometryReader { geo in
+            ZStack(alignment: .top) {
+                // Scrim: deja ver el cúmulo atenuado arriba; opaco abajo para el detalle.
+                LinearGradient(
+                    stops: [
+                        .init(color: .clear, location: 0.0),
+                        .init(color: accent.opacity(0.55), location: 0.40),
+                        .init(color: .black, location: 0.80)
+                    ],
+                    startPoint: .top, endPoint: .bottom
+                )
                 .ignoresSafeArea()
-        )
-        .foregroundStyle(.white)
-        .overlay(alignment: .topTrailing) { closeButton }
-        .task { await model.load(artist) }
+                .allowsHitTesting(false)
+
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        heroSection(height: geo.size.height,
+                                    topInset: geo.safeAreaInsets.top)
+                        detailSection
+                    }
+                }
+                .scrollIndicators(.hidden)
+                .onScrollGeometryChange(for: Bool.self) { scrollGeo in
+                    scrollGeo.contentOffset.y > 24
+                } action: { _, isScrolled in
+                    withAnimation(.easeInOut(duration: 0.25)) { scrolled = isScrolled }
+                }
+
+                closeButton.padding(.horizontal)
+            }
+            .foregroundStyle(.white)
+            .task { await model.load(artist) }
+        }
     }
 
-    // MARK: Hero
+    // MARK: Héroe (primera pantalla)
 
-    private var hero: some View {
-        VStack(spacing: 12) {
+    private func heroSection(height: CGFloat, topInset: CGFloat) -> some View {
+        let heroSize = min(240, height * 0.32)
+        return VStack(spacing: 16) {
+            Spacer(minLength: topInset + 56)
+
             ZStack {
                 Circle().fill(accent.gradient)
                 if let url = artist.imageURL {
-                    AsyncImage(url: url) { $0.resizable().scaledToFill() }
-                        placeholder: { Color.clear }
-                        .clipShape(Circle())
+                    AsyncImage(url: url) { phase in
+                        if let image = phase.image {
+                            image.resizable().scaledToFill()
+                        } else {
+                            Text(initials).font(.system(size: 52, weight: .bold))
+                        }
+                    }
+                    .clipShape(Circle())
                 } else {
-                    Text(initials)
-                        .font(.system(size: 48, weight: .bold))
-                        .foregroundStyle(.white)
+                    Text(initials).font(.system(size: 52, weight: .bold))
                 }
             }
-            .frame(width: 150, height: 150)
-            .overlay(Circle().stroke(.white.opacity(0.25), lineWidth: 1))
-            .shadow(color: .black.opacity(0.3), radius: 10, y: 4)
-            .padding(.top, 32)
+            .frame(width: heroSize, height: heroSize)
+            .overlay(Circle().stroke(.white.opacity(0.3), lineWidth: 1))
+            .shadow(color: .black.opacity(0.4), radius: 16, y: 8)
+            .matchedGeometryEffect(id: artist.id, in: namespace, isSource: true)
 
             Text(artist.name)
-                .font(.title.bold())
+                .font(.largeTitle.bold())
                 .multilineTextAlignment(.center)
+                .padding(.horizontal)
+
+            Tag(text: artist.tier.displayName, filled: true, accent: accent)
+
+            Spacer()
+            scrollHint
+        }
+        .frame(height: height * 0.86)
+        .frame(maxWidth: .infinity)
+    }
+
+    // Insinúa que la vista continúa hacia abajo.
+    private var scrollHint: some View {
+        VStack(spacing: 4) {
+            Text("Desliza para ver más")
+                .font(.caption.weight(.medium))
+                .foregroundStyle(.white.opacity(0.7))
+            Image(systemName: "chevron.down")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.8))
+                .offset(y: hintBounce ? 4 : -2)
+        }
+        .opacity(scrolled ? 0 : 1)
+        .padding(.bottom, 18)
+        .onAppear {
+            withAnimation(.easeInOut(duration: 0.85).repeatForever(autoreverses: true)) {
+                hintBounce = true
+            }
         }
     }
 
-    // MARK: Metadata (tier · día · géneros)
+    // MARK: Detalle (continúa hacia abajo)
+
+    private var detailSection: some View {
+        VStack(spacing: 20) {
+            metadata
+            playButton
+            topSongsSection
+        }
+        .padding()
+        .padding(.bottom, 48)
+        .frame(maxWidth: .infinity)
+        .background(.black)
+    }
 
     private var metadata: some View {
         FlowChips {
-            Tag(text: artist.tier.displayName, filled: true, accent: accent)
             if let day = artist.day {
                 Tag(text: "Día \(day)", filled: false, accent: accent)
             }
@@ -131,12 +199,10 @@ struct ArtistDetailView: View {
         }
     }
 
-    // MARK: Botón de reproducción
-
     private var playButton: some View {
         Button {
             Task { await player.playMix(for: [artist]) }
-            dismiss()
+            onClose()
         } label: {
             HStack {
                 Image(systemName: "play.fill")
@@ -144,12 +210,10 @@ struct ArtistDetailView: View {
             }
             .frame(maxWidth: .infinity)
             .padding()
-            .background(accent, in: Capsule())
+            .background(accent.gradient, in: Capsule())
             .foregroundStyle(.white)
         }
     }
-
-    // MARK: Top songs
 
     @ViewBuilder private var topSongsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -183,14 +247,16 @@ struct ArtistDetailView: View {
             .padding(.vertical, 12)
     }
 
-    // MARK: Cerrar
-
     private var closeButton: some View {
-        Button { dismiss() } label: {
-            Image(systemName: "xmark.circle.fill")
-                .font(.title2)
-                .foregroundStyle(.white.opacity(0.6))
-                .padding()
+        HStack {
+            Button(action: onClose) {
+                Image(systemName: "xmark")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .padding(12)
+                    .background(.black.opacity(0.3), in: Circle())
+            }
+            Spacer()
         }
     }
 
