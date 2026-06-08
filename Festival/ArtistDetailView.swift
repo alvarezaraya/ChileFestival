@@ -70,14 +70,16 @@ struct ArtistDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
+            VStack(spacing: 0) {
                 hero
-                metadata
-                playButton
-                topSongsSection
+                VStack(spacing: 20) {
+                    metadata
+                    playButton
+                    topSongsSection
+                }
+                .padding()
+                .padding(.bottom, 24)
             }
-            .padding()
-            .padding(.bottom, 24)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(
@@ -93,28 +95,34 @@ struct ArtistDetailView: View {
     // MARK: Hero
 
     private var hero: some View {
-        VStack(spacing: 12) {
-            ZStack {
-                Circle().fill(accent.gradient)
-                if let url = artist.imageURL {
-                    AsyncImage(url: url) { $0.resizable().scaledToFill() }
-                        placeholder: { Color.clear }
-                        .clipShape(Circle())
-                } else {
+        ZStack(alignment: .bottomLeading) {
+            if let url = artist.imageURL {
+                AsyncImage(url: url) { phase in
+                    if let img = phase.image {
+                        img.resizable().scaledToFill()
+                    } else {
+                        accent.opacity(0.8)
+                    }
+                }
+            } else {
+                ZStack {
+                    accent.opacity(0.8)
                     Text(initials)
-                        .font(.system(size: 48, weight: .bold))
-                        .foregroundStyle(.white)
+                        .font(.system(size: 80, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.35))
                 }
             }
-            .frame(width: 150, height: 150)
-            .overlay(Circle().stroke(.white.opacity(0.25), lineWidth: 1))
-            .shadow(color: .black.opacity(0.3), radius: 10, y: 4)
-            .padding(.top, 32)
-
+            LinearGradient(
+                colors: [.clear, .black.opacity(0.75)],
+                startPoint: .top, endPoint: .bottom
+            )
             Text(artist.name)
-                .font(.title.bold())
-                .multilineTextAlignment(.center)
+                .font(.system(size: 30, weight: .heavy, design: .rounded))
+                .multilineTextAlignment(.leading)
+                .padding([.horizontal, .bottom], 20)
         }
+        .frame(maxWidth: .infinity, height: 260)
+        .clipped()
     }
 
     // MARK: Metadata (tier · día · géneros)

@@ -105,6 +105,7 @@ struct FestivalClusterView: View {
                                  isSelected: selected == circle.id)
                         .position(circle.center)
                         .onTapGesture {
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                             selected = circle.id
                             onTapArtist(circle.artist)
                         }

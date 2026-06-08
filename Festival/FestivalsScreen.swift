@@ -74,11 +74,18 @@ struct FestivalPage: View {
     }
 
     private var header: some View {
-        VStack(spacing: 2) {
-            Text(festival.name).font(.title2.bold())
+        VStack(spacing: 4) {
+            Text(festival.name)
+                .font(.system(size: 34, weight: .heavy, design: .rounded))
+                .multilineTextAlignment(.center)
+            if let dateRange = festival.formattedDateRange {
+                Text(dateRange)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(festival.accentColor)
+            }
             Text("\(festival.venue) · \(festival.city)")
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.7))
+                .foregroundStyle(.white.opacity(0.65))
         }
     }
 
@@ -130,7 +137,10 @@ private struct Chip: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            UISelectionFeedbackGenerator().selectionChanged()
+            action()
+        } label: {
             Text(title)
                 .font(.subheadline.weight(.medium))
                 .padding(.horizontal, 14)

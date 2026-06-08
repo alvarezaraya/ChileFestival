@@ -37,6 +37,32 @@ struct Festival: Codable, Identifiable, Hashable, Sendable {
     var clusterOrdered: [LineupArtist] {
         lineup.sorted { $0.billingWeight > $1.billingWeight }
     }
+
+    /// Rango de fechas legible en español, p.ej. "28–30 mar 2026" o "28 mar – 1 abr 2026".
+    var formattedDateRange: String? {
+        guard !dates.isEmpty else { return nil }
+        let sorted = dates.sorted()
+        guard let first = sorted.first, let last = sorted.last else { return nil }
+        let fmt = DateFormatter()
+        fmt.locale = Locale(identifier: "es_CL")
+        if sorted.count == 1 {
+            fmt.dateFormat = "d MMM yyyy"
+            return fmt.string(from: first)
+        }
+        let cal = Calendar.current
+        if cal.component(.year, from: first) == cal.component(.year, from: last),
+           cal.component(.month, from: first) == cal.component(.month, from: last) {
+            let dayFmt = DateFormatter()
+            dayFmt.locale = fmt.locale
+            dayFmt.dateFormat = "d"
+            fmt.dateFormat = "MMM yyyy"
+            return "\(dayFmt.string(from: first))–\(dayFmt.string(from: last)) \(fmt.string(from: last))"
+        }
+        fmt.dateFormat = "d MMM"
+        let startStr = fmt.string(from: first)
+        fmt.dateFormat = "d MMM yyyy"
+        return "\(startStr) – \(fmt.string(from: last))"
+    }
 }
 
 // MARK: - LineupArtist
