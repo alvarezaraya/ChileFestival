@@ -1,150 +1,171 @@
 import SwiftUI
 
-// MARK: - Packer (relajación: empujar solapados + atraer al centro)
+// MARK: - Vista del cúmulo con física
 
-struct PackedCircle: Identifiable, Sendable {
-    let artist: LineupArtist
-    var center: CGPoint
-    let radius: CGFloat
-    var id: String { artist.id }
-}
-
-enum CirclePacker {
-
-    nonisolated static func pack(_ artists: [LineupArtist],
-                     in size: CGSize,
-                     minRadius: CGFloat = 28,
-                     maxRadius: CGFloat = 64,
-                     padding: CGFloat = 3,
-                     iterations: Int = 320) -> [PackedCircle] {
-
-        guard !artists.isEmpty, size.width > 1, size.height > 1 else { return [] }
-
-        // Radio por peso (área ~ peso → sqrt para percepción visual correcta).
-        let radii = artists.map { a -> CGFloat in
-            minRadius + (maxRadius - minRadius) * sqrt(CGFloat(a.billingWeight))
-        }
-
-        let center = CGPoint(x: size.width / 2, y: size.height / 2)
-
-        // Posiciones iniciales en espiral determinista (mayores hacia el centro).
-        var pos = (0..<artists.count).map { i -> CGPoint in
-            let t = CGFloat(i)
-            let angle = t * 2.399963        // golden angle → reparto uniforme
-            let r = 6 * sqrt(t)
-            return CGPoint(x: center.x + cos(angle) * r,
-                           y: center.y + sin(angle) * r)
-        }
-
-        let centeringStrength: CGFloat = 0.012
-
-        for _ in 0..<iterations {
-            // Atracción al centro.
-            for i in pos.indices {
-                pos[i].x += (center.x - pos[i].x) * centeringStrength
-                pos[i].y += (center.y - pos[i].y) * centeringStrength
-            }
-            // Resolución de colisiones (par a par).
-            for i in 0..<pos.count {
-                for j in (i + 1)..<pos.count {
-                    let dx = pos[j].x - pos[i].x
-                    let dy = pos[j].y - pos[i].y
-                    var dist = (dx * dx + dy * dy).squareRoot()
-                    let minDist = radii[i] + radii[j] + padding
-                    if dist < minDist {
-                        if dist == 0 { dist = 0.01 }
-                        let overlap = (minDist - dist) / 2
-                        let nx = dx / dist, ny = dy / dist
-                        pos[i].x -= nx * overlap; pos[i].y -= ny * overlap
-                        pos[j].x += nx * overlap; pos[j].y += ny * overlap
-                    }
-                }
-            }
-        }
-
-        // Encajar (escalar + centrar) en el frame disponible.
-        var minX = CGFloat.greatestFiniteMagnitude, minY = minX
-        var maxX = -minX, maxY = -minX
-        for i in pos.indices {
-            minX = min(minX, pos[i].x - radii[i]); maxX = max(maxX, pos[i].x + radii[i])
-            minY = min(minY, pos[i].y - radii[i]); maxY = max(maxY, pos[i].y + radii[i])
-        }
-        let bboxW = max(maxX - minX, 1), bboxH = max(maxY - minY, 1)
-        let inset: CGFloat = 8
-        let scale = min((size.width - inset * 2) / bboxW,
-                        (size.height - inset * 2) / bboxH, 1)
-        let bcx = (minX + maxX) / 2, bcy = (minY + maxY) / 2
-
-        return artists.enumerated().map { idx, artist in
-            let p = pos[idx]
-            return PackedCircle(
-                artist: artist,
-                center: CGPoint(x: center.x + (p.x - bcx) * scale,
-                                y: center.y + (p.y - bcy) * scale),
-                radius: radii[idx] * scale)
-        }
-    }
-}
-
-// MARK: - Vista del cúmulo
-
-struct FestivalClusterView: View {
+/// Renderiza los círculos sobre una simulación de gravedad. Sirve en dos modos:
+///
+/// - `interactive == false` (silueta colapsada): un toque en cualquier parte
+///   expande la vista; los círculos solo se pueden **arrastrar** (física).
+/// - `interactive == true` (pantalla completa): cada círculo es tappable de forma
+///   individual (abre el artista) además de arrastrable.
+///
+/// El estepeo lo dispara un `TimelineView(.animation)`. La instancia de
+/// `ClusterPhysics` se comparte con la silueta para mantener continuidad.
+struct PhysicsClusterView: View {
     let artists: [LineupArtist]
+    @ObservedObject var physics: ClusterPhysics
     let accent: Color
-    var onTapArtist: (LineupArtist) -> Void = { _ in }
+    let interactive: Bool
 
-    @State private var circles: [PackedCircle] = []
-    @State private var selected: String?
+    /// Solo la vista activa estepea la simulación. Como la silueta y el overlay a
+    /// pantalla completa comparten el mismo `ClusterPhysics` (con marcos distintos),
+    /// pausar la inactiva evita que ambas reescalen los cuerpos en cada frame.
+    var isActive: Bool = true
+
+    /// Cuando se hace zoom a un artista: el círculo origen se oculta (lo sustituye
+    /// el héroe con matchedGeometry) y el resto se atenúa.
+    var zoomedArtistID: String? = nil
+    /// Solo la vista a pantalla completa participa del matchedGeometry hacia el
+    /// héroe (evita ids duplicados entre silueta y overlay).
+    var matchNamespace: Namespace.ID? = nil
+
+    var onTapBackground: () -> Void = {}
+    var onSelect: (LineupArtist) -> Void = { _ in }
+
+    @State private var lastTick: Date?
+    @State private var boundsSize: CGSize = .zero
 
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                ForEach(circles) { circle in
-                    ArtistBubble(circle: circle,
-                                 accent: accent,
-                                 isSelected: selected == circle.id)
-                        .position(circle.center)
-                        .onTapGesture {
-                            selected = circle.id
-                            onTapArtist(circle.artist)
+                // Capa de fondo: en modo silueta capta el toque para expandir.
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture { if !interactive { onTapBackground() } }
+
+                ForEach(physics.bodies) { body in
+                    DraggableBubble(
+                        physics: physics,
+                        physicsBody: body,
+                        accent: accent,
+                        interactive: interactive,
+                        isZoomSource: zoomedArtistID == body.id,
+                        dimmed: zoomedArtistID != nil && zoomedArtistID != body.id,
+                        matchNamespace: matchNamespace,
+                        onTapBackground: onTapBackground,
+                        onSelect: onSelect
+                    )
+                }
+
+                // Motor: avanza la simulación en cada frame. Pausa si está inactiva.
+                TimelineView(.animation(paused: !isActive)) { tl in
+                    Color.clear
+                        .onChange(of: tl.date) { _, date in
+                            let dt = lastTick.map { CGFloat(date.timeIntervalSince($0)) } ?? 0
+                            lastTick = date
+                            if isActive { physics.step(dt) }
                         }
                 }
+                .allowsHitTesting(false)
             }
-            .frame(width: geo.size.width, height: geo.size.height)
-            // Recalcula cuando cambia el tamaño o el lineup. El cómputo va a
-            // un hilo de fondo para no bloquear la UI con carteles grandes.
-            .task(id: ClusterKey(size: geo.size, ids: artists.map(\.id))) {
-                let result = await Task.detached(priority: .userInitiated) {
-                    CirclePacker.pack(artists, in: geo.size)
-                }.value
-                withAnimation(.spring(duration: 0.45)) { circles = result }
+            .coordinateSpace(.named("cluster"))
+            .onAppear {
+                boundsSize = geo.size
+                if isActive { physics.configure(artists: artists, size: geo.size) }
+            }
+            .onChange(of: geo.size) { _, size in
+                boundsSize = size
+                if isActive { physics.configure(artists: artists, size: size) }
+            }
+            // Cambiar el día (u otro filtro) reconstruye el cúmulo.
+            .onChange(of: artists.map(\.id)) { _, _ in
+                if isActive { physics.configure(artists: artists, size: boundsSize) }
+            }
+            // Al reactivarse (p. ej. al colapsar), readapta los cuerpos a su marco.
+            .onChange(of: isActive) { _, active in
+                if active {
+                    lastTick = nil
+                    physics.configure(artists: artists, size: boundsSize)
+                }
             }
         }
     }
 }
 
-private struct ClusterKey: Equatable {
-    let size: CGSize
-    let ids: [String]
+// MARK: - Burbuja arrastrable
+
+private struct DraggableBubble: View {
+    @ObservedObject var physics: ClusterPhysics
+    let physicsBody: PhysicsBody
+    let accent: Color
+    let interactive: Bool
+    let isZoomSource: Bool
+    let dimmed: Bool
+    let matchNamespace: Namespace.ID?
+    let onTapBackground: () -> Void
+    let onSelect: (LineupArtist) -> Void
+
+    @State private var didDrag = false
+
+    var body: some View {
+        bubble
+            .frame(width: physicsBody.radius * 2, height: physicsBody.radius * 2)
+            .opacity(isZoomSource ? 0 : (dimmed ? 0.22 : 1))
+            .scaleEffect(dimmed ? 0.92 : 1)
+            .position(physicsBody.position)
+            .animation(.easeInOut(duration: 0.35), value: dimmed)
+            .gesture(drag)
+    }
+
+    @ViewBuilder private var bubble: some View {
+        if let ns = matchNamespace {
+            ArtistBubble(artist: physicsBody.artist, radius: physicsBody.radius, accent: accent)
+                .matchedGeometryEffect(id: physicsBody.id, in: ns, isSource: !isZoomSource)
+        } else {
+            ArtistBubble(artist: physicsBody.artist, radius: physicsBody.radius, accent: accent)
+        }
+    }
+
+    /// Un único gesto distingue arrastre (física) de toque (expandir/seleccionar)
+    /// según la distancia recorrida, evitando conflictos de gestos.
+    private var drag: some Gesture {
+        DragGesture(minimumDistance: 0, coordinateSpace: .named("cluster"))
+            .onChanged { v in
+                let moved = abs(v.translation.width) + abs(v.translation.height)
+                if moved > 8 {
+                    if !didDrag { didDrag = true; physics.beginDrag(physicsBody.id) }
+                    physics.drag(physicsBody.id, to: v.location)
+                }
+            }
+            .onEnded { v in
+                if didDrag {
+                    physics.endDrag(physicsBody.id, velocity: v.velocity)
+                    didDrag = false
+                } else if interactive {
+                    onSelect(physicsBody.artist) // pantalla completa → abre artista
+                } else {
+                    onTapBackground()            // silueta → expande
+                }
+            }
+    }
 }
 
-// MARK: - Burbuja de artista
+// MARK: - Burbuja de artista (contenido visual)
 
 struct ArtistBubble: View {
-    let circle: PackedCircle
+    let artist: LineupArtist
+    let radius: CGFloat
     let accent: Color
-    let isSelected: Bool
 
-    private var diameter: CGFloat { circle.radius * 2 }
-    private var showsFullName: Bool { circle.radius >= 40 }
+    private var diameter: CGFloat { radius * 2 }
 
     var body: some View {
         ZStack {
-            Circle().fill((circle.artist.accentColor ?? accent).gradient)
+            Circle().fill((artist.accentColor ?? accent).gradient)
 
-            if let url = circle.artist.imageURL {
+            if artist.imageURL != nil {
                 // La foto del artista es el contenido: llena el círculo.
-                AsyncImage(url: url) { phase in
+                ArtistImage(artist: artist, width: 300, height: 300) { phase in
                     if let image = phase.image {
                         image.resizable().scaledToFill()
                     } else {
@@ -153,34 +174,29 @@ struct ArtistBubble: View {
                 }
                 .clipShape(Circle())
 
-                // Degradado inferior para que el nombre quede legible sobre la foto.
+                // Degradado inferior para legibilidad del nombre sobre la foto.
                 Circle().fill(
                     LinearGradient(colors: [.clear, .clear, .black.opacity(0.6)],
                                    startPoint: .top, endPoint: .bottom))
 
                 // Nombre curvado siguiendo la curvatura inferior del círculo.
-                CurvedBottomText(text: circle.artist.name, radius: circle.radius)
+                CurvedBottomText(text: artist.name, radius: radius)
                     .frame(width: diameter, height: diameter)
             } else {
-                // Sin foto: gradiente de acento + texto centrado.
                 centeredLabel
             }
         }
         .frame(width: diameter, height: diameter)
-        .overlay(
-            Circle().stroke(.white.opacity(isSelected ? 0.95 : 0.25),
-                            lineWidth: isSelected ? 3 : 1))
-        .shadow(color: .black.opacity(0.25), radius: isSelected ? 8 : 3, y: 2)
-        .scaleEffect(isSelected ? 1.06 : 1)
-        .animation(.spring(duration: 0.3), value: isSelected)
+        .overlay(Circle().stroke(.white.opacity(0.25), lineWidth: 1))
+        .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
     }
 
-    private var label: String { showsFullName ? circle.artist.name : initials }
+    private var showsFullName: Bool { radius >= 40 }
+    private var label: String { showsFullName ? artist.name : initials }
 
-    /// Texto centrado cuando no hay foto.
     private var centeredLabel: some View {
         Text(label)
-            .font(.system(size: max(9, circle.radius * 0.28), weight: .semibold))
+            .font(.system(size: max(9, radius * 0.28), weight: .semibold))
             .multilineTextAlignment(.center)
             .minimumScaleFactor(0.6)
             .lineLimit(2)
@@ -188,15 +204,14 @@ struct ArtistBubble: View {
             .padding(4)
     }
 
-    /// Iniciales como placeholder mientras carga la foto.
     private var initialsLabel: some View {
         Text(initials)
-            .font(.system(size: max(10, circle.radius * 0.5), weight: .bold))
+            .font(.system(size: max(10, radius * 0.5), weight: .bold))
             .foregroundStyle(.white.opacity(0.9))
     }
 
     private var initials: String {
-        circle.artist.name
+        artist.name
             .split(separator: " ").prefix(2)
             .compactMap { $0.first }
             .map(String.init).joined().uppercased()

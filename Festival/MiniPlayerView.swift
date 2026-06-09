@@ -3,25 +3,33 @@ import SwiftUI
 struct MiniPlayerView: View {
     @ObservedObject var player: FestivalPlayer
     let accent: Color
+    var onTap: () -> Void = {}
 
     var body: some View {
         HStack(spacing: 12) {
-            artwork
-            VStack(alignment: .leading, spacing: 2) {
-                Text(titleText)
-                    .font(.subheadline.weight(.semibold))
-                    .lineLimit(1)
-                Text(subtitleText)
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.7))
-                    .lineLimit(1)
+            // Zona tappable (carátula + texto) que abre el reproductor completo.
+            // Los botones de control de la derecha capturan su propio toque.
+            HStack(spacing: 12) {
+                artwork
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(titleText)
+                        .font(.subheadline.weight(.semibold))
+                        .lineLimit(1)
+                    Text(subtitleText)
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.7))
+                        .lineLimit(1)
+                }
+                Spacer(minLength: 4)
             }
-            Spacer(minLength: 4)
+            .contentShape(Rectangle())
+            .onTapGesture { onTap() }
+
             controls
         }
         .padding(8)
-        .background(.white.opacity(0.12), in: Capsule())
-        .overlay(Capsule().stroke(.white.opacity(0.15), lineWidth: 1))
+        // Al estar reproduciendo, la píldora es Liquid Glass transparente.
+        .glassEffect(.clear, in: Capsule())
     }
 
     private var artwork: some View {
