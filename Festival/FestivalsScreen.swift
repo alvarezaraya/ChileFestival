@@ -43,6 +43,10 @@ struct FestivalsScreen: View {
                         physics: physicsStore.model(for: festival.id),
                         namespace: ns,
                         isExpanded: expandedIndex == i,
+                        // Solo la página visible mantiene la física en marcha; los
+                        // vecinos del TabView se quedan vivos pero pausados para
+                        // no saturar el main thread con dos simulaciones.
+                        isVisible: i == safeIndex,
                         selectedDay: Binding(
                             get: { selectedDays[festival.id] },
                             set: { selectedDays[festival.id] = $0 }
@@ -141,6 +145,7 @@ struct FestivalPosterPage: View {
     @ObservedObject var physics: ClusterPhysics
     let namespace: Namespace.ID
     let isExpanded: Bool
+    var isVisible: Bool = true
     @Binding var selectedDay: Int?
     let onExpand: () -> Void
 
@@ -177,7 +182,12 @@ struct FestivalPosterPage: View {
                 physics: physics,
                 accent: festival.accentColor,
                 interactive: false,
-                isActive: !isExpanded,
+                isActive: !isExpanded && isVisible,
+                // El cúmulo vive en un espacio mayor que la silueta: las burbujas
+                // desbordan los bordes y la máscara las funde. Esta extensión es
+                // parte del diseño que el usuario prefiere.
+                worldScale: 1.7,
+                fadesAtEdges: true,
                 onTapBackground: onExpand
             )
             .padding(.horizontal, 28)
