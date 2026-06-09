@@ -364,6 +364,655 @@
       ]
     },
     {
+      "id": "womad-chile-2025",
+      "name": "WOMAD Chile",
+      "edition": "2025",
+      "venue": "Plaza La Paz",
+      "city": "Recoleta",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2025-10-10",
+        "2025-10-11",
+        "2025-10-12"
+      ],
+      "accentColorHex": "#E67E22",
+      "posterImageURL": null,
+      "lineup": []
+    },
+    {
+      "id": "ruidosa-fest-2025",
+      "name": "Ruidosa Fest",
+      "edition": "2025",
+      "venue": "Parque O'Higgins",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2025-10-11",
+        "2025-10-12"
+      ],
+      "accentColorHex": "#E81C7A",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "mon-laferte",
+          "name": "Mon Laferte",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "latin pop",
+            "rock"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "myriam-hernandez",
+          "name": "Myriam Hernández",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "pop",
+            "latin pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "villano-antillano",
+          "name": "Villano Antillano",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "reggaeton",
+            "trap"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "ms-nina",
+          "name": "Ms Nina",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "reggaeton",
+            "trap"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "francisca-valenzuela",
+          "name": "Francisca Valenzuela",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "indie pop",
+            "rock"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "javiera-mena",
+          "name": "Javiera Mena",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "synth pop",
+            "electro pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "cami",
+          "name": "Cami",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "pop",
+            "latin pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "princesa-alba",
+          "name": "Princesa Alba",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop",
+            "r&b"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "javiera-parra",
+          "name": "Javiera Parra",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "folk",
+            "rock"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "nicole-chile",
+          "name": "Nicole",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop",
+            "latin pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "supernova-chile",
+          "name": "Supernova",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "fran-maira",
+          "name": "Fran Maira",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop",
+            "r&b"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "paula-rivas",
+          "name": "Paula Rivas",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop",
+            "r&b"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "catalina-bordonas-de-oro",
+          "name": "Catalina y las Bordonas de Oro",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "cumbia",
+            "folklore"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "javiera-electra",
+          "name": "Javiera Electra",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "pop",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "chini-png",
+          "name": "Chini.png",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "pop",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "laia-chile",
+          "name": "Laia",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "karla-grunewaldt",
+          "name": "Karla Grunewaldt",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "pop",
+            "r&b"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "nekki",
+          "name": "Nekki",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "pop",
+            "r&b"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "entremares",
+          "name": "Entremares",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "indie",
+            "alternative"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "akrilla",
+          "name": "Akrilla",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "rap",
+            "hip hop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "daniela-millaleo",
+          "name": "Daniela Millaleo",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "folk",
+            "indie"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "masquemusica",
+          "name": "Masquemusica",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "electronic",
+            "pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "creamfields-chile-2025",
+      "name": "Creamfields Chile",
+      "edition": "2025",
+      "venue": "Club Hípico de Santiago",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2025-10-11",
+        "2025-10-12"
+      ],
+      "accentColorHex": "#00B5CC",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "deadmau5",
+          "name": "Deadmau5",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "electronic",
+            "techno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "david-guetta",
+          "name": "David Guetta",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "electronic",
+            "dance"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "armin-van-buuren",
+          "name": "Armin van Buuren",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "trance",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "timmy-trumpet",
+          "name": "Timmy Trumpet",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "electronic",
+            "dance"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "robin-schulz",
+          "name": "Robin Schulz",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "deep house",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "lost-frequencies",
+          "name": "Lost Frequencies",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "deep house",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "r3hab",
+          "name": "R3hab",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "electronic",
+            "dance"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "claptone",
+          "name": "Claptone",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "deep house",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "argy",
+          "name": "Argy",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "techno",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "stella-bossi",
+          "name": "Stella Bossi",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "techno",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "dual-damage",
+          "name": "Dual Damage",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "electronic",
+            "dance"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "mathame",
+          "name": "Mathame",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "techno",
+            "melodic techno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "miss-monique",
+          "name": "Miss Monique",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "trance",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "reinier-zonneveld",
+          "name": "Reinier Zonneveld",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "techno",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "mind-against",
+          "name": "Mind Against",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "techno",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "agents-of-time",
+          "name": "Agents of Time",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "techno",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "leonor-baesler",
+          "name": "Leonor Baesler",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "electronic",
+            "dj"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "xxamorxx",
+          "name": "XXamorXX",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "electronic",
+            "dj"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "daniela-fuzz",
+          "name": "Daniela Fuzz",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "electronic",
+            "dj"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "michelle-tijoux",
+          "name": "Michelle Tijoux",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "electronic",
+            "dj"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
       "id": "fauna-primavera-2025",
       "name": "Fauna Primavera",
       "edition": "2025",
