@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-07",
+  "updatedAt": "2026-06-09",
   "festivals": [
     {
       "id": "lollapalooza-chile-2026",
@@ -494,6 +494,448 @@
           "accentColorHex": null
         }
       ]
+    },
+    {
+      "id": "en-orbita-2026",
+      "name": "Festival En Órbita",
+      "edition": "2026",
+      "venue": "Basel",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2026-09-24",
+        "2026-09-25"
+      ],
+      "accentColorHex": "#4B2E9E",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "blonde-redhead",
+          "name": "Blonde Redhead",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "indie rock",
+            "noise rock",
+            "dream pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "dry-cleaning",
+          "name": "Dry Cleaning",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "post-punk",
+            "art rock"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "beach-fossils",
+          "name": "Beach Fossils",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "indie pop",
+            "dream pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "denver",
+          "name": "Dënver",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "indie pop",
+            "electropop chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "dinastia-moon",
+          "name": "Dinastía Moon",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "psicodélico",
+            "indie chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "alejandro-paz",
+          "name": "Alejandro Paz",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "indie chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "diegors",
+          "name": "Diegors",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "indie chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "ruidosa-fest-2026",
+      "name": "Ruidosa Fest",
+      "edition": "2026",
+      "venue": "Parque O'Higgins",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2026-10-10",
+        "2026-10-11"
+      ],
+      "accentColorHex": "#E81C7A",
+      "posterImageURL": null,
+      "lineup": []
+    },
+    {
+      "id": "bamba-2026",
+      "name": "Festival Bamba",
+      "edition": "2026",
+      "venue": "Parque O'Higgins",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2026-10-24",
+        "2026-10-25"
+      ],
+      "accentColorHex": "#F5A623",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "marc-anthony",
+          "name": "Marc Anthony",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "salsa",
+            "latin pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "juanes",
+          "name": "Juanes",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "latin rock",
+            "pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "fito-paez",
+          "name": "Fito Páez",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "rock argentino",
+            "pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "carlos-vives",
+          "name": "Carlos Vives",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "vallenato",
+            "latin pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "bomba-estereo",
+          "name": "Bomba Estéreo",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "electrónica tropical",
+            "cumbia"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "ile",
+          "name": "iLe",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "r&b",
+            "salsa"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "orishas-bamba",
+          "name": "Orishas",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "hip hop cubano",
+            "latin"
+          ],
+          "appleMusicArtistID": "103897",
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "los-vasquez",
+          "name": "Los Vásquez",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop rock chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "conociendo-rusia",
+          "name": "Conociendo Rusia",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "indie rock argentino"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "elena-rose",
+          "name": "Elena Rose",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop latino",
+            "r&b"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "jovanotti",
+          "name": "Jovanotti",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop",
+            "hip hop italiano"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "alvaro-henriquez-con-pettinellis",
+          "name": "Álvaro Henríquez con Pettinellis",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "indie",
+            "rock chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "los-pericos",
+          "name": "Los Pericos",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "reggae argentino"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "rafaga",
+          "name": "Ráfaga",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "cumbia argentina"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "coti",
+          "name": "Coti",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop rock argentino"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "gale",
+          "name": "Gale",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "catalina-y-las-bordonas-de-oro",
+          "name": "Catalina y las Bordonas de Oro",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "folclore chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "paloma-morphy",
+          "name": "Paloma Morphy",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "seamoon",
+          "name": "Seamoon",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "pop electrónico"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "cantamarta",
+          "name": "Cantamarta",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "folk chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "aura-bae",
+          "name": "Aura Bae",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "r&b"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "creamfields-chile-2026",
+      "name": "Creamfields Chile",
+      "edition": "2026",
+      "venue": "Club Hípico de Santiago",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2026-11-14",
+        "2026-11-15"
+      ],
+      "accentColorHex": "#00B5CC",
+      "posterImageURL": null,
+      "lineup": []
     },
     {
       "id": "fauna-primavera-2026",

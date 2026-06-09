@@ -170,57 +170,73 @@ struct FestivalPosterPage: View {
                 .matchedGeometryEffect(id: "silhouette-\(festival.id)",
                                        in: namespace, isSource: !isExpanded)
 
-            // El cúmulo se inseta en horizontal para dejar pasillos laterales por
-            // donde se puede deslizar entre festivales (paginado del TabView).
-            PhysicsClusterView(
-                artists: dayArtists,
-                physics: physics,
-                accent: festival.accentColor,
-                interactive: false,
-                isActive: !isExpanded,
-                onTapBackground: onExpand
-            )
-            .padding(.horizontal, 28)
-            .mask {
-                // Degrada hacia todos los bordes para indicar que hay más contenido.
-                // Dos gradientes cruzados multiplicados generan una zona opaca central
-                // y transparencia suave en los cuatro bordes.
-                ZStack {
-                    LinearGradient(
-                        stops: [
-                            .init(color: .clear, location: 0),
-                            .init(color: .white, location: 0.15),
-                            .init(color: .white, location: 0.85),
-                            .init(color: .clear, location: 1)
-                        ],
-                        startPoint: .leading, endPoint: .trailing
-                    )
-                    LinearGradient(
-                        stops: [
-                            .init(color: .clear, location: 0),
-                            .init(color: .white, location: 0.10),
-                            .init(color: .white, location: 0.90),
-                            .init(color: .clear, location: 1)
-                        ],
-                        startPoint: .top, endPoint: .bottom
-                    )
-                    .blendMode(.multiply)
+            if dayArtists.isEmpty {
+                // El lineup aún no fue anunciado: aviso dentro del recuadro.
+                VStack(spacing: 12) {
+                    Image(systemName: "music.note.list")
+                        .font(.system(size: 34))
+                        .foregroundStyle(festival.accentColor.opacity(0.8))
+                    Text("Lineup próximamente")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                    Text("Los artistas de este festival aún no han sido anunciados.")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.55))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
                 }
-                .compositingGroup()
-                .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
-            }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                // El cúmulo se inseta en horizontal para dejar pasillos laterales por
+                // donde se puede deslizar entre festivales (paginado del TabView).
+                PhysicsClusterView(
+                    artists: dayArtists,
+                    physics: physics,
+                    accent: festival.accentColor,
+                    interactive: false,
+                    isActive: !isExpanded,
+                    onTapBackground: onExpand
+                )
+                .padding(.horizontal, 28)
+                .mask {
+                    // Degrada hacia todos los bordes para indicar que hay más contenido.
+                    ZStack {
+                        LinearGradient(
+                            stops: [
+                                .init(color: .clear, location: 0),
+                                .init(color: .white, location: 0.15),
+                                .init(color: .white, location: 0.85),
+                                .init(color: .clear, location: 1)
+                            ],
+                            startPoint: .leading, endPoint: .trailing
+                        )
+                        LinearGradient(
+                            stops: [
+                                .init(color: .clear, location: 0),
+                                .init(color: .white, location: 0.10),
+                                .init(color: .white, location: 0.90),
+                                .init(color: .clear, location: 1)
+                            ],
+                            startPoint: .top, endPoint: .bottom
+                        )
+                        .blendMode(.multiply)
+                    }
+                    .compositingGroup()
+                    .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
+                }
 
-            // Pista de que es tocable / expandible.
-            VStack {
-                Spacer()
-                Label("Toca para explorar", systemImage: "arrow.up.left.and.arrow.down.right")
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.white.opacity(0.85))
-                    .padding(.horizontal, 12).padding(.vertical, 6)
-                    .background(.black.opacity(0.25), in: Capsule())
-                    .padding(.bottom, 12)
+                // Pista de que es tocable / expandible.
+                VStack {
+                    Spacer()
+                    Label("Toca para explorar", systemImage: "arrow.up.left.and.arrow.down.right")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.white.opacity(0.85))
+                        .padding(.horizontal, 12).padding(.vertical, 6)
+                        .background(.black.opacity(0.25), in: Capsule())
+                        .padding(.bottom, 12)
+                }
+                .allowsHitTesting(false)
             }
-            .allowsHitTesting(false)
         }
         .overlay(
             RoundedRectangle(cornerRadius: 34, style: .continuous)
