@@ -52,6 +52,7 @@ struct FestivalsScreen: View {
                         physics: physicsStore.model(for: festival.id),
                         namespace: ns,
                         isExpanded: expandedIndex == i,
+                        isActive: i == safeIndex,
                         selectedDay: Binding(
                             get: { selectedDays[festival.id] },
                             set: { selectedDays[festival.id] = $0 }
@@ -150,6 +151,8 @@ struct FestivalPosterPage: View {
     @ObservedObject var physics: ClusterPhysics
     let namespace: Namespace.ID
     let isExpanded: Bool
+    /// Solo la página visible activa la simulación (evita correr N físicas en paralelo).
+    let isActive: Bool
     @Binding var selectedDay: Int?
     let onExpand: () -> Void
 
@@ -203,7 +206,7 @@ struct FestivalPosterPage: View {
                     physics: physics,
                     accent: festival.accentColor,
                     interactive: false,
-                    isActive: !isExpanded,
+                    isActive: isActive && !isExpanded,
                     onTapBackground: onExpand
                 )
                 .padding(.horizontal, 28)
