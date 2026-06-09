@@ -244,7 +244,10 @@ struct FestivalPosterPage: View {
             HStack(spacing: 8) {
                 Chip(title: "Todos", selected: selectedDay == nil) { selectedDay = nil }
                 ForEach(1...max(festival.dayCount, 1), id: \.self) { day in
-                    Chip(title: "Día \(day)", selected: selectedDay == day) { selectedDay = day }
+                    let hasData = festival.lineup.contains { $0.day == day }
+                    Chip(title: "Día \(day)", selected: selectedDay == day, disabled: !hasData) {
+                        selectedDay = day
+                    }
                 }
             }
             .padding(.horizontal, 2)
@@ -366,6 +369,7 @@ struct SharedPlayButton: View {
 private struct Chip: View {
     let title: String
     let selected: Bool
+    var disabled: Bool = false
     let action: () -> Void
 
     var body: some View {
@@ -377,5 +381,7 @@ private struct Chip: View {
                 .background(selected ? .white.opacity(0.9) : .white.opacity(0.15), in: Capsule())
                 .foregroundStyle(selected ? .black : .white)
         }
+        .opacity(disabled ? 0.30 : 1)
+        .disabled(disabled)
     }
 }
