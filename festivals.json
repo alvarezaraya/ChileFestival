@@ -514,7 +514,7 @@
           "id": "the-strokes",
           "name": "The Strokes",
           "tier": "headliner",
-          "day": 1,
+          "day": null,
           "genres": [
             "indie rock",
             "garage rock"
@@ -528,7 +528,7 @@
           "id": "fka-twigs",
           "name": "FKA twigs",
           "tier": "headliner",
-          "day": 1,
+          "day": null,
           "genres": [
             "art pop",
             "electronic",
@@ -543,7 +543,7 @@
           "id": "godspeed-you-black-emperor",
           "name": "Godspeed You! Black Emperor",
           "tier": "mid",
-          "day": 1,
+          "day": null,
           "genres": [
             "post-rock"
           ],
@@ -556,7 +556,7 @@
           "id": "new-order",
           "name": "New Order",
           "tier": "headliner",
-          "day": 2,
+          "day": null,
           "genres": [
             "new wave",
             "electronic",
@@ -571,7 +571,7 @@
           "id": "johnny-marr",
           "name": "Johnny Marr",
           "tier": "main",
-          "day": 2,
+          "day": null,
           "genres": [
             "indie rock",
             "alternative rock"
@@ -585,7 +585,7 @@
           "id": "tricky",
           "name": "Tricky",
           "tier": "mid",
-          "day": 2,
+          "day": null,
           "genres": [
             "trip hop",
             "electronic"
