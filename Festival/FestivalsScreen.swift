@@ -11,7 +11,7 @@ struct FestivalsScreen: View {
 
     @StateObject private var player = FestivalPlayer()
     @StateObject private var physicsStore = PhysicsStore()
-    @State private var selectedIndex = 0
+    @State private var selectedIndex: Int
     @State private var expandedIndex: Int? = nil
     @State private var zoomArtist: LineupArtist? = nil
     @State private var showNowPlaying = false
@@ -19,6 +19,15 @@ struct FestivalsScreen: View {
     /// se arma la fila de reproducción al tocar play.
     @State private var selectedDays: [String: Int] = [:]
     @Namespace private var ns
+
+    init(feed: FestivalFeed) {
+        self.feed = feed
+        // Arrancar en el festival más próximo a realizarse (o el último si todos pasaron).
+        let today = Date()
+        let idx = feed.festivals.firstIndex { $0.endDate.addingTimeInterval(86_400) > today }
+            ?? max(0, feed.festivals.count - 1)
+        _selectedIndex = State(initialValue: idx)
+    }
 
     private var safeIndex: Int { min(max(selectedIndex, 0), feed.festivals.count - 1) }
     private var current: Festival { feed.festivals[safeIndex] }
@@ -175,35 +184,53 @@ struct FestivalPosterPage: View {
                 .matchedGeometryEffect(id: "silhouette-\(festival.id)",
                                        in: namespace, isSource: !isExpanded)
 
-            // El cúmulo se inseta en horizontal para dejar pasillos laterales por
-            // donde se puede deslizar entre festivales (paginado del TabView).
-            PhysicsClusterView(
-                artists: dayArtists,
-                physics: physics,
-                accent: festival.accentColor,
-                interactive: false,
-                isActive: !isExpanded && isVisible,
-                // El cúmulo vive en un espacio mayor que la silueta: las burbujas
-                // desbordan los bordes y la máscara las funde. Esta extensión es
-                // parte del diseño que el usuario prefiere.
-                worldScale: 1.7,
-                fadesAtEdges: true,
-                onTapBackground: onExpand
-            )
-            .padding(.horizontal, 28)
-            .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
+            if dayArtists.isEmpty {
+                // El lineup aún no fue anunciado: aviso dentro del recuadro.
+                VStack(spacing: 12) {
+                    Image(systemName: "music.note.list")
+                        .font(.system(size: 34))
+                        .foregroundStyle(festival.accentColor.opacity(0.8))
+                    Text("Lineup próximamente")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                    Text("Los artistas de este festival aún no han sido anunciados.")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.55))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                // El cúmulo se inseta en horizontal para dejar pasillos laterales por
+                // donde se puede deslizar entre festivales (paginado del TabView).
+                PhysicsClusterView(
+                    artists: dayArtists,
+                    physics: physics,
+                    accent: festival.accentColor,
+                    interactive: false,
+                    isActive: !isExpanded && isVisible,
+                    // El cúmulo vive en un espacio mayor que la silueta: las burbujas
+                    // desbordan los bordes y la máscara interna las funde hacia la
+                    // periferia (fadesAtEdges). Es el diseño que el usuario prefiere.
+                    worldScale: 1.7,
+                    fadesAtEdges: true,
+                    onTapBackground: onExpand
+                )
+                .padding(.horizontal, 28)
+                .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
 
-            // Pista de que es tocable / expandible.
-            VStack {
-                Spacer()
-                Label("Toca para explorar", systemImage: "arrow.up.left.and.arrow.down.right")
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.white.opacity(0.85))
-                    .padding(.horizontal, 12).padding(.vertical, 6)
-                    .background(.black.opacity(0.25), in: Capsule())
-                    .padding(.bottom, 12)
+                // Pista de que es tocable / expandible.
+                VStack {
+                    Spacer()
+                    Label("Toca para explorar", systemImage: "arrow.up.left.and.arrow.down.right")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.white.opacity(0.85))
+                        .padding(.horizontal, 12).padding(.vertical, 6)
+                        .background(.black.opacity(0.25), in: Capsule())
+                        .padding(.bottom, 12)
+                }
+                .allowsHitTesting(false)
             }
-            .allowsHitTesting(false)
         }
         .overlay(
             RoundedRectangle(cornerRadius: 34, style: .continuous)
@@ -214,11 +241,41 @@ struct FestivalPosterPage: View {
     }
 
     private var header: some View {
-        VStack(spacing: 2) {
-            Text(festival.name).font(.title2.bold())
+        VStack(spacing: 3) {
+            Text(festival.name)
+                .font(.title2.bold())
+                .opacity(festival.isPast ? 0.55 : 1)
+            HStack(spacing: 6) {
+                Text(festival.dateRangeLabel)
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.white.opacity(festival.isPast ? 0.40 : 0.85))
+                statusBadge
+            }
             Text("\(festival.venue) · \(festival.city)")
-                .font(.caption)
-                .foregroundStyle(.white.opacity(0.7))
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(festival.isPast ? 0.35 : 0.55))
+        }
+    }
+
+    @ViewBuilder private var statusBadge: some View {
+        if festival.isPast {
+            Text("Pasado")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.50))
+                .padding(.horizontal, 7).padding(.vertical, 3)
+                .background(.white.opacity(0.10), in: Capsule())
+        } else if festival.isOngoing {
+            Text("En curso")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 7).padding(.vertical, 3)
+                .background(.green.opacity(0.75), in: Capsule())
+        } else if festival.daysUntilStart <= 90 {
+            Text("En \(festival.daysUntilStart) día\(festival.daysUntilStart == 1 ? "" : "s")")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(festival.accentColor)
+                .padding(.horizontal, 7).padding(.vertical, 3)
+                .background(festival.accentColor.opacity(0.18), in: Capsule())
         }
     }
 
@@ -227,7 +284,10 @@ struct FestivalPosterPage: View {
             HStack(spacing: 8) {
                 Chip(title: "Todos", selected: selectedDay == nil) { selectedDay = nil }
                 ForEach(1...max(festival.dayCount, 1), id: \.self) { day in
-                    Chip(title: "Día \(day)", selected: selectedDay == day) { selectedDay = day }
+                    let hasData = festival.lineup.contains { $0.day == day }
+                    Chip(title: "Día \(day)", selected: selectedDay == day, disabled: !hasData) {
+                        selectedDay = day
+                    }
                 }
             }
             .padding(.horizontal, 2)
@@ -349,6 +409,7 @@ struct SharedPlayButton: View {
 private struct Chip: View {
     let title: String
     let selected: Bool
+    var disabled: Bool = false
     let action: () -> Void
 
     var body: some View {
@@ -360,5 +421,7 @@ private struct Chip: View {
                 .background(selected ? .white.opacity(0.9) : .white.opacity(0.15), in: Capsule())
                 .foregroundStyle(selected ? .black : .white)
         }
+        .opacity(disabled ? 0.30 : 1)
+        .disabled(disabled)
     }
 }
