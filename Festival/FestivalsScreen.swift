@@ -14,11 +14,22 @@ struct FestivalsScreen: View {
     @State private var selectedIndex = 0
     @State private var expandedIndex: Int? = nil
     @State private var zoomArtist: LineupArtist? = nil
+    @State private var showNowPlaying = false
+    /// Día elegido por festival (nil/ausente = todos). Es el parámetro con el que
+    /// se arma la fila de reproducción al tocar play.
+    @State private var selectedDays: [String: Int] = [:]
     @Namespace private var ns
 
     private var safeIndex: Int { min(max(selectedIndex, 0), feed.festivals.count - 1) }
     private var current: Festival { feed.festivals[safeIndex] }
     private var isExpanded: Bool { expandedIndex != nil }
+
+    /// Artistas con los que se genera el mix, según el día seleccionado del
+    /// festival visible (ordenados por peso de cartel).
+    private func mixArtists(for festival: Festival) -> [LineupArtist] {
+        festival.artists(onDay: selectedDays[festival.id])
+            .sorted { $0.billingWeight > $1.billingWeight }
+    }
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -32,6 +43,10 @@ struct FestivalsScreen: View {
                         physics: physicsStore.model(for: festival.id),
                         namespace: ns,
                         isExpanded: expandedIndex == i,
+                        selectedDay: Binding(
+                            get: { selectedDays[festival.id] },
+                            set: { selectedDays[festival.id] = $0 }
+                        ),
                         onExpand: { withAnimation(.spring(response: 0.5, dampingFraction: 0.82)) {
                             expandedIndex = i
                         } }
@@ -46,13 +61,14 @@ struct FestivalsScreen: View {
             // Botón dinámico compartido + indicador de página (fuera de la silueta).
             if zoomArtist == nil {
                 VStack(spacing: 10) {
-                    SharedPlayButton(festival: current, player: player) { festival in
-                        Task { await player.playMix(for: festival.clusterOrdered) }
-                    }
+                    SharedPlayButton(festival: current, player: player, play: { festival in
+                        Task { await player.playMix(for: mixArtists(for: festival)) }
+                    }, onOpenPlayer: { showNowPlaying = true })
                     if feed.festivals.count > 1, !isExpanded { pageDots }
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 8)
+                .padding(.bottom, 28)   // sube el bloque para alejar los dots del
+                                        // home indicator y evitar falsos toques
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
 
@@ -91,8 +107,13 @@ struct FestivalsScreen: View {
             }
         }
         .background(.black)
-        .task { player.startSyncingWithMusicApp() }
         .onDisappear { player.stop() }
+        .sheet(isPresented: $showNowPlaying) {
+            NowPlayingView(player: player, accent: current.accentColor) {
+                showNowPlaying = false
+            }
+            .presentationDragIndicator(.hidden)
+        }
     }
 
     private var background: some View {
@@ -120,9 +141,8 @@ struct FestivalPosterPage: View {
     @ObservedObject var physics: ClusterPhysics
     let namespace: Namespace.ID
     let isExpanded: Bool
+    @Binding var selectedDay: Int?
     let onExpand: () -> Void
-
-    @State private var selectedDay: Int? = nil
 
     private var dayArtists: [LineupArtist] {
         festival.artists(onDay: selectedDay)
@@ -140,14 +160,18 @@ struct FestivalPosterPage: View {
         .foregroundStyle(.white)
     }
 
-    // La silueta rectangular que encierra los círculos (póster Apple Invites).
+    // La silueta rectangular que encierra los círculos (póster Apple Invites):
+    // fondo transparente y solo el borde conserva el color del festival.
     private var silhouette: some View {
         ZStack {
+            // Marco transparente con borde de color (matchedGeometry de la silueta).
             RoundedRectangle(cornerRadius: 34, style: .continuous)
-                .fill(festival.accentColor.gradient)
+                .fill(.clear)
                 .matchedGeometryEffect(id: "silhouette-\(festival.id)",
                                        in: namespace, isSource: !isExpanded)
 
+            // El cúmulo se inseta en horizontal para dejar pasillos laterales por
+            // donde se puede deslizar entre festivales (paginado del TabView).
             PhysicsClusterView(
                 artists: dayArtists,
                 physics: physics,
@@ -156,6 +180,7 @@ struct FestivalPosterPage: View {
                 isActive: !isExpanded,
                 onTapBackground: onExpand
             )
+            .padding(.horizontal, 28)
             .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
 
             // Pista de que es tocable / expandible.
@@ -172,9 +197,9 @@ struct FestivalPosterPage: View {
         }
         .overlay(
             RoundedRectangle(cornerRadius: 34, style: .continuous)
-                .stroke(.white.opacity(0.18), lineWidth: 1)
+                .strokeBorder(festival.accentColor.gradient, lineWidth: 2.5)
         )
-        .shadow(color: .black.opacity(0.4), radius: 18, y: 10)
+        .shadow(color: festival.accentColor.opacity(0.35), radius: 14, y: 8)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
@@ -217,7 +242,8 @@ struct FullscreenClusterOverlay: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 0, style: .continuous)
-                .fill(festival.accentColor.gradient)
+                .fill(LinearGradient(colors: [festival.accentColor.opacity(0.30), .black],
+                                     startPoint: .top, endPoint: .bottom))
                 .matchedGeometryEffect(id: "silhouette-\(festival.id)",
                                        in: namespace, isSource: true)
                 .ignoresSafeArea()
@@ -274,11 +300,13 @@ struct SharedPlayButton: View {
     let festival: Festival
     @ObservedObject var player: FestivalPlayer
     var play: (Festival) -> Void
+    var onOpenPlayer: () -> Void = {}
 
     var body: some View {
         Group {
             if player.isActive {
-                MiniPlayerView(player: player, accent: festival.accentColor)
+                MiniPlayerView(player: player, accent: festival.accentColor,
+                               onTap: onOpenPlayer)
             } else {
                 Button { play(festival) } label: {
                     HStack {

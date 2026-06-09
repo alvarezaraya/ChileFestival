@@ -34,22 +34,26 @@ final class FestivalPlayer: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var observingSystem = false
 
+    /// URL para "Abrir en Música": la página de la canción actual si la conocemos
+    /// (abre Música justo ahí), o el esquema `music://` como respaldo (la cola es
+    /// compartida, así que Música muestra lo mismo que suena).
+    var musicAppURL: URL {
+        if previewQueue != nil, previewSongs.indices.contains(previewIndex),
+           let url = previewSongs[previewIndex].url {
+            return url
+        }
+        if let song = player.queue.currentEntry?.item as? Song, let url = song.url {
+            return url
+        }
+        return URL(string: "music://")!
+    }
+
     // Backend de previews (sin suscripción).
     private var previewQueue: AVQueuePlayer?
     private var previewSongs: [Song] = []
     private var previewURLs: [URL] = []
     private var previewIndex = 0
     private var previewEndToken: NSObjectProtocol?
-
-    // MARK: - Sincronización con la app Música
-
-    /// Empieza a reflejar lo que suena en la app Música. No pide permiso si el
-    /// usuario aún no lo concedió (para no lanzar el prompt al abrir la app):
-    /// solo engancha los observers cuando ya está autorizado.
-    func startSyncingWithMusicApp() {
-        guard MusicAuthorization.currentStatus == .authorized else { return }
-        observeSystemPlayback()
-    }
 
     // MARK: - Acción principal
 
@@ -178,7 +182,7 @@ final class FestivalPlayer: ObservableObject {
         let entry = player.queue.currentEntry
         nowPlayingTitle = entry?.title
         nowPlayingArtist = entry?.subtitle
-        artworkURL = entry?.artwork?.url(width: 120, height: 120)
+        artworkURL = entry?.artwork?.url(width: 600, height: 600)
 
         // Muestra/oculta el mini-player según haya algo cargado en Música.
         if entry != nil {
@@ -238,7 +242,7 @@ final class FestivalPlayer: ObservableObject {
         let song = previewSongs[previewIndex]
         nowPlayingTitle = song.title
         nowPlayingArtist = song.artistName
-        artworkURL = song.artwork?.url(width: 120, height: 120)
+        artworkURL = song.artwork?.url(width: 600, height: 600)
     }
 
     // MARK: - Limpieza

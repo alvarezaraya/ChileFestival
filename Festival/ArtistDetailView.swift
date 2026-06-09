@@ -9,22 +9,87 @@ import Combine
 
 enum ArtistCatalog {
 
-    static func topSongs(for artist: LineupArtist, limit: Int) async throws -> [Song] {
-        let catalogArtist: MusicKit.Artist
+    /// Resuelve el `Artist` del catálogo de Apple Music: por id si lo tenemos
+    /// cacheado en el feed, si no por búsqueda de texto.
+    static func catalogArtist(for artist: LineupArtist) async throws -> MusicKit.Artist? {
         if let id = artist.appleMusicArtistID {
             let request = MusicCatalogResourceRequest<MusicKit.Artist>(
                 matching: \.id, equalTo: MusicItemID(id))
-            guard let found = try await request.response().items.first else { return [] }
-            catalogArtist = found
+            return try await request.response().items.first
         } else {
             var search = MusicCatalogSearchRequest(term: artist.name,
                                                    types: [MusicKit.Artist.self])
             search.limit = 1
-            guard let found = try await search.response().artists.first else { return [] }
-            catalogArtist = found
+            return try await search.response().artists.first
         }
+    }
+
+    static func topSongs(for artist: LineupArtist, limit: Int) async throws -> [Song] {
+        guard let catalogArtist = try await catalogArtist(for: artist) else { return [] }
         let detailed = try await catalogArtist.with([.topSongs])
         return Array((detailed.topSongs ?? []).prefix(limit))
+    }
+
+    /// Foto oficial del artista en Apple Music (artwork de MusicKit), resuelta
+    /// en vivo. Requiere autorización; el llamador debería caer a la URL del
+    /// feed si esto devuelve `nil`.
+    static func artworkURL(for artist: LineupArtist,
+                           width: Int, height: Int) async throws -> URL? {
+        try await catalogArtist(for: artist)?.artwork?.url(width: width, height: height)
+    }
+}
+
+// MARK: - Caché de artwork de Apple Music
+//
+// Memoiza la URL oficial por artista para que el cúmulo, el detalle y demás
+// vistas la pidan una sola vez. No es ObservableObject a propósito: cada vista
+// la consume desde su `.task` y guarda el resultado en estado local, evitando
+// re-render global del cúmulo entero.
+
+@MainActor
+enum ArtworkCache {
+    private static var cache: [String: URL] = [:]
+    private static var tasks: [String: Task<URL?, Never>] = [:]
+
+    /// URL de la foto oficial de Apple Music, resuelta una vez y cacheada.
+    /// Devuelve `nil` si no hay autorización o no se encontró: en ese caso el
+    /// llamador usa `artist.imageURL` (horneada en el feed) como fallback.
+    static func appleMusicArtworkURL(for artist: LineupArtist,
+                                     width: Int = 600, height: Int = 600) async -> URL? {
+        if let hit = cache[artist.id] { return hit }
+        if let running = tasks[artist.id] { return await running.value }
+        guard MusicAuthorization.currentStatus == .authorized else { return nil }
+
+        let task = Task<URL?, Never> {
+            try? await ArtistCatalog.artworkURL(for: artist, width: width, height: height)
+        }
+        tasks[artist.id] = task
+        let url = await task.value
+        tasks[artist.id] = nil
+        if let url { cache[artist.id] = url }
+        return url
+    }
+}
+
+// MARK: - Imagen de artista (feed al instante → foto oficial en vivo)
+
+/// Muestra la foto del artista usando la URL del feed de inmediato y, en cuanto
+/// se resuelve la oficial de Apple Music (si hay autorización), la mejora.
+/// Reusa el mismo `content` de `AsyncImage`, así cada vista mantiene su estilo.
+struct ArtistImage<Content: View>: View {
+    let artist: LineupArtist
+    var width: Int = 600
+    var height: Int = 600
+    @ViewBuilder var content: (AsyncImagePhase) -> Content
+
+    @State private var liveURL: URL?
+
+    var body: some View {
+        AsyncImage(url: liveURL ?? artist.imageURL, content: content)
+            .task(id: artist.id) {
+                liveURL = await ArtworkCache.appleMusicArtworkURL(
+                    for: artist, width: width, height: height)
+            }
     }
 }
 
@@ -122,8 +187,8 @@ struct ArtistZoomView: View {
 
             ZStack {
                 Circle().fill(accent.gradient)
-                if let url = artist.imageURL {
-                    AsyncImage(url: url) { phase in
+                if artist.imageURL != nil {
+                    ArtistImage(artist: artist) { phase in
                         if let image = phase.image {
                             image.resizable().scaledToFill()
                         } else {

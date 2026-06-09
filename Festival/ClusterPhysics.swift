@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 // MARK: - Cuerpo físico (un círculo de artista)
 
@@ -7,6 +8,10 @@ struct PhysicsBody: Identifiable {
     let radius: CGFloat
     var position: CGPoint
     var velocity: CGVector = .zero
+    /// Posición radial deseada (0 = centro … 1 = borde) según el lugar en el
+    /// cartel: los cabeza de cartel quedan al centro y los emergentes orbitan
+    /// hacia afuera (orden centrípeto).
+    var orderT: CGFloat = 0
     var id: String { artist.id }
 }
 
@@ -25,10 +30,10 @@ final class ClusterPhysics: ObservableObject {
     private var configuredIDs: [String] = []
 
     // Ajuste (puntos · segundos).
-    private let gravity: CGFloat = 1500
+    private let centripetal: CGFloat = 9.0     // rigidez del resorte radial al anillo objetivo
     private let wallRestitution: CGFloat = 0.32
     private let bodyRestitution: CGFloat = 0.18
-    private let linearDamping: CGFloat = 0.986
+    private let linearDamping: CGFloat = 0.90
 
     var isDragging: Bool { draggingID != nil }
 
@@ -52,12 +57,19 @@ final class ClusterPhysics: ObservableObject {
         let radii = artists.map { a in
             minRadius + (maxRadius - minRadius) * CGFloat(sqrt(a.billingWeight))
         }
-        // Reparto inicial en la mitad superior: caen y se apilan por gravedad.
+        let center = CGPoint(x: size.width / 2, y: size.height / 2)
+        let count = artists.count
+        // Reparto inicial en espiral alrededor del centro: flotan y se ordenan
+        // de forma centrípeta (cabezas de cartel al centro, emergentes afuera).
         bodies = artists.enumerated().map { i, a in
             let r = radii[i]
-            let x = CGFloat.random(in: r...max(r, size.width - r))
-            let y = CGFloat.random(in: r...max(r, size.height * 0.45))
-            return PhysicsBody(artist: a, radius: r, position: CGPoint(x: x, y: y))
+            let t = count <= 1 ? 0 : CGFloat(i) / CGFloat(count - 1)
+            let angle = CGFloat(i) * 2.399963        // ángulo áureo → reparto uniforme
+            let seed = t * min(size.width, size.height) * 0.35
+            let p = CGPoint(x: center.x + cos(angle) * seed,
+                            y: center.y + sin(angle) * seed)
+            return PhysicsBody(artist: a, radius: r,
+                               position: clampInside(p, radius: r), orderT: t)
         }
     }
 
@@ -71,9 +83,10 @@ final class ClusterPhysics: ObservableObject {
             bodies[i].position.y *= sy
         }
         bounds = size
-        // Un empujón para que reacomoden al nuevo marco.
+        // Pequeña perturbación para que reacomoden al nuevo marco.
         for i in bodies.indices where bodies[i].id != draggingID {
-            bodies[i].velocity.dy += 40
+            bodies[i].velocity.dx += .random(in: -20...20)
+            bodies[i].velocity.dy += .random(in: -20...20)
         }
     }
 
@@ -84,15 +97,30 @@ final class ClusterPhysics: ObservableObject {
         let h = min(max(dt, 0), 1.0 / 30.0)   // clamp para saltos de frame
         guard h > 0 else { return }
 
+        let center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
+        let maxReach = max(20, min(bounds.width, bounds.height) / 2)
+
         for i in bodies.indices where bodies[i].id != draggingID {
-            bodies[i].velocity.dy += gravity * h
+            // Resorte radial hacia el anillo objetivo (orden centrípeto): la
+            // distancia al centro tiende a `target`, mientras el componente
+            // tangencial queda libre para que floten y se repartan.
+            let dx = bodies[i].position.x - center.x
+            let dy = bodies[i].position.y - center.y
+            var d = sqrt(dx * dx + dy * dy)
+            if d < 0.01 { d = 0.01 }
+            let ux = dx / d, uy = dy / d
+            let target = sqrt(bodies[i].orderT) * max(0, maxReach - bodies[i].radius - 6)
+            let err = d - target                       // >0 demasiado afuera → atraer
+            bodies[i].velocity.dx += -err * ux * centripetal * h
+            bodies[i].velocity.dy += -err * uy * centripetal * h
+
             bodies[i].velocity.dx *= linearDamping
             bodies[i].velocity.dy *= linearDamping
             bodies[i].position.x += bodies[i].velocity.dx * h
             bodies[i].position.y += bodies[i].velocity.dy * h
         }
 
-        // Varias iteraciones de relajación estabilizan el apilamiento.
+        // Varias iteraciones de relajación estabilizan el reparto.
         for _ in 0..<4 { resolveCollisions() }
         resolveWalls()
     }

@@ -46,7 +46,7 @@ struct PhysicsClusterView: View {
                 ForEach(physics.bodies) { body in
                     DraggableBubble(
                         physics: physics,
-                        body: body,
+                        physicsBody: body,
                         accent: accent,
                         interactive: interactive,
                         isZoomSource: zoomedArtistID == body.id,
@@ -77,6 +77,10 @@ struct PhysicsClusterView: View {
                 boundsSize = size
                 if isActive { physics.configure(artists: artists, size: size) }
             }
+            // Cambiar el día (u otro filtro) reconstruye el cúmulo.
+            .onChange(of: artists.map(\.id)) { _, _ in
+                if isActive { physics.configure(artists: artists, size: boundsSize) }
+            }
             // Al reactivarse (p. ej. al colapsar), readapta los cuerpos a su marco.
             .onChange(of: isActive) { _, active in
                 if active {
@@ -92,7 +96,7 @@ struct PhysicsClusterView: View {
 
 private struct DraggableBubble: View {
     @ObservedObject var physics: ClusterPhysics
-    let body: PhysicsBody
+    let physicsBody: PhysicsBody
     let accent: Color
     let interactive: Bool
     let isZoomSource: Bool
@@ -105,20 +109,20 @@ private struct DraggableBubble: View {
 
     var body: some View {
         bubble
-            .frame(width: body.radius * 2, height: body.radius * 2)
+            .frame(width: physicsBody.radius * 2, height: physicsBody.radius * 2)
             .opacity(isZoomSource ? 0 : (dimmed ? 0.22 : 1))
             .scaleEffect(dimmed ? 0.92 : 1)
-            .position(body.position)
+            .position(physicsBody.position)
             .animation(.easeInOut(duration: 0.35), value: dimmed)
             .gesture(drag)
     }
 
     @ViewBuilder private var bubble: some View {
         if let ns = matchNamespace {
-            ArtistBubble(artist: body.artist, radius: body.radius, accent: accent)
-                .matchedGeometryEffect(id: body.id, in: ns, isSource: !isZoomSource)
+            ArtistBubble(artist: physicsBody.artist, radius: physicsBody.radius, accent: accent)
+                .matchedGeometryEffect(id: physicsBody.id, in: ns, isSource: !isZoomSource)
         } else {
-            ArtistBubble(artist: body.artist, radius: body.radius, accent: accent)
+            ArtistBubble(artist: physicsBody.artist, radius: physicsBody.radius, accent: accent)
         }
     }
 
@@ -129,16 +133,16 @@ private struct DraggableBubble: View {
             .onChanged { v in
                 let moved = abs(v.translation.width) + abs(v.translation.height)
                 if moved > 8 {
-                    if !didDrag { didDrag = true; physics.beginDrag(body.id) }
-                    physics.drag(body.id, to: v.location)
+                    if !didDrag { didDrag = true; physics.beginDrag(physicsBody.id) }
+                    physics.drag(physicsBody.id, to: v.location)
                 }
             }
             .onEnded { v in
                 if didDrag {
-                    physics.endDrag(body.id, velocity: v.velocity)
+                    physics.endDrag(physicsBody.id, velocity: v.velocity)
                     didDrag = false
                 } else if interactive {
-                    onSelect(body.artist)        // pantalla completa → abre artista
+                    onSelect(physicsBody.artist) // pantalla completa → abre artista
                 } else {
                     onTapBackground()            // silueta → expande
                 }
@@ -159,9 +163,9 @@ struct ArtistBubble: View {
         ZStack {
             Circle().fill((artist.accentColor ?? accent).gradient)
 
-            if let url = artist.imageURL {
+            if artist.imageURL != nil {
                 // La foto del artista es el contenido: llena el círculo.
-                AsyncImage(url: url) { phase in
+                ArtistImage(artist: artist, width: 300, height: 300) { phase in
                     if let image = phase.image {
                         image.resizable().scaledToFill()
                     } else {
