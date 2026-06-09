@@ -26,6 +26,58 @@ struct Festival: Codable, Identifiable, Hashable, Sendable {
     var dayCount: Int { dates.count }
     var accentColor: Color { Color(hex: accentColorHex) }
 
+    // MARK: Estado temporal
+
+    var startDate: Date { dates.first ?? .distantPast }
+    var endDate: Date   { dates.last  ?? .distantPast }
+
+    /// True cuando la última jornada ya terminó (midnight Santiago + 24 h).
+    var isPast: Bool     { Date() >= endDate.addingTimeInterval(86_400) }
+    /// True cuando el festival ya arrancó pero aún no terminó.
+    var isOngoing: Bool  { !isPast && startDate <= Date() }
+    /// True cuando todavía no empieza.
+    var isUpcoming: Bool { startDate > Date() }
+
+    /// Días enteros hasta el comienzo (negativo si ya pasó).
+    var daysUntilStart: Int {
+        let cal = Festival.santiagoCal
+        return cal.dateComponents([.day],
+            from: cal.startOfDay(for: Date()),
+            to:   cal.startOfDay(for: startDate)).day ?? 0
+    }
+
+    /// Etiqueta compacta del rango de fechas, p. ej. "7–8 nov '25" / "24–25 oct".
+    var dateRangeLabel: String {
+        guard let first = dates.first else { return "" }
+        let last = dates.last ?? first
+        let cal  = Festival.santiagoCal
+        var df   = DateFormatter()
+        df.locale   = Locale(identifier: "es_CL")
+        df.timeZone = TimeZone(identifier: "America/Santiago")
+
+        let currentYear = cal.component(.year, from: Date())
+        let festYear    = cal.component(.year, from: first)
+        let yearSuffix  = festYear != currentYear ? " '\(festYear % 100)" : ""
+
+        df.dateFormat = "d";  let d1 = df.string(from: first); let d2 = df.string(from: last)
+        df.dateFormat = "MMM"; let m1 = df.string(from: first); let m2 = df.string(from: last)
+
+        if dates.count == 1        { return "\(d1) \(m1)\(yearSuffix)" }
+        if cal.component(.month, from: first) == cal.component(.month, from: last) {
+            return "\(d1)–\(d2) \(m1)\(yearSuffix)"
+        }
+        return "\(d1) \(m1) – \(d2) \(m2)\(yearSuffix)"
+    }
+
+    private static let santiagoCal: Calendar = {
+        var c = Calendar(identifier: .gregorian)
+        c.timeZone = TimeZone(identifier: "America/Santiago") ?? .current
+        c.locale   = Locale(identifier: "es_CL")
+        return c
+    }()
+
+    // MARK: Artistas
+
     /// Artistas de un día concreto (1-indexed). Los `day == nil`
     /// (aún sin confirmar) se incluyen siempre.
     func artists(onDay day: Int? = nil) -> [LineupArtist] {

@@ -3,6 +3,630 @@
   "updatedAt": "2026-06-09",
   "festivals": [
     {
+      "id": "lollapalooza-chile-2025",
+      "name": "Lollapalooza Chile",
+      "edition": "2025",
+      "venue": "Parque Bicentenario Cerrillos",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2025-03-21",
+        "2025-03-22",
+        "2025-03-23"
+      ],
+      "accentColorHex": "#E4002B",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "olivia-rodrigo",
+          "name": "Olivia Rodrigo",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "pop",
+            "pop punk"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "rufus-du-sol",
+          "name": "Rüfüs Du Sol",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "electronic",
+            "indie dance"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "justin-timberlake",
+          "name": "Justin Timberlake",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "pop",
+            "r&b"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "alanis-morissette",
+          "name": "Alanis Morissette",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "alt rock",
+            "pop rock"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "tool-band",
+          "name": "Tool",
+          "tier": "headliner",
+          "day": 3,
+          "genres": [
+            "progressive metal",
+            "art rock"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "shawn-mendes",
+          "name": "Shawn Mendes",
+          "tier": "headliner",
+          "day": 3,
+          "genres": [
+            "pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "benson-boone",
+          "name": "Benson Boone",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop",
+            "indie pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "girl-in-red",
+          "name": "Girl in Red",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "indie pop",
+            "bedroom pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "rawayana",
+          "name": "Rawayana",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "latin indie",
+            "reggae"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "james-hype",
+          "name": "James Hype",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "electronic",
+            "house"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "foster-the-people",
+          "name": "Foster the People",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "indie pop",
+            "alternative"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "charlotte-de-witte",
+          "name": "Charlotte de Witte",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "techno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "mon-laferte",
+          "name": "Mon Laferte",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "latin pop",
+            "rock"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "babasonicos",
+          "name": "Babasónicos",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "rock argentino"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "nathy-peluso",
+          "name": "Nathy Peluso",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "latin pop",
+            "urban"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "parcels",
+          "name": "Parcels",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "disco",
+            "funk",
+            "indie"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "barry-cant-swim",
+          "name": "Barry Can't Swim",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "electronic",
+            "dance"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "tate-mcrae",
+          "name": "Tate McRae",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "zedd",
+          "name": "Zedd",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "edm",
+            "progressive house"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "teddy-swims",
+          "name": "Teddy Swims",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "r&b",
+            "soul"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "los-tres",
+          "name": "Los Tres",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "rock chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "lucybell",
+          "name": "Lucybell",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "rock chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "joe-vasconcellos",
+          "name": "Joe Vasconcellos",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "rock chileno",
+            "pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "claudio-narea",
+          "name": "Claudio Narea",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "rock chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "lasso",
+          "name": "Lasso",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "pop",
+            "pop alternativo"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "fauna-primavera-2025",
+      "name": "Fauna Primavera",
+      "edition": "2025",
+      "venue": "Parque Ciudad Empresarial",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2025-11-07",
+        "2025-11-08"
+      ],
+      "accentColorHex": "#1F7A4D",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "weezer",
+          "name": "Weezer",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "rock",
+            "power pop",
+            "alternative"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "massive-attack",
+          "name": "Massive Attack",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "trip hop",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "aurora",
+          "name": "AURORA",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "art pop",
+            "indie folk"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "james",
+          "name": "James",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "indie rock",
+            "britpop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "mogwai",
+          "name": "Mogwai",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "post-rock"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "stereolab",
+          "name": "Stereolab",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "indie pop",
+            "krautrock",
+            "lounge"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "bloc-party",
+          "name": "Bloc Party",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "indie rock",
+            "post-punk revival"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "tash-sultana",
+          "name": "Tash Sultana",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "psychedelic pop",
+            "indie"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "ry-x",
+          "name": "RY X",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "indie folk",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "the-whitest-boy-alive",
+          "name": "The Whitest Boy Alive",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "indie pop",
+            "electronic"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "otoboke-beaver",
+          "name": "Otoboke Beaver",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "punk",
+            "noise rock"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "el-mato-a-un-policia",
+          "name": "El Mató a un Policía Motorizado",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "indie rock argentino"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "yo-la-tengo",
+          "name": "Yo La Tengo",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "indie rock",
+            "noise pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "javiera-mena",
+          "name": "Javiera Mena",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "electropop chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "fother-muckers",
+          "name": "Fother Muckers",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "indie chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "niebla-niebla",
+          "name": "Niebla Niebla",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "indie chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "candelabro",
+          "name": "Candelabro",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "indie chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "fcukers",
+          "name": "Fcukers",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "indie chileno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
       "id": "lollapalooza-chile-2026",
       "name": "Lollapalooza Chile",
       "edition": "2026",

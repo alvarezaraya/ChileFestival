@@ -11,7 +11,7 @@ struct FestivalsScreen: View {
 
     @StateObject private var player = FestivalPlayer()
     @StateObject private var physicsStore = PhysicsStore()
-    @State private var selectedIndex = 0
+    @State private var selectedIndex: Int
     @State private var expandedIndex: Int? = nil
     @State private var zoomArtist: LineupArtist? = nil
     @State private var showNowPlaying = false
@@ -19,6 +19,15 @@ struct FestivalsScreen: View {
     /// se arma la fila de reproducción al tocar play.
     @State private var selectedDays: [String: Int] = [:]
     @Namespace private var ns
+
+    init(feed: FestivalFeed) {
+        self.feed = feed
+        // Arrancar en el festival más próximo a realizarse (o el último si todos pasaron).
+        let today = Date()
+        let idx = feed.festivals.firstIndex { $0.endDate.addingTimeInterval(86_400) > today }
+            ?? max(0, feed.festivals.count - 1)
+        _selectedIndex = State(initialValue: idx)
+    }
 
     private var safeIndex: Int { min(max(selectedIndex, 0), feed.festivals.count - 1) }
     private var current: Festival { feed.festivals[safeIndex] }
@@ -247,11 +256,41 @@ struct FestivalPosterPage: View {
     }
 
     private var header: some View {
-        VStack(spacing: 2) {
-            Text(festival.name).font(.title2.bold())
+        VStack(spacing: 3) {
+            Text(festival.name)
+                .font(.title2.bold())
+                .opacity(festival.isPast ? 0.55 : 1)
+            HStack(spacing: 6) {
+                Text(festival.dateRangeLabel)
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.white.opacity(festival.isPast ? 0.40 : 0.85))
+                statusBadge
+            }
             Text("\(festival.venue) · \(festival.city)")
-                .font(.caption)
-                .foregroundStyle(.white.opacity(0.7))
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(festival.isPast ? 0.35 : 0.55))
+        }
+    }
+
+    @ViewBuilder private var statusBadge: some View {
+        if festival.isPast {
+            Text("Pasado")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.50))
+                .padding(.horizontal, 7).padding(.vertical, 3)
+                .background(.white.opacity(0.10), in: Capsule())
+        } else if festival.isOngoing {
+            Text("En curso")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 7).padding(.vertical, 3)
+                .background(.green.opacity(0.75), in: Capsule())
+        } else if festival.daysUntilStart <= 90 {
+            Text("En \(festival.daysUntilStart) día\(festival.daysUntilStart == 1 ? "" : "s")")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(festival.accentColor)
+                .padding(.horizontal, 7).padding(.vertical, 3)
+                .background(festival.accentColor.opacity(0.18), in: Capsule())
         }
     }
 
