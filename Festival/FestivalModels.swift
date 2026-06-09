@@ -115,14 +115,13 @@ enum FestivalLoader {
         return try makeDecoder().decode(FestivalFeed.self, from: data)
     }
 
-    /// Remoto desde GitHub. Si falla, cae al bundle.
+    /// Remoto desde GitHub. Lanza error si falla (sin fallback interno).
     static func loadRemote() async throws -> FestivalFeed {
-        do {
-            let (data, _) = try await URLSession.shared.data(from: feedURL)
-            return try makeDecoder().decode(FestivalFeed.self, from: data)
-        } catch {
-            return try loadBundled()
-        }
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 8
+        config.timeoutIntervalForResource = 8
+        let (data, _) = try await URLSession(configuration: config).data(from: feedURL)
+        return try makeDecoder().decode(FestivalFeed.self, from: data)
     }
 }
 
