@@ -181,7 +181,34 @@ struct FestivalPosterPage: View {
                 onTapBackground: onExpand
             )
             .padding(.horizontal, 28)
-            .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
+            .mask {
+                // Degrada hacia todos los bordes para indicar que hay más contenido.
+                // Dos gradientes cruzados multiplicados generan una zona opaca central
+                // y transparencia suave en los cuatro bordes.
+                ZStack {
+                    LinearGradient(
+                        stops: [
+                            .init(color: .clear, location: 0),
+                            .init(color: .white, location: 0.15),
+                            .init(color: .white, location: 0.85),
+                            .init(color: .clear, location: 1)
+                        ],
+                        startPoint: .leading, endPoint: .trailing
+                    )
+                    LinearGradient(
+                        stops: [
+                            .init(color: .clear, location: 0),
+                            .init(color: .white, location: 0.10),
+                            .init(color: .white, location: 0.90),
+                            .init(color: .clear, location: 1)
+                        ],
+                        startPoint: .top, endPoint: .bottom
+                    )
+                    .blendMode(.multiply)
+                }
+                .compositingGroup()
+                .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
+            }
 
             // Pista de que es tocable / expandible.
             VStack {
