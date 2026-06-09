@@ -52,6 +52,10 @@ struct FestivalsScreen: View {
                         physics: physicsStore.model(for: festival.id),
                         namespace: ns,
                         isExpanded: expandedIndex == i,
+                        // Solo la página visible mantiene la física en marcha; los
+                        // vecinos del TabView se quedan vivos pero pausados para
+                        // no saturar el main thread con dos simulaciones.
+                        isVisible: i == safeIndex,
                         selectedDay: Binding(
                             get: { selectedDays[festival.id] },
                             set: { selectedDays[festival.id] = $0 }
@@ -150,6 +154,7 @@ struct FestivalPosterPage: View {
     @ObservedObject var physics: ClusterPhysics
     let namespace: Namespace.ID
     let isExpanded: Bool
+    var isVisible: Bool = true
     @Binding var selectedDay: Int?
     let onExpand: () -> Void
 
@@ -203,36 +208,16 @@ struct FestivalPosterPage: View {
                     physics: physics,
                     accent: festival.accentColor,
                     interactive: false,
-                    isActive: !isExpanded,
+                    isActive: !isExpanded && isVisible,
+                    // El cúmulo vive en un espacio mayor que la silueta: las burbujas
+                    // desbordan los bordes y la máscara interna las funde hacia la
+                    // periferia (fadesAtEdges). Es el diseño que el usuario prefiere.
+                    worldScale: 1.7,
+                    fadesAtEdges: true,
                     onTapBackground: onExpand
                 )
                 .padding(.horizontal, 28)
-                .mask {
-                    // Degrada hacia todos los bordes para indicar que hay más contenido.
-                    ZStack {
-                        LinearGradient(
-                            stops: [
-                                .init(color: .clear, location: 0),
-                                .init(color: .white, location: 0.15),
-                                .init(color: .white, location: 0.85),
-                                .init(color: .clear, location: 1)
-                            ],
-                            startPoint: .leading, endPoint: .trailing
-                        )
-                        LinearGradient(
-                            stops: [
-                                .init(color: .clear, location: 0),
-                                .init(color: .white, location: 0.10),
-                                .init(color: .white, location: 0.90),
-                                .init(color: .clear, location: 1)
-                            ],
-                            startPoint: .top, endPoint: .bottom
-                        )
-                        .blendMode(.multiply)
-                    }
-                    .compositingGroup()
-                    .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
-                }
+                .clipShape(RoundedRectangle(cornerRadius: 34, style: .continuous))
 
                 // Pista de que es tocable / expandible.
                 VStack {

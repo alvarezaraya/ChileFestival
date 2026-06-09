@@ -1,4 +1,6 @@
 import SwiftUI
+import UIKit
+import ImageIO
 
 // MARK: - Vista del cúmulo con física
 
@@ -22,6 +24,15 @@ struct PhysicsClusterView: View {
     /// pausar la inactiva evita que ambas reescalen los cuerpos en cada frame.
     var isActive: Bool = true
 
+    /// Factor del "mundo" físico respecto a la ventana visible. Con `> 1` los
+    /// círculos se reparten en un espacio mayor que el marco recortado por la
+    /// silueta; el contenido se centra y desborda, así solo se ve la parte central.
+    var worldScale: CGFloat = 1
+
+    /// Cuando es `true`, los círculos se difuminan (opacidad + desenfoque) de forma
+    /// gradual a medida que se acercan al límite de la ventana visible.
+    var fadesAtEdges: Bool = false
+
     /// Cuando se hace zoom a un artista: el círculo origen se oculta (lo sustituye
     /// el héroe con matchedGeometry) y el resto se atenúa.
     var zoomedArtistID: String? = nil
@@ -37,28 +48,27 @@ struct PhysicsClusterView: View {
 
     var body: some View {
         GeometryReader { geo in
+            // El "mundo" físico puede ser mayor que la ventana visible: el contenido
+            // se centra y desborda, de modo que la silueta (clip del padre) solo deja
+            // ver la parte central.
+            let world = CGSize(width: geo.size.width * worldScale,
+                               height: geo.size.height * worldScale)
             ZStack {
                 // Capa de fondo: en modo silueta capta el toque para expandir.
                 Color.clear
                     .contentShape(Rectangle())
                     .onTapGesture { if !interactive { onTapBackground() } }
 
-                ForEach(physics.bodies) { body in
-                    DraggableBubble(
-                        physics: physics,
-                        physicsBody: body,
-                        accent: accent,
-                        interactive: interactive,
-                        isZoomSource: zoomedArtistID == body.id,
-                        dimmed: zoomedArtistID != nil && zoomedArtistID != body.id,
-                        matchNamespace: matchNamespace,
-                        onTapBackground: onTapBackground,
-                        onSelect: onSelect
-                    )
-                }
+                bubbles
+                    .modifier(EdgeFadeMask(visible: geo.size, enabled: fadesAtEdges))
+                    .modifier(FlattenCluster(enabled: !interactive))
 
-                // Motor: avanza la simulación en cada frame. Pausa si está inactiva.
-                TimelineView(.animation(paused: !isActive)) { tl in
+                // Motor: avanza la simulación a ~30 Hz. A 60 Hz, dos festivales del
+                // TabView corriendo en paralelo saturan el main thread y bloquean
+                // gestos. 30 Hz es indistinguible visualmente para un cúmulo con
+                // damping y deja holgura al run loop.
+                TimelineView(.animation(minimumInterval: 1.0 / 30.0,
+                                        paused: !isActive)) { tl in
                     Color.clear
                         .onChange(of: tl.date) { _, date in
                             let dt = lastTick.map { CGFloat(date.timeIntervalSince($0)) } ?? 0
@@ -68,14 +78,19 @@ struct PhysicsClusterView: View {
                 }
                 .allowsHitTesting(false)
             }
+            // Marco del mundo, centrado sobre la ventana visible (desborda y se recorta).
+            // `coordinateSpace` se ancla al marco del mundo (antes de `position`) para
+            // que el arrastre lea coordenadas del mundo, no de la ventana visible.
+            .frame(width: world.width, height: world.height)
             .coordinateSpace(.named("cluster"))
+            .position(x: geo.size.width / 2, y: geo.size.height / 2)
             .onAppear {
-                boundsSize = geo.size
-                if isActive { physics.configure(artists: artists, size: geo.size) }
+                boundsSize = world
+                if isActive { physics.configure(artists: artists, size: world) }
             }
-            .onChange(of: geo.size) { _, size in
-                boundsSize = size
-                if isActive { physics.configure(artists: artists, size: size) }
+            .onChange(of: geo.size) { _, _ in
+                boundsSize = world
+                if isActive { physics.configure(artists: artists, size: world) }
             }
             // Cambiar el día (u otro filtro) reconstruye el cúmulo.
             .onChange(of: artists.map(\.id)) { _, _ in
@@ -88,6 +103,63 @@ struct PhysicsClusterView: View {
                     physics.configure(artists: artists, size: boundsSize)
                 }
             }
+        }
+    }
+
+    /// Renderiza las burbujas como un solo subárbol para poder aplicarles una
+    /// máscara y aplanado únicos (más barato que modificadores por burbuja).
+    @ViewBuilder private var bubbles: some View {
+        ZStack {
+            ForEach(physics.bodies) { body in
+                DraggableBubble(
+                    physics: physics,
+                    physicsBody: body,
+                    accent: accent,
+                    interactive: interactive,
+                    isZoomSource: zoomedArtistID == body.id,
+                    dimmed: zoomedArtistID != nil && zoomedArtistID != body.id,
+                    matchNamespace: matchNamespace,
+                    onTapBackground: onTapBackground,
+                    onSelect: onSelect
+                )
+            }
+        }
+    }
+}
+
+/// Una sola máscara para todo el cúmulo: un rectángulo redondeado desenfocado
+/// centrado en la ventana visible. Sustituye al `.blur` dinámico por burbuja,
+/// que recalculaba un pase offscreen por burbuja en cada frame (causaba stutter).
+private struct EdgeFadeMask: ViewModifier {
+    let visible: CGSize
+    let enabled: Bool
+
+    func body(content: Content) -> some View {
+        if enabled {
+            content.mask(
+                RoundedRectangle(cornerRadius: 60, style: .continuous)
+                    .frame(width: visible.width * 0.92,
+                           height: visible.height * 0.92)
+                    .blur(radius: 22)
+            )
+        } else {
+            content
+        }
+    }
+}
+
+/// Aplana el cúmulo en una sola textura Metal (`drawingGroup`) para que las
+/// sombras y demás composición offscreen de cada burbuja se resuelvan una sola
+/// vez por frame, en lugar de N veces. Solo se aplica a la silueta (no al
+/// overlay con `matchedGeometryEffect`, incompatible con `drawingGroup`).
+private struct FlattenCluster: ViewModifier {
+    let enabled: Bool
+
+    func body(content: Content) -> some View {
+        if enabled {
+            content.drawingGroup(opaque: false)
+        } else {
+            content
         }
     }
 }
@@ -120,17 +192,22 @@ private struct DraggableBubble: View {
     @ViewBuilder private var bubble: some View {
         if let ns = matchNamespace {
             ArtistBubble(artist: physicsBody.artist, radius: physicsBody.radius, accent: accent)
+                .equatable()
                 .matchedGeometryEffect(id: physicsBody.id, in: ns, isSource: !isZoomSource)
         } else {
             ArtistBubble(artist: physicsBody.artist, radius: physicsBody.radius, accent: accent)
+                .equatable()
         }
     }
 
     /// Un único gesto distingue arrastre (física) de toque (expandir/seleccionar)
-    /// según la distancia recorrida, evitando conflictos de gestos.
+    /// según la distancia recorrida, evitando conflictos de gestos. En la silueta
+    /// colapsada (`!interactive`) los círculos son inertes: no se arrastran ni se
+    /// seleccionan, cualquier toque solo expande la vista.
     private var drag: some Gesture {
         DragGesture(minimumDistance: 0, coordinateSpace: .named("cluster"))
             .onChanged { v in
+                guard interactive else { return }   // silueta: sin arrastre
                 let moved = abs(v.translation.width) + abs(v.translation.height)
                 if moved > 8 {
                     if !didDrag { didDrag = true; physics.beginDrag(physicsBody.id) }
@@ -152,25 +229,28 @@ private struct DraggableBubble: View {
 
 // MARK: - Burbuja de artista (contenido visual)
 
-struct ArtistBubble: View {
+struct ArtistBubble: View, Equatable {
     let artist: LineupArtist
     let radius: CGFloat
     let accent: Color
 
     private var diameter: CGFloat { radius * 2 }
 
+    // Igualdad por contenido visual: permite a SwiftUI saltarse el re-render
+    // (incluido el Canvas del nombre) mientras la física solo cambia la posición.
+    static func == (lhs: ArtistBubble, rhs: ArtistBubble) -> Bool {
+        lhs.artist.id == rhs.artist.id && lhs.radius == rhs.radius && lhs.accent == rhs.accent
+    }
+
     var body: some View {
         ZStack {
             Circle().fill((artist.accentColor ?? accent).gradient)
 
-            if artist.imageURL != nil {
-                // La foto del artista es el contenido: llena el círculo.
-                ArtistImage(artist: artist, width: 300, height: 300) { phase in
-                    if let image = phase.image {
-                        image.resizable().scaledToFill()
-                    } else {
-                        initialsLabel   // placeholder mientras carga / si falla
-                    }
+            if let url = artist.imageURL {
+                // La foto del artista es el contenido: llena el círculo. Se decodifica
+                // a tamaño y se cachea, así no satura el hilo principal con 56 PNG.
+                CachedArtworkImage(url: url, pointSize: diameter) {
+                    initialsLabel   // placeholder mientras carga / si falla
                 }
                 .clipShape(Circle())
 
@@ -188,7 +268,6 @@ struct ArtistBubble: View {
         }
         .frame(width: diameter, height: diameter)
         .overlay(Circle().stroke(.white.opacity(0.25), lineWidth: 1))
-        .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
     }
 
     private var showsFullName: Bool { radius >= 40 }
@@ -215,6 +294,78 @@ struct ArtistBubble: View {
             .split(separator: " ").prefix(2)
             .compactMap { $0.first }
             .map(String.init).joined().uppercased()
+    }
+}
+
+// MARK: - Imagen cacheada y reducida (para el cúmulo)
+
+/// Carga una foto remota una sola vez, la decodifica **fuera del hilo principal**
+/// y al tamaño en píxeles del círculo, y la cachea en memoria. Sustituye a
+/// `AsyncImage` en el cúmulo: con decenas de círculos, decodificar PNG de 600px
+/// en el hilo principal saturaba la UI (la app "se pegaba" y la foto no aparecía).
+struct CachedArtworkImage<Placeholder: View>: View {
+    let url: URL
+    /// Tamaño en puntos del círculo; se multiplica por la escala de pantalla
+    /// (`displayScale`) para decodificar a la resolución física exacta.
+    let pointSize: CGFloat
+    @ViewBuilder var placeholder: () -> Placeholder
+
+    @Environment(\.displayScale) private var displayScale
+    @State private var image: UIImage?
+
+    var body: some View {
+        Group {
+            if let image {
+                Image(uiImage: image).resizable().scaledToFill()
+            } else {
+                placeholder()
+            }
+        }
+        .task(id: url) {
+            if image == nil {
+                image = await ArtworkImageCache.shared.image(
+                    for: url, maxPixel: pointSize * displayScale)
+            }
+        }
+    }
+}
+
+/// Caché compartida de imágenes decodificadas + deduplicación de descargas.
+actor ArtworkImageCache {
+    static let shared = ArtworkImageCache()
+
+    private let cache = NSCache<NSURL, UIImage>()
+    private var inFlight: [URL: Task<UIImage?, Never>] = [:]
+
+    func image(for url: URL, maxPixel: CGFloat) async -> UIImage? {
+        if let hit = cache.object(forKey: url as NSURL) { return hit }
+        if let running = inFlight[url] { return await running.value }
+
+        let px = max(64, maxPixel)
+        let task = Task<UIImage?, Never>.detached(priority: .utility) {
+            guard let (data, _) = try? await URLSession.shared.data(from: url) else { return nil }
+            return ArtworkImageCache.downsample(data, maxPixel: px)
+        }
+        inFlight[url] = task
+        let img = await task.value
+        inFlight[url] = nil
+        if let img { cache.setObject(img, forKey: url as NSURL) }
+        return img
+    }
+
+    /// Decodifica `data` directamente a un thumbnail de `maxPixel` px (ImageIO),
+    /// evitando cargar el bitmap completo en memoria.
+    private static func downsample(_ data: Data, maxPixel: CGFloat) -> UIImage? {
+        let srcOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let src = CGImageSourceCreateWithData(data as CFData, srcOptions) else { return nil }
+        let options = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxPixel
+        ] as CFDictionary
+        guard let cg = CGImageSourceCreateThumbnailAtIndex(src, 0, options) else { return nil }
+        return UIImage(cgImage: cg)
     }
 }
 
