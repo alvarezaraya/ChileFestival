@@ -55,14 +55,19 @@ final class FeedViewModel: ObservableObject {
 
     func load() async {
         state = .loading
+        // 1. Bundle primero → arranque instantáneo, sin esperar red.
+        let hasBundleData: Bool
         do {
-            // loadRemote() ya cae al bundle si no hay red.
+            state = .loaded(try FestivalLoader.loadBundled())
+            hasBundleData = true
+        } catch {
+            hasBundleData = false
+        }
+        // 2. Refresco remoto silencioso (8 s de timeout).
+        do {
             state = .loaded(try await FestivalLoader.loadRemote())
         } catch {
-            // Último recurso: bundle directo.
-            do {
-                state = .loaded(try FestivalLoader.loadBundled())
-            } catch {
+            if !hasBundleData {
                 state = .failed(error.localizedDescription)
             }
         }
