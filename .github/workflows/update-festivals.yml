@@ -23,7 +23,7 @@ jobs:
       # los scrapers reales y agrégalo antes del resolver cuando estén listos.
 
       - name: Resolver IDs y fotos de Apple Music (sin token)
-        run: python scripts/resolve_artist_images.py festivals.json --refresh
+        run: python scripts/resolve_artist_images.py festivals.json
 
       - name: Sincronizar copia del bundle
         run: cp festivals.json Festival/festivals.json
@@ -32,7 +32,7 @@ jobs:
         run: |
           git config user.name "festival-bot"
           git config user.email "bot@users.noreply.github.com"
-          if git diff --quiet festivals.json Festival/festivals.json; then
+          if git diff --quiet HEAD -- festivals.json Festival/festivals.json; then
             echo "Sin cambios."
           else
             git add festivals.json Festival/festivals.json

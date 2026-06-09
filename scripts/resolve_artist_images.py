@@ -110,7 +110,11 @@ def resolve(artist, refresh):
     if have_id and have_img and not refresh:
         return False
 
-    candidates = search_artists(name)
+    try:
+        candidates = search_artists(name)
+    except Exception as e:                            # noqa: BLE001
+        print(f"  ! error buscando {name}: {e}")
+        return False
     match = best_match(name, candidates)
     if not match:
         print(f"  ? sin match: {name}")
@@ -146,20 +150,26 @@ def main():
     with open(args.json_path, encoding="utf-8") as f:
         feed = json.load(f)
 
-    changed = 0
-    for festival in feed["festivals"]:
-        print(f"\n{festival['name']}:")
-        for artist in festival["lineup"]:
-            if resolve(artist, args.refresh):
-                changed += 1
-            time.sleep(0.25)                          # cortesía con la API
+    def save(changed):
+        if changed:
+            os.replace(args.json_path, args.json_path + ".bak")
+            with open(args.json_path, "w", encoding="utf-8") as f:
+                json.dump(feed, f, ensure_ascii=False, indent=2)
+                f.write("\n")
+        print(f"\nActualizados {changed} artistas." if changed else "\nSin cambios.")
 
-    if changed:
-        os.replace(args.json_path, args.json_path + ".bak")
-        with open(args.json_path, "w", encoding="utf-8") as f:
-            json.dump(feed, f, ensure_ascii=False, indent=2)
-            f.write("\n")
-    print(f"\nActualizados {changed} artistas." if changed else "\nSin cambios.")
+    changed = 0
+    try:
+        for festival in feed["festivals"]:
+            print(f"\n{festival['name']}:")
+            for artist in festival["lineup"]:
+                if resolve(artist, args.refresh):
+                    changed += 1
+                time.sleep(0.25)                      # cortesía con la API
+    except KeyboardInterrupt:
+        print("\n[interrumpido]")
+    finally:
+        save(changed)
 
 
 if __name__ == "__main__":
