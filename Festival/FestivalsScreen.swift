@@ -398,12 +398,17 @@ struct FullscreenClusterOverlay: View {
 struct SharedPlayButton: View {
     let festival: Festival
     @ObservedObject var player: FestivalPlayer
+    var activeFestivalID: String?
     var play: (Festival) -> Void
     var onOpenPlayer: () -> Void = {}
 
+    private var isThisActive: Bool {
+        player.isActive && festival.id == activeFestivalID
+    }
+
     var body: some View {
         Group {
-            if player.isActive {
+            if isThisActive {
                 MiniPlayerView(player: player, accent: festival.accentColor,
                                onTap: onOpenPlayer)
             } else if festival.lineup.isEmpty {
