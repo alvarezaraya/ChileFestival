@@ -31,6 +31,13 @@ SEARCH = "https://itunes.apple.com/search"
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15"
 ART_SIZE = "600x600cc"   # recorte cuadrado, rellena (crop-center)
 
+# Artistas sin match fiable en Apple Music: NO auto-resolver (la búsqueda solo
+# encuentra homónimos). Clave = `id` slug del feed. Se dejan con ID/imagen nulos
+# a propósito; si algún día aparecen en el catálogo, poblar a mano.
+SKIP_IDS = {
+    "melania-wonder",  # único candidato era "Melania Pacheco" (score 0.62), otro artista
+}
+
 
 def normalize(s: str) -> str:
     s = unicodedata.normalize("NFKD", s)
@@ -105,6 +112,9 @@ def og_image(link: str):
 
 def resolve(artist, refresh):
     name = artist["name"]
+    if artist.get("id") in SKIP_IDS:
+        print(f"  ⊘ omitido (sin match fiable): {name}")
+        return False
     have_id = bool(artist.get("appleMusicArtistID"))
     have_img = bool(artist.get("imageURL"))
     if have_id and have_img and not refresh:

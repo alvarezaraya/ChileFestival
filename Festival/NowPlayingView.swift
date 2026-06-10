@@ -45,6 +45,8 @@ struct NowPlayingView: View {
             .padding(.top, 10)
             .contentShape(Rectangle())
             .onTapGesture { onClose() }
+            .accessibilityLabel("Cerrar reproductor")
+            .accessibilityAddTraits(.isButton)
     }
 
     private var artwork: some View {
@@ -104,16 +106,19 @@ struct NowPlayingView: View {
                     .font(.title)
                     .frame(maxWidth: .infinity)
             }
+            .accessibilityLabel("Anterior")
             Button { player.togglePlayPause() } label: {
                 Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
                     .font(.system(size: 52))
                     .frame(maxWidth: .infinity)
             }
+            .accessibilityLabel(player.isPlaying ? "Pausar" : "Reproducir")
             Button { Task { await player.next() } } label: {
                 Image(systemName: "forward.fill")
                     .font(.title)
                     .frame(maxWidth: .infinity)
             }
+            .accessibilityLabel("Siguiente")
         }
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)

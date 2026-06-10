@@ -24,6 +24,9 @@ struct MiniPlayerView: View {
             }
             .contentShape(Rectangle())
             .onTapGesture { onTap() }
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityHint("Abre el reproductor")
 
             controls
         }
@@ -51,13 +54,16 @@ struct MiniPlayerView: View {
             Button { Task { await player.previous() } } label: {
                 Image(systemName: "backward.fill")
             }
+            .accessibilityLabel("Anterior")
             Button { player.togglePlayPause() } label: {
                 Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
                     .font(.title3)
             }
+            .accessibilityLabel(player.isPlaying ? "Pausar" : "Reproducir")
             Button { Task { await player.next() } } label: {
                 Image(systemName: "forward.fill")
             }
+            .accessibilityLabel("Siguiente")
         }
         .foregroundStyle(.white)
         .padding(.trailing, 6)

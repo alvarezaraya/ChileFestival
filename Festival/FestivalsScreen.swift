@@ -93,6 +93,7 @@ struct FestivalsScreen: View {
                     physics: physicsStore.model(for: festival.id),
                     namespace: ns,
                     zoomedArtistID: zoomArtist?.id,
+                    selectedDay: selectedDays[festival.id],
                     onClose: { withAnimation(.spring(response: 0.5, dampingFraction: 0.82)) {
                         expandedIndex = nil
                     } },
@@ -158,15 +159,26 @@ struct FestivalPosterPage: View {
     @Binding var selectedDay: Int?
     let onExpand: () -> Void
 
+    /// Artistas que la portada simula y dibuja: solo cabezas de cartel y estelares.
+    /// Al simular únicamente estos, llenan la silueta sea cual sea el tamaño del
+    /// cartel (no quedan dispersos en festivales con pocos destacados). Los demás
+    /// se agregan a la misma simulación al expandir, conservando estas posiciones.
+    private var posterArtists: [LineupArtist] {
+        festival.headlineArtists(onDay: selectedDay)
+    }
+
+    /// Cartel completo del día (solo para saber si aún no hay lineup que mostrar).
     private var dayArtists: [LineupArtist] {
         festival.artists(onDay: selectedDay)
-            .sorted { $0.billingWeight > $1.billingWeight }
     }
 
     var body: some View {
         VStack(spacing: 12) {
             header
-            daySelector
+            // Solo si el cartel ya tiene artistas repartidos por jornada. Si el
+            // lineup está vacío o aún sin desglose por día, el selector no aporta
+            // (serían chips deshabilitados) y se omite.
+            if festival.hasDayBreakdown { daySelector }
             silhouette
             Spacer(minLength: 96)   // deja sitio al botón compartido flotante
         }
@@ -204,7 +216,7 @@ struct FestivalPosterPage: View {
                 // El cúmulo se inseta en horizontal para dejar pasillos laterales por
                 // donde se puede deslizar entre festivales (paginado del TabView).
                 PhysicsClusterView(
-                    artists: dayArtists,
+                    artists: posterArtists,
                     physics: physics,
                     accent: festival.accentColor,
                     interactive: false,
@@ -302,11 +314,18 @@ struct FullscreenClusterOverlay: View {
     @ObservedObject var physics: ClusterPhysics
     let namespace: Namespace.ID
     var zoomedArtistID: String?
+    /// Mismo día que la portada: así la simulación es exactamente la misma que ya
+    /// venía corriendo y, al expandir, los círculos conservan su posición (solo se
+    /// revelan los no-destacados). Si difiriera, la física se reconstruiría y los
+    /// círculos saltarían.
+    var selectedDay: Int?
     let onClose: () -> Void
     let onSelect: (LineupArtist) -> Void
 
+    /// Cartel completo del día seleccionado, mismo orden por peso que la portada.
     private var artists: [LineupArtist] {
-        festival.clusterOrdered
+        festival.artists(onDay: selectedDay)
+            .sorted { $0.billingWeight > $1.billingWeight }
     }
 
     var body: some View {
@@ -340,6 +359,7 @@ struct FullscreenClusterOverlay: View {
                                 .padding(12)
                                 .background(.black.opacity(0.3), in: Circle())
                         }
+                        .accessibilityLabel("Cerrar cartel")
                         Spacer()
                         Text(festival.name)
                             .font(.headline)
