@@ -56,18 +56,17 @@ final class FeedViewModel: ObservableObject {
     func load() async {
         state = .loading
         // 1. Bundle primero → arranque instantáneo, sin esperar red.
-        let hasBundleData: Bool
+        let bundle = try? FestivalLoader.loadBundled()
+        if let bundle { state = .loaded(bundle) }
+        // 2. Refresco remoto silencioso (8 s de timeout). Se rellenan con el
+        //    bundle los datos que el remoto traiga incompletos (fotos / IDs de
+        //    Apple Music), para que un feed remoto más viejo no borre en runtime
+        //    imágenes ya curadas localmente.
         do {
-            state = .loaded(try FestivalLoader.loadBundled())
-            hasBundleData = true
+            let remote = try await FestivalLoader.loadRemote()
+            state = .loaded(bundle.map(remote.backfilled(from:)) ?? remote)
         } catch {
-            hasBundleData = false
-        }
-        // 2. Refresco remoto silencioso (8 s de timeout).
-        do {
-            state = .loaded(try await FestivalLoader.loadRemote())
-        } catch {
-            if !hasBundleData {
+            if bundle == nil {
                 state = .failed(error.localizedDescription)
             }
         }

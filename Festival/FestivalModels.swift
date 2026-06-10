@@ -51,7 +51,7 @@ struct Festival: Codable, Identifiable, Hashable, Sendable {
         guard let first = dates.first else { return "" }
         let last = dates.last ?? first
         let cal  = Festival.santiagoCal
-        var df   = DateFormatter()
+        let df   = DateFormatter()
         df.locale   = Locale(identifier: "es_CL")
         df.timeZone = TimeZone(identifier: "America/Santiago")
 
@@ -89,6 +89,27 @@ struct Festival: Codable, Identifiable, Hashable, Sendable {
     var clusterOrdered: [LineupArtist] {
         lineup.sorted { $0.billingWeight > $1.billingWeight }
     }
+
+    /// True cuando al menos un artista tiene día asignado, es decir, hay un
+    /// desglose real por jornada. Cuando es `false` (lineup vacío, o con
+    /// artistas pero aún sin repartir por día) el selector de día no aporta
+    /// nada y se oculta.
+    var hasDayBreakdown: Bool { lineup.contains { $0.day != nil } }
+
+    /// Artistas que se muestran en la **portada** (silueta colapsada): solo las
+    /// cabezas de cartel y los estelares. Los intermedios y el resto siguen en la
+    /// misma simulación —invisibles en la portada— y aparecen en sus anillos al
+    /// expandir, conservando su posición. Orden por peso (cabezas de cartel
+    /// primero) para que la física las ubique del centro hacia afuera.
+    ///
+    /// Si un cartel no tuviera ningún tier alto, cae a todo el lineup para no
+    /// dejar la portada vacía.
+    func headlineArtists(onDay day: Int? = nil) -> [LineupArtist] {
+        let pool = artists(onDay: day)
+        let featured = pool.filter { $0.tier == .headliner || $0.tier == .main }
+        return (featured.isEmpty ? pool : featured)
+            .sorted { $0.billingWeight > $1.billingWeight }
+    }
 }
 
 // MARK: - LineupArtist
@@ -101,6 +122,10 @@ struct LineupArtist: Codable, Identifiable, Hashable, Sendable {
     let day: Int?                   // día 1-indexed; nil = sin confirmar
     let genres: [String]
     let appleMusicArtistID: String? // resuelto UNA vez y cacheado aquí; nil = pendiente
+    /// IDs extra de Apple Music cuando la entrada agrupa a más de un artista
+    /// (p. ej. "Álvaro Henríquez con Pettinellis"): sus top songs se combinan
+    /// con las del `appleMusicArtistID` principal. Opcional/ausente en el feed.
+    let additionalAppleMusicArtistIDs: [String]?
     let setlistfmMBID: String?      // MusicBrainz id (orden por set en vivo, a futuro)
     let imageURL: URL?
     let accentColorHex: String?     // override opcional por artista
@@ -112,6 +137,17 @@ struct LineupArtist: Codable, Identifiable, Hashable, Sendable {
 
     /// True cuando todavía hay que resolver el match en Apple Music.
     var needsAppleMusicResolution: Bool { appleMusicArtistID == nil }
+
+    /// Todos los IDs de catálogo a combinar (principal + adicionales), sin
+    /// nil ni duplicados, preservando el orden (principal primero).
+    var appleMusicArtistIDs: [String] {
+        var ids: [String] = []
+        if let primary = appleMusicArtistID { ids.append(primary) }
+        for extra in additionalAppleMusicArtistIDs ?? [] where !ids.contains(extra) {
+            ids.append(extra)
+        }
+        return ids
+    }
 }
 
 // MARK: - Tier
@@ -137,6 +173,51 @@ enum Tier: String, Codable, CaseIterable, Sendable {
         case .mid:       "Intermedio"
         case .emerging:  "Emergente"
         }
+    }
+}
+
+// MARK: - Backfill (rellena con el bundle lo que el remoto traiga incompleto)
+//
+// El feed remoto es la fuente de verdad, pero puede ir por detrás del bundle
+// curado (p. ej. fotos/IDs de Apple Music ya resueltos localmente y aún no
+// pusheados). Sin esto, el refresco remoto "borraría" esas fotos en runtime.
+// El backfill empareja por id de festival y de artista y solo rellena campos
+// nulos; nunca sobrescribe datos que el remoto sí trae.
+
+extension FestivalFeed {
+    func backfilled(from fallback: FestivalFeed) -> FestivalFeed {
+        let byID = Dictionary(fallback.festivals.map { ($0.id, $0) },
+                              uniquingKeysWith: { a, _ in a })
+        let merged = festivals.map { fest in
+            byID[fest.id].map(fest.backfilled(from:)) ?? fest
+        }
+        return FestivalFeed(version: version, updatedAt: updatedAt, festivals: merged)
+    }
+}
+
+extension Festival {
+    func backfilled(from fallback: Festival) -> Festival {
+        let byID = Dictionary(fallback.lineup.map { ($0.id, $0) },
+                              uniquingKeysWith: { a, _ in a })
+        let mergedLineup = lineup.map { artist in
+            byID[artist.id].map(artist.backfilled(from:)) ?? artist
+        }
+        return Festival(id: id, name: name, edition: edition, venue: venue, city: city,
+                        region: region, dates: dates, accentColorHex: accentColorHex,
+                        posterImageURL: posterImageURL, lineup: mergedLineup)
+    }
+}
+
+extension LineupArtist {
+    func backfilled(from fallback: LineupArtist) -> LineupArtist {
+        LineupArtist(
+            id: id, name: name, tier: tier, day: day, genres: genres,
+            appleMusicArtistID: appleMusicArtistID ?? fallback.appleMusicArtistID,
+            additionalAppleMusicArtistIDs: additionalAppleMusicArtistIDs
+                ?? fallback.additionalAppleMusicArtistIDs,
+            setlistfmMBID: setlistfmMBID ?? fallback.setlistfmMBID,
+            imageURL: imageURL ?? fallback.imageURL,
+            accentColorHex: accentColorHex ?? fallback.accentColorHex)
     }
 }
 
@@ -180,14 +261,36 @@ enum FestivalLoader {
 // MARK: - Color(hex:)
 
 extension Color {
+    /// Acepta `#RGB`, `#RRGGBB` y `#RRGGBBAA` (con o sin `#`). Si el string no
+    /// es un hex válido cae a un gris neutro en vez de pintar negro en silencio
+    /// —así un accentColorHex mal tecleado en el feed se nota y no desaparece
+    /// sobre el fondo oscuro de la app.
     nonisolated init(hex: String) {
         let s = hex.trimmingCharacters(in: CharacterSet(charactersIn: "# "))
         var v: UInt64 = 0
-        Scanner(string: s).scanHexInt64(&v)
-        let r = Double((v >> 16) & 0xFF) / 255
-        let g = Double((v >> 8) & 0xFF) / 255
-        let b = Double(v & 0xFF) / 255
-        self.init(.sRGB, red: r, green: g, blue: b, opacity: 1)
+        guard Scanner(string: s).scanHexInt64(&v) else { self = .gray; return }
+
+        let r, g, b, a: Double
+        switch s.count {
+        case 3:   // RGB (4 bits por canal → se expande a 8)
+            r = Double((v >> 8) & 0xF) / 15
+            g = Double((v >> 4) & 0xF) / 15
+            b = Double(v & 0xF) / 15
+            a = 1
+        case 6:   // RRGGBB
+            r = Double((v >> 16) & 0xFF) / 255
+            g = Double((v >> 8) & 0xFF) / 255
+            b = Double(v & 0xFF) / 255
+            a = 1
+        case 8:   // RRGGBBAA
+            r = Double((v >> 24) & 0xFF) / 255
+            g = Double((v >> 16) & 0xFF) / 255
+            b = Double((v >> 8) & 0xFF) / 255
+            a = Double(v & 0xFF) / 255
+        default:
+            self = .gray; return
+        }
+        self.init(.sRGB, red: r, green: g, blue: b, opacity: a)
     }
 }
 

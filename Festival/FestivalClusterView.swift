@@ -55,9 +55,18 @@ struct PhysicsClusterView: View {
                                height: geo.size.height * worldScale)
             ZStack {
                 // Capa de fondo: en modo silueta capta el toque para expandir.
+                // En la silueta el cúmulo va dentro de un `drawingGroup` que aplana
+                // las burbujas y oculta su accesibilidad; esta capa ofrece a
+                // VoiceOver un único botón para expandir el cartel.
                 Color.clear
                     .contentShape(Rectangle())
                     .onTapGesture { if !interactive { onTapBackground() } }
+                    .accessibilityElement()
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityLabel("Explorar cartel")
+                    // En el overlay interactivo cada burbuja ya es accesible; aquí
+                    // ocultamos la capa de fondo para no duplicar elementos.
+                    .accessibilityHidden(interactive)
 
                 bubbles
                     .modifier(EdgeFadeMask(visible: geo.size, enabled: fadesAtEdges))
@@ -187,6 +196,24 @@ private struct DraggableBubble: View {
             .position(physicsBody.position)
             .animation(.easeInOut(duration: 0.35), value: dimmed)
             .gesture(drag)
+            // En la portada (silueta) las burbujas son inertes al tacto: así
+            // cualquier toque/deslizamiento atraviesa hasta el TabView (deslizar
+            // entre festivales) o hasta la capa de fondo (expandir). Solo en la
+            // vista expandida capturan toques (seleccionar / arrastrar).
+            .allowsHitTesting(interactive)
+            // VoiceOver: cada burbuja es un elemento con el nombre del artista.
+            // En modo cartel a pantalla completa (`interactive`) la acción abre
+            // el artista; en la silueta colapsada expande la vista. En la silueta
+            // el `drawingGroup` aplana el subárbol, así que estos elementos solo
+            // se exponen de forma fiable en el overlay interactivo —que es donde
+            // importa explorar el lineup.
+            .accessibilityElement(children: .ignore)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityLabel(physicsBody.artist.name)
+            .accessibilityHint(interactive ? "Ver artista" : "Explorar cartel")
+            .accessibilityAction {
+                if interactive { onSelect(physicsBody.artist) } else { onTapBackground() }
+            }
     }
 
     @ViewBuilder private var bubble: some View {

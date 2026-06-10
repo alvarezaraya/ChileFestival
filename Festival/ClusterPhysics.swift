@@ -71,6 +71,19 @@ final class ClusterPhysics: ObservableObject {
             rescaleLocked(to: size)
             return
         }
+
+        // Reconfiguración **incremental**. La portada simula solo los destacados
+        // (para que llenen la silueta sea cual sea el tamaño del cartel) y la vista
+        // expandida simula el cartel completo. En la transición, los cuerpos que
+        // persisten (mismo id) CONSERVAN su posición —solo se reescala al nuevo
+        // marco— mientras los nuevos (los tiers que se revelan al expandir) nacen
+        // en la periferia y los que desaparecen (al colapsar) se descartan. Así los
+        // destacados no saltan entre portada y vista expandida.
+        let previous = Dictionary(simBodies.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
+        let hadBounds = simBounds.width > 1 && simBounds.height > 1
+        let sx = hadBounds ? size.width  / simBounds.width  : 1
+        let sy = hadBounds ? size.height / simBounds.height : 1
+
         simConfiguredIDs = ids
         simBounds = size
         wakeLocked()
@@ -81,17 +94,27 @@ final class ClusterPhysics: ObservableObject {
         }
         let center = CGPoint(x: size.width / 2, y: size.height / 2)
         let count = artists.count
-        // Reparto inicial en espiral alrededor del centro: flotan y se ordenan
-        // de forma centrípeta (cabezas de cartel al centro, emergentes afuera).
+        // `orderT` (radio objetivo) es un gradiente continuo por índice sobre el
+        // cartel ya ordenado por peso: cabezas de cartel al centro y el resto hacia
+        // afuera, sin huecos entre categorías.
         simBodies = artists.enumerated().map { i, a in
             let r = radii[i]
             let t = count <= 1 ? 0 : CGFloat(i) / CGFloat(count - 1)
-            let angle = CGFloat(i) * 2.399963        // ángulo áureo → reparto uniforme
-            let seed = t * min(size.width, size.height) * 0.35
-            let p = CGPoint(x: center.x + cos(angle) * seed,
-                            y: center.y + sin(angle) * seed)
-            return PhysicsBody(artist: a, radius: r,
-                               position: clampInsideLocked(p, radius: r), orderT: t)
+            if let old = previous[a.id] {
+                // Persiste: conserva posición (reescalada al nuevo marco) y velocidad.
+                let p = clampInsideLocked(CGPoint(x: old.position.x * sx,
+                                                  y: old.position.y * sy), radius: r)
+                return PhysicsBody(artist: a, radius: r, position: p,
+                                   velocity: old.velocity, orderT: t)
+            } else {
+                // Nuevo: nace en espiral (ángulo áureo) hacia su anillo objetivo.
+                let angle = CGFloat(i) * 2.399963
+                let seed = t * min(size.width, size.height) * 0.35
+                let p = CGPoint(x: center.x + cos(angle) * seed,
+                                y: center.y + sin(angle) * seed)
+                return PhysicsBody(artist: a, radius: r,
+                                   position: clampInsideLocked(p, radius: r), orderT: t)
+            }
         }
     }
 
@@ -105,11 +128,12 @@ final class ClusterPhysics: ObservableObject {
             simBodies[i].position.y *= sy
         }
         simBounds = size
-        // Pequeña perturbación para que reacomoden al nuevo marco.
-        for i in simBodies.indices where simBodies[i].id != simDraggingID {
-            simBodies[i].velocity.dx += .random(in: -20...20)
-            simBodies[i].velocity.dy += .random(in: -20...20)
-        }
+        // Sin perturbación aleatoria: el reescalado es proporcional desde el
+        // origen, así el centro (cabezas de cartel) se mantiene fijo y la
+        // periferia se abre/cierra al hacer zoom entre la portada y la vista
+        // expandida. Mantener las posiciones es justamente lo que da continuidad
+        // a la transición; solo despertamos la simulación para que el resorte
+        // reasiente cualquier solapamiento leve por cambio de proporción.
         wakeLocked()
     }
 

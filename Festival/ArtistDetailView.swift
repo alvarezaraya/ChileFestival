@@ -9,25 +9,62 @@ import Combine
 
 enum ArtistCatalog {
 
-    /// Resuelve el `Artist` del catálogo de Apple Music: por id si lo tenemos
-    /// cacheado en el feed, si no por búsqueda de texto.
-    static func catalogArtist(for artist: LineupArtist) async throws -> MusicKit.Artist? {
-        if let id = artist.appleMusicArtistID {
-            let request = MusicCatalogResourceRequest<MusicKit.Artist>(
-                matching: \.id, equalTo: MusicItemID(id))
-            return try await request.response().items.first
-        } else {
+    /// Resuelve los `Artist` del catálogo de Apple Music: por id(s) si los
+    /// tenemos cacheados en el feed, si no por búsqueda de texto. Suele ser uno
+    /// solo; son varios cuando la entrada agrupa a más de un artista.
+    static func catalogArtists(for artist: LineupArtist) async throws -> [MusicKit.Artist] {
+        let ids = artist.appleMusicArtistIDs
+        guard !ids.isEmpty else {
             var search = MusicCatalogSearchRequest(term: artist.name,
                                                    types: [MusicKit.Artist.self])
             search.limit = 1
-            return try await search.response().artists.first
+            return try await search.response().artists.first.map { [$0] } ?? []
         }
+        let request = MusicCatalogResourceRequest<MusicKit.Artist>(
+            matching: \.id, memberOf: ids.map { MusicItemID($0) })
+        // El catálogo no garantiza el orden; lo reordenamos según el feed.
+        let items = try await request.response().items
+        return ids.compactMap { id in items.first { $0.id.rawValue == id } }
+    }
+
+    /// El artista principal (para artwork, nombre, etc.).
+    static func catalogArtist(for artist: LineupArtist) async throws -> MusicKit.Artist? {
+        try await catalogArtists(for: artist).first
     }
 
     static func topSongs(for artist: LineupArtist, limit: Int) async throws -> [Song] {
-        guard let catalogArtist = try await catalogArtist(for: artist) else { return [] }
-        let detailed = try await catalogArtist.with([.topSongs])
-        return Array((detailed.topSongs ?? []).prefix(limit))
+        let artists = try await catalogArtists(for: artist)
+        guard !artists.isEmpty else { return [] }
+
+        // Caso común (un artista): sus top songs tal cual.
+        if artists.count == 1 {
+            let detailed = try await artists[0].with([.topSongs])
+            return Array((detailed.topSongs ?? []).prefix(limit))
+        }
+
+        // Varios artistas en la entrada: combinamos sus top songs intercaladas
+        // para que todos queden representados.
+        var pools: [[Song]] = []
+        for catalogArtist in artists {
+            let detailed = try await catalogArtist.with([.topSongs])
+            let songs = Array(detailed.topSongs ?? [])
+            if !songs.isEmpty { pools.append(songs) }
+        }
+        return Array(interleave(pools).prefix(limit))
+    }
+
+    /// Round-robin: toma una de cada pool por vuelta hasta agotarlas.
+    private static func interleave<T>(_ pools: [[T]]) -> [T] {
+        var pools = pools
+        var result: [T] = []
+        var keepGoing = true
+        while keepGoing {
+            keepGoing = false
+            for i in pools.indices where !pools[i].isEmpty {
+                result.append(pools[i].removeFirst()); keepGoing = true
+            }
+        }
+        return result
     }
 
     /// Foto oficial del artista en Apple Music (artwork de MusicKit), resuelta
@@ -139,6 +176,7 @@ struct ArtistZoomView: View {
     @StateObject private var model = ArtistDetailViewModel()
     @State private var scrolled = false
     @State private var hintBounce = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var accent: Color { artist.accentColor ?? festivalAccent }
 
@@ -233,6 +271,9 @@ struct ArtistZoomView: View {
         .opacity(scrolled ? 0 : 1)
         .padding(.bottom, 18)
         .onAppear {
+            // Respeta "Reducir movimiento": sin el rebote infinito (que además
+            // mantendría un timer corriendo). El chevron queda estático.
+            guard !reduceMotion else { return }
             withAnimation(.easeInOut(duration: 0.85).repeatForever(autoreverses: true)) {
                 hintBounce = true
             }
@@ -321,6 +362,7 @@ struct ArtistZoomView: View {
                     .padding(12)
                     .background(.black.opacity(0.3), in: Circle())
             }
+            .accessibilityLabel("Cerrar")
             Spacer()
         }
     }
