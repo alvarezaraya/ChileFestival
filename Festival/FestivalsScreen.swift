@@ -397,6 +397,19 @@ struct SharedPlayButton: View {
             if player.isActive {
                 MiniPlayerView(player: player, accent: festival.accentColor,
                                onTap: onOpenPlayer)
+            } else if festival.lineup.isEmpty {
+                // Sin lineup anunciado: no hay nada que reproducir. Botón apagado y
+                // no tappable (es un contenedor estático, no un Button).
+                HStack {
+                    Image(systemName: "play.slash.fill")
+                    Text("No disponible").fontWeight(.semibold).lineLimit(1)
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(.white.opacity(0.12), in: Capsule())
+                .foregroundStyle(.white.opacity(0.45))
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Reproducción no disponible")
             } else {
                 Button { play(festival) } label: {
                     HStack {
