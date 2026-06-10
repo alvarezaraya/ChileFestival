@@ -102,14 +102,14 @@ struct Festival: Codable, Identifiable, Hashable, Sendable {
     /// expandir, conservando su posición. Orden por peso (cabezas de cartel
     /// primero) para que la física las ubique del centro hacia afuera.
     ///
-    /// Excepciones para no dejar la portada vacía:
-    /// - Cartel chico (menos de 10 artistas): se muestran todos.
-    /// - Sin ningún tier alto: cae a todo el lineup.
+    /// Muestra los destacados, pero **nunca menos de 10**: si hay menos de 10
+    /// cabezas de cartel + estelares, rellena con los siguientes por peso
+    /// (intermedios, etc.) hasta llegar a 10. Un cartel de menos de 10 artistas
+    /// se muestra entero.
     func headlineArtists(onDay day: Int? = nil) -> [LineupArtist] {
         let pool = artists(onDay: day).sorted { $0.billingWeight > $1.billingWeight }
-        guard pool.count >= 10 else { return pool }
-        let featured = pool.filter { $0.tier == .headliner || $0.tier == .main }
-        return featured.isEmpty ? pool : featured
+        let featuredCount = pool.filter { $0.tier == .headliner || $0.tier == .main }.count
+        return Array(pool.prefix(max(10, featuredCount)))
     }
 }
 
