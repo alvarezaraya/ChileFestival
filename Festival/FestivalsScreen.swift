@@ -15,6 +15,8 @@ struct FestivalsScreen: View {
     @State private var expandedIndex: Int? = nil
     @State private var zoomArtist: LineupArtist? = nil
     @State private var showNowPlaying = false
+    /// ID del festival cuyo botón inició la reproducción actual.
+    @State private var activePlayerFestivalID: String? = nil
     /// Día elegido por festival (nil/ausente = todos). Es el parámetro con el que
     /// se arma la fila de reproducción al tocar play.
     @State private var selectedDays: [String: Int] = [:]
@@ -74,9 +76,12 @@ struct FestivalsScreen: View {
             // Botón dinámico compartido + indicador de página (fuera de la silueta).
             if zoomArtist == nil {
                 VStack(spacing: 10) {
-                    SharedPlayButton(festival: current, player: player, play: { festival in
-                        Task { await player.playMix(for: mixArtists(for: festival)) }
-                    }, onOpenPlayer: { showNowPlaying = true })
+                    SharedPlayButton(festival: current, player: player,
+                                     activeFestivalID: activePlayerFestivalID,
+                                     play: { festival in
+                                         activePlayerFestivalID = festival.id
+                                         Task { await player.playMix(for: mixArtists(for: festival)) }
+                                     }, onOpenPlayer: { showNowPlaying = true })
                     if feed.festivals.count > 1, !isExpanded { pageDots }
                 }
                 .padding(.horizontal)
@@ -122,6 +127,9 @@ struct FestivalsScreen: View {
         }
         .background(.black)
         .onDisappear { player.stop() }
+        .onChange(of: player.isActive) { _, active in
+            if !active { activePlayerFestivalID = nil }
+        }
         .sheet(isPresented: $showNowPlaying) {
             NowPlayingView(player: player, accent: current.accentColor) {
                 showNowPlaying = false
@@ -221,10 +229,11 @@ struct FestivalPosterPage: View {
                     accent: festival.accentColor,
                     interactive: false,
                     isActive: !isExpanded && isVisible,
-                    // El cúmulo vive en un espacio mayor que la silueta: las burbujas
-                    // desbordan los bordes y la máscara interna las funde hacia la
-                    // periferia (fadesAtEdges). Es el diseño que el usuario prefiere.
-                    worldScale: 1.7,
+                    // worldScale 1.0: el "mundo" físico = la ventana visible, así las
+                    // paredes encierran TODOS los destacados dentro de la silueta y se
+                    // ven los ≥10. (Con 1.7 el mundo era mayor y los círculos de orden
+                    // exterior quedaban fuera, difuminados, y se veían menos de 10.)
+                    worldScale: 1.0,
                     fadesAtEdges: true,
                     onTapBackground: onExpand
                 )
@@ -389,12 +398,17 @@ struct FullscreenClusterOverlay: View {
 struct SharedPlayButton: View {
     let festival: Festival
     @ObservedObject var player: FestivalPlayer
+    var activeFestivalID: String?
     var play: (Festival) -> Void
     var onOpenPlayer: () -> Void = {}
 
+    private var isThisActive: Bool {
+        player.isActive && festival.id == activeFestivalID
+    }
+
     var body: some View {
         Group {
-            if player.isActive {
+            if isThisActive {
                 MiniPlayerView(player: player, accent: festival.accentColor,
                                onTap: onOpenPlayer)
             } else if festival.lineup.isEmpty {
