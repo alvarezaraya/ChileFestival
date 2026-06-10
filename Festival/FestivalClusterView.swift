@@ -54,45 +54,51 @@ struct PhysicsClusterView: View {
             let world = CGSize(width: geo.size.width * worldScale,
                                height: geo.size.height * worldScale)
             ZStack {
-                // Capa de fondo: en modo silueta capta el toque para expandir.
-                // En la silueta el cúmulo va dentro de un `drawingGroup` que aplana
-                // las burbujas y oculta su accesibilidad; esta capa ofrece a
-                // VoiceOver un único botón para expandir el cartel.
-                Color.clear
-                    .contentShape(Rectangle())
-                    .onTapGesture { if !interactive { onTapBackground() } }
-                    .accessibilityElement()
-                    .accessibilityAddTraits(.isButton)
-                    .accessibilityLabel("Explorar cartel")
-                    // En el overlay interactivo cada burbuja ya es accesible; aquí
-                    // ocultamos la capa de fondo para no duplicar elementos.
-                    .accessibilityHidden(interactive)
-
-                bubbles
-                    .modifier(EdgeFadeMask(visible: geo.size, enabled: fadesAtEdges))
-                    .modifier(FlattenCluster(enabled: !interactive))
-
-                // Motor: avanza la simulación a ~30 Hz. A 60 Hz, dos festivales del
-                // TabView corriendo en paralelo saturan el main thread y bloquean
-                // gestos. 30 Hz es indistinguible visualmente para un cúmulo con
-                // damping y deja holgura al run loop.
-                TimelineView(.animation(minimumInterval: 1.0 / 30.0,
-                                        paused: !isActive)) { tl in
+                // Capa de fondo para expandir: mide SOLO la ventana visible
+                // (`geo.size`), no el mundo desbordado. Si viviera dentro del marco
+                // del mundo (1.7×, posicionado), su zona de toque se saldría de la
+                // silueta —el clip del padre recorta el dibujo pero no el
+                // hit-testing— y robaría los toques del selector de día vecino.
+                // En la silueta las burbujas son inertes, así que el toque cae aquí.
+                if !interactive {
                     Color.clear
-                        .onChange(of: tl.date) { _, date in
-                            let dt = lastTick.map { CGFloat(date.timeIntervalSince($0)) } ?? 0
-                            lastTick = date
-                            if isActive { physics.step(dt) }
-                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture { onTapBackground() }
+                        .accessibilityElement()
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityLabel("Explorar cartel")
                 }
-                .allowsHitTesting(false)
+
+                // Mundo físico: desborda la ventana y el padre lo recorta. Sus
+                // burbujas y el motor no captan toques en la silueta, por lo que
+                // este subárbol no intercepta nada fuera de la ventana visible.
+                ZStack {
+                    bubbles
+                        .modifier(EdgeFadeMask(visible: geo.size, enabled: fadesAtEdges))
+                        .modifier(FlattenCluster(enabled: !interactive))
+
+                    // Motor: avanza la simulación a ~30 Hz. A 60 Hz, dos festivales
+                    // del TabView corriendo en paralelo saturan el main thread y
+                    // bloquean gestos. 30 Hz es indistinguible para un cúmulo con
+                    // damping y deja holgura al run loop.
+                    TimelineView(.animation(minimumInterval: 1.0 / 30.0,
+                                            paused: !isActive)) { tl in
+                        Color.clear
+                            .onChange(of: tl.date) { _, date in
+                                let dt = lastTick.map { CGFloat(date.timeIntervalSince($0)) } ?? 0
+                                lastTick = date
+                                if isActive { physics.step(dt) }
+                            }
+                    }
+                    .allowsHitTesting(false)
+                }
+                // Marco del mundo, centrado sobre la ventana visible (desborda y se
+                // recorta). `coordinateSpace` se ancla al marco del mundo (antes de
+                // `position`) para que el arrastre lea coordenadas del mundo.
+                .frame(width: world.width, height: world.height)
+                .coordinateSpace(.named("cluster"))
+                .position(x: geo.size.width / 2, y: geo.size.height / 2)
             }
-            // Marco del mundo, centrado sobre la ventana visible (desborda y se recorta).
-            // `coordinateSpace` se ancla al marco del mundo (antes de `position`) para
-            // que el arrastre lea coordenadas del mundo, no de la ventana visible.
-            .frame(width: world.width, height: world.height)
-            .coordinateSpace(.named("cluster"))
-            .position(x: geo.size.width / 2, y: geo.size.height / 2)
             .onAppear {
                 boundsSize = world
                 if isActive { physics.configure(artists: artists, size: world) }
