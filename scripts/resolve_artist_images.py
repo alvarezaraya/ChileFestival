@@ -38,6 +38,16 @@ SKIP_IDS = {
     "melania-wonder",  # único candidato era "Melania Pacheco" (score 0.62), otro artista
 }
 
+# Artistas con homónimos en Apple Music resueltos a mano: el mejor match por
+# nombre es OTRO artista, así que ni --refresh debe re-resolverlos.
+# Clave = `id` slug del feed; el ID/imagen correctos ya están en festivals.json.
+PINNED_IDS = {
+    "denver",       # dúo chileno = 2621236; la búsqueda prefiere un "Denver" urbano latino
+    "panico",       # banda chilena (Kick, 2010) = 1678166227; gana un productor dance europeo
+    "seamoon",      # proyecto en español = 1654057479; gana un Seamoon downtempo en inglés
+    "nico-castro",  # pop/house chileno = 1639100824; gana un homónimo de puros features
+}
+
 
 def normalize(s: str) -> str:
     s = unicodedata.normalize("NFKD", s)
@@ -114,6 +124,9 @@ def resolve(artist, refresh):
     name = artist["name"]
     if artist.get("id") in SKIP_IDS:
         print(f"  ⊘ omitido (sin match fiable): {name}")
+        return False
+    if artist.get("id") in PINNED_IDS:
+        print(f"  ⊙ fijado a mano (homónimo): {name}")
         return False
     have_id = bool(artist.get("appleMusicArtistID"))
     have_img = bool(artist.get("imageURL"))
