@@ -10,9 +10,22 @@
 		CF55EFA22FD64C530041AFFB /* Festival.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Festival.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CF55EFC02FD64C530041AFFB /* Exceptions for "Festival" folder in "Festival" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CF55EFA12FD64C530041AFFB /* Festival */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CF55EFA42FD64C530041AFFB /* Festival */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CF55EFC02FD64C530041AFFB /* Exceptions for "Festival" folder in "Festival" target */,
+			);
 			path = Festival;
 			sourceTree = "<group>";
 		};
@@ -256,6 +269,8 @@
 				DEVELOPMENT_TEAM = E29KYC4PP4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Festival/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Festival reproduce un mix con las canciones más escuchadas del cartel usando Apple Music.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -293,6 +308,8 @@
 				DEVELOPMENT_TEAM = E29KYC4PP4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Festival/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Festival reproduce un mix con las canciones más escuchadas del cartel usando Apple Music.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

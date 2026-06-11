@@ -102,14 +102,13 @@ struct Festival: Codable, Identifiable, Hashable, Sendable {
     /// expandir, conservando su posición. Orden por peso (cabezas de cartel
     /// primero) para que la física las ubique del centro hacia afuera.
     ///
-    /// Muestra los destacados, pero **nunca menos de 10**: si hay menos de 10
-    /// cabezas de cartel + estelares, rellena con los siguientes por peso
-    /// (intermedios, etc.) hasta llegar a 10. Un cartel de menos de 10 artistas
-    /// se muestra entero.
+    /// Muestra **exactamente 10** artistas (los de mayor peso): cabezas de cartel y
+    /// estelares primero y, si no llegan a 10, rellena con los siguientes por peso.
+    /// Nunca más de 10, para que los círculos quepan en la silueta sin superponerse.
+    /// Un cartel de menos de 10 artistas se muestra entero.
     func headlineArtists(onDay day: Int? = nil) -> [LineupArtist] {
         let pool = artists(onDay: day).sorted { $0.billingWeight > $1.billingWeight }
-        let featuredCount = pool.filter { $0.tier == .headliner || $0.tier == .main }.count
-        return Array(pool.prefix(max(10, featuredCount)))
+        return Array(pool.prefix(10))
     }
 }
 
@@ -131,8 +130,11 @@ struct LineupArtist: Codable, Identifiable, Hashable, Sendable {
     let imageURL: URL?
     let accentColorHex: String?     // override opcional por artista
 
-    /// Tamaño relativo del círculo en el packing.
+    /// Peso para ordenar el cartel (centro → afuera) en el packing.
     var billingWeight: Double { tier.weight }
+
+    /// Factor de radio del círculo según la categoría (tres tamaños).
+    var circleSizeFactor: CGFloat { tier.circleSizeFactor }
 
     var accentColor: Color? { accentColorHex.map(Color.init(hex:)) }
 
@@ -156,13 +158,24 @@ struct LineupArtist: Codable, Identifiable, Hashable, Sendable {
 enum Tier: String, Codable, CaseIterable, Sendable {
     case headliner, main, mid, emerging
 
-    /// Peso usado como radio base en el circle-packing.
+    /// Peso usado para ordenar el cartel (centro → afuera) en el circle-packing.
     var weight: Double {
         switch self {
         case .headliner: 1.0
         case .main:      0.66
         case .mid:       0.42
         case .emerging:  0.28
+        }
+    }
+
+    /// Factor de radio del círculo (0…1): **tres** tamaños claros — los cabezas de
+    /// cartel los mayores, los estelares algo menores, y el resto (intermedios y
+    /// emergentes) los más pequeños.
+    var circleSizeFactor: CGFloat {
+        switch self {
+        case .headliner:      1.0
+        case .main:           0.6
+        case .mid, .emerging: 0.28
         }
     }
 
