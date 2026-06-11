@@ -76,60 +76,6 @@ enum ArtistCatalog {
     }
 }
 
-// MARK: - Caché de artwork de Apple Music
-//
-// Memoiza la URL oficial por artista para que el cúmulo, el detalle y demás
-// vistas la pidan una sola vez. No es ObservableObject a propósito: cada vista
-// la consume desde su `.task` y guarda el resultado en estado local, evitando
-// re-render global del cúmulo entero.
-
-@MainActor
-enum ArtworkCache {
-    private static var cache: [String: URL] = [:]
-    private static var tasks: [String: Task<URL?, Never>] = [:]
-
-    /// URL de la foto oficial de Apple Music, resuelta una vez y cacheada.
-    /// Devuelve `nil` si no hay autorización o no se encontró: en ese caso el
-    /// llamador usa `artist.imageURL` (horneada en el feed) como fallback.
-    static func appleMusicArtworkURL(for artist: LineupArtist,
-                                     width: Int = 600, height: Int = 600) async -> URL? {
-        if let hit = cache[artist.id] { return hit }
-        if let running = tasks[artist.id] { return await running.value }
-        guard MusicAuthorization.currentStatus == .authorized else { return nil }
-
-        let task = Task<URL?, Never> {
-            try? await ArtistCatalog.artworkURL(for: artist, width: width, height: height)
-        }
-        tasks[artist.id] = task
-        let url = await task.value
-        tasks[artist.id] = nil
-        if let url { cache[artist.id] = url }
-        return url
-    }
-}
-
-// MARK: - Imagen de artista (feed al instante → foto oficial en vivo)
-
-/// Muestra la foto del artista usando la URL del feed de inmediato y, en cuanto
-/// se resuelve la oficial de Apple Music (si hay autorización), la mejora.
-/// Reusa el mismo `content` de `AsyncImage`, así cada vista mantiene su estilo.
-struct ArtistImage<Content: View>: View {
-    let artist: LineupArtist
-    var width: Int = 600
-    var height: Int = 600
-    @ViewBuilder var content: (AsyncImagePhase) -> Content
-
-    @State private var liveURL: URL?
-
-    var body: some View {
-        AsyncImage(url: liveURL ?? artist.imageURL, content: content)
-            .task(id: artist.id) {
-                liveURL = await ArtworkCache.appleMusicArtworkURL(
-                    for: artist, width: width, height: height)
-            }
-    }
-}
-
 // MARK: - ViewModel del detalle
 
 @MainActor
@@ -158,144 +104,93 @@ final class ArtistDetailViewModel: ObservableObject {
     }
 }
 
-// MARK: - Zoom de artista (seamless desde el círculo)
+// MARK: - Página de artista (zoom nativo del propio círculo)
 //
-// Se presenta como overlay encima del cúmulo expandido. El héroe usa
-// `matchedGeometryEffect` con el mismo id que la burbuja, de modo que la vista
-// hace zoom *hacia* el círculo tocado mientras el resto se atenúa por detrás.
-// La primera pantalla es el círculo enfocado sobre el cúmulo atenuado; el resto
-// del detalle continúa hacia abajo (scroll), insinuado con un indicador sutil.
+// Se presenta como overlay encima del cúmulo expandido. El zoom es NATIVO: no
+// existe una segunda vista del artista ni fundidos. El propio círculo del
+// cúmulo viaja hasta el centro llevado por la cámara (`zoomTransform` en
+// PhysicsClusterView) y ahí se queda, visible DEBAJO de este overlay, que es
+// transparente arriba. Aquí solo vive el contenido de la página: una tarjeta
+// que entra deslizándose desde abajo (transición .move en FestivalsScreen) y
+// que al deslizar hacia arriba revela las top songs pasando sobre el círculo.
 
 struct ArtistZoomView: View {
     let artist: LineupArtist
     let festivalAccent: Color
     @ObservedObject var player: FestivalPlayer
-    let namespace: Namespace.ID
     let onClose: () -> Void
 
     @StateObject private var model = ArtistDetailViewModel()
-    @State private var scrolled = false
-    @State private var hintBounce = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var accent: Color { artist.accentColor ?? festivalAccent }
 
     var body: some View {
         GeometryReader { geo in
-            ZStack(alignment: .top) {
-                // Scrim: deja ver el cúmulo atenuado arriba; opaco abajo para el detalle.
-                LinearGradient(
-                    stops: [
-                        .init(color: .clear, location: 0.0),
-                        .init(color: accent.opacity(0.55), location: 0.40),
-                        .init(color: .black, location: 0.80)
-                    ],
-                    startPoint: .top, endPoint: .bottom
-                )
-                .ignoresSafeArea()
-                .allowsHitTesting(false)
+            // Mismas medidas que usa la cámara del cúmulo (zoomTransform), para
+            // que el hueco transparente calce con el círculo centrado detrás.
+            let heroSize = heroCircleDiameter(forHeight: geo.size.height)
+            let circleBottom = geo.size.height / 2 + heroSize / 2
 
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 0) {
-                        heroSection(height: geo.size.height,
-                                    topInset: geo.safeAreaInsets.top)
-                        detailSection
-                    }
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
+                    // Hueco: deja ver el círculo (y el cúmulo atenuado) detrás.
+                    // Tocar el espacio negativo —fuera del círculo— cierra la
+                    // vista, igual que el botón de la esquina.
+                    Color.clear
+                        .frame(height: circleBottom + 24)
+                        .contentShape(Rectangle())
+                        .onTapGesture(coordinateSpace: .global) { location in
+                            // El círculo vive centrado en la pantalla (marco
+                            // completo, igual que esta vista): un toque dentro
+                            // de su radio no cierra.
+                            let center = CGPoint(x: geo.size.width / 2,
+                                                 y: geo.size.height / 2)
+                            let distance = hypot(location.x - center.x,
+                                                 location.y - center.y)
+                            if distance > heroSize / 2 { onClose() }
+                        }
+                    card
                 }
-                .scrollIndicators(.hidden)
-                .onScrollGeometryChange(for: Bool.self) { scrollGeo in
-                    scrollGeo.contentOffset.y > 24
-                } action: { _, isScrolled in
-                    withAnimation(.easeInOut(duration: 0.25)) { scrolled = isScrolled }
-                }
-
-                closeButton.padding(.horizontal)
             }
             .foregroundStyle(.white)
-            .task { await model.load(artist) }
         }
+        // Mismo marco que el cúmulo de fondo (pantalla completa): así el centro
+        // de esta vista y el del zoom de cámara coinciden —el círculo queda en
+        // el centro real de la pantalla— y el hueco calza con él.
+        .ignoresSafeArea()
+        .task(id: artist.id) { await model.load(artist) }
     }
 
-    // MARK: Héroe (primera pantalla)
+    // MARK: Tarjeta de contenido (bajo el círculo)
 
-    private func heroSection(height: CGFloat, topInset: CGFloat) -> some View {
-        let heroSize = min(240, height * 0.32)
-        return VStack(spacing: 16) {
-            Spacer(minLength: topInset + 56)
-
-            ZStack {
-                Circle().fill(accent.gradient)
-                if artist.imageURL != nil {
-                    ArtistImage(artist: artist) { phase in
-                        if let image = phase.image {
-                            image.resizable().scaledToFill()
-                        } else {
-                            Text(initials).font(.system(size: 52, weight: .bold))
-                        }
-                    }
-                    .clipShape(Circle())
-                } else {
-                    Text(initials).font(.system(size: 52, weight: .bold))
-                }
-            }
-            .frame(width: heroSize, height: heroSize)
-            .overlay(Circle().stroke(.white.opacity(0.3), lineWidth: 1))
-            .shadow(color: .black.opacity(0.4), radius: 16, y: 8)
-            .matchedGeometryEffect(id: artist.id, in: namespace, isSource: true)
-
+    private var card: some View {
+        VStack(spacing: 20) {
             Text(artist.name)
                 .font(.largeTitle.bold())
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
-            Tag(text: artist.tier.displayName, filled: true, accent: accent)
-
-            Spacer()
-            scrollHint
-        }
-        .frame(height: height * 0.86)
-        .frame(maxWidth: .infinity)
-    }
-
-    // Insinúa que la vista continúa hacia abajo.
-    private var scrollHint: some View {
-        VStack(spacing: 4) {
-            Text("Desliza para ver más")
-                .font(.caption.weight(.medium))
-                .foregroundStyle(.white.opacity(0.7))
-            Image(systemName: "chevron.down")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.8))
-                .offset(y: hintBounce ? 4 : -2)
-        }
-        .opacity(scrolled ? 0 : 1)
-        .padding(.bottom, 18)
-        .onAppear {
-            // Respeta "Reducir movimiento": sin el rebote infinito (que además
-            // mantendría un timer corriendo). El chevron queda estático.
-            guard !reduceMotion else { return }
-            withAnimation(.easeInOut(duration: 0.85).repeatForever(autoreverses: true)) {
-                hintBounce = true
-            }
-        }
-    }
-
-    // MARK: Detalle (continúa hacia abajo)
-
-    private var detailSection: some View {
-        VStack(spacing: 20) {
             metadata
             playButton
             topSongsSection
         }
         .padding()
-        .padding(.bottom, 48)
+        .padding(.top, 8)
+        .padding(.bottom, 140)
         .frame(maxWidth: .infinity)
-        .background(.black)
+        .background(
+            LinearGradient(
+                stops: [
+                    .init(color: accent.opacity(0.55), location: 0),
+                    .init(color: .black, location: 0.45)
+                ],
+                startPoint: .top, endPoint: .bottom))
+        .clipShape(UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28))
     }
 
     private var metadata: some View {
         FlowChips {
+            Tag(text: artist.tier.displayName, filled: true, accent: accent)
             if let day = artist.day {
                 Tag(text: "Día \(day)", filled: false, accent: accent)
             }
@@ -351,27 +246,6 @@ struct ArtistZoomView: View {
             .foregroundStyle(.white.opacity(0.65))
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 12)
-    }
-
-    private var closeButton: some View {
-        HStack {
-            Button(action: onClose) {
-                Image(systemName: "xmark")
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                    .padding(12)
-                    .background(.black.opacity(0.3), in: Circle())
-            }
-            .accessibilityLabel("Cerrar")
-            Spacer()
-        }
-    }
-
-    private var initials: String {
-        artist.name
-            .split(separator: " ").prefix(2)
-            .compactMap { $0.first }
-            .map(String.init).joined().uppercased()
     }
 }
 

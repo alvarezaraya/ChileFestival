@@ -111,18 +111,27 @@ struct FestivalsScreen: View {
                 .transition(.opacity)
             }
 
-            // Zoom seamless hacia el artista seleccionado.
+            // Página de artista: el círculo lo lleva al centro la cámara del
+            // cúmulo (zoom nativo); este overlay solo aporta el contenido.
             if let artist = zoomArtist {
                 ArtistZoomView(
                     artist: artist,
                     festivalAccent: current.accentColor,
                     player: player,
-                    namespace: ns,
-                    onClose: { withAnimation(.spring(response: 0.5, dampingFraction: 0.85)) {
-                        zoomArtist = nil
-                    } }
+                    onClose: closeZoom
                 )
                 .zIndex(2)
+                // La tarjeta entra deslizándose desde abajo, sin fundidos: la
+                // parte superior del overlay es transparente, así que lo único
+                // que se ve moverse es el contenido subiendo bajo el círculo.
+                .transition(.move(edge: .bottom))
+
+                // Cerrar va como hermano del overlay (las transiciones de los
+                // hijos no corren al insertarse el padre): se funde aparte y no
+                // viaja con la tarjeta.
+                closeZoomButton
+                    .zIndex(3)
+                    .transition(.opacity)
             }
         }
         .background(.black)
@@ -138,6 +147,23 @@ struct FestivalsScreen: View {
         }
     }
 
+    private func closeZoom() {
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.85)) {
+            zoomArtist = nil
+        }
+    }
+
+    private var closeZoomButton: some View {
+        VStack {
+            HStack {
+                CloseCircleButton(label: "Cerrar", action: closeZoom)
+                Spacer()
+            }
+            .padding(.horizontal)
+            Spacer()
+        }
+    }
+
     private var background: some View {
         LinearGradient(colors: [current.accentColor.opacity(0.35), .black],
                        startPoint: .top, endPoint: .bottom)
@@ -146,13 +172,49 @@ struct FestivalsScreen: View {
     }
 
     private var pageDots: some View {
-        HStack(spacing: 7) {
-            ForEach(feed.festivals.indices, id: \.self) { i in
-                Circle()
-                    .fill(.white.opacity(i == safeIndex ? 0.95 : 0.35))
-                    .frame(width: 7, height: 7)
+        let dotSize: CGFloat = 7
+        let gap: CGFloat = 7
+        let step = dotSize + gap          // 14 pts por slot
+        let n = feed.festivals.count
+        let sideRadius = 2                // dots visibles a cada lado
+
+        let maxVisible = 2 * sideRadius + 1
+        let showAll = n <= maxVisible
+        let containerW = showAll
+            ? CGFloat(n) * step - gap
+            : CGFloat(maxVisible) * step - gap
+
+        // En un ZStack centrado el HStack ya queda centrado; el offset
+        // mueve el strip para que dot[safeIndex] quede en el centro del contenedor.
+        let hstackW = CGFloat(n) * step - gap
+        let xOffset: CGFloat = showAll ? 0
+            : hstackW / 2 - CGFloat(safeIndex) * step - dotSize / 2
+
+        return ZStack {
+            HStack(spacing: gap) {
+                ForEach(feed.festivals.indices, id: \.self) { i in
+                    let d = abs(i - safeIndex)
+                    Circle()
+                        .fill(.white.opacity(
+                            showAll
+                                ? (i == safeIndex ? 0.95 : 0.35)
+                                : (d == 0 ? 0.95 : d == 1 ? 0.60 : d == 2 ? 0.30 : 0.0)
+                        ))
+                        .frame(width: dotSize, height: dotSize)
+                }
             }
+            .offset(x: xOffset)
+            .animation(.spring(response: 0.35, dampingFraction: 0.8), value: safeIndex)
         }
+        .frame(width: containerW, height: dotSize)
+        .mask(
+            LinearGradient(stops: [
+                .init(color: showAll ? .black : .clear, location: 0),
+                .init(color: .black,                    location: showAll ? 0 : 0.15),
+                .init(color: .black,                    location: showAll ? 1 : 0.85),
+                .init(color: showAll ? .black : .clear, location: 1)
+            ], startPoint: .leading, endPoint: .trailing)
+        )
     }
 }
 
@@ -160,7 +222,9 @@ struct FestivalsScreen: View {
 
 struct FestivalPosterPage: View {
     let festival: Festival
-    @ObservedObject var physics: ClusterPhysics
+    /// Sin `@ObservedObject`: solo se pasa hacia abajo; observarlo re-renderizaría
+    /// la página completa con cada publicación del motor (30/60 Hz).
+    let physics: ClusterPhysics
     let namespace: Namespace.ID
     let isExpanded: Bool
     var isVisible: Bool = true
@@ -230,9 +294,9 @@ struct FestivalPosterPage: View {
                     interactive: false,
                     isActive: !isExpanded && isVisible,
                     // worldScale 1.0: el "mundo" físico = la ventana visible, así las
-                    // paredes encierran TODOS los destacados dentro de la silueta y se
-                    // ven los ≥10. (Con 1.7 el mundo era mayor y los círculos de orden
-                    // exterior quedaban fuera, difuminados, y se veían menos de 10.)
+                    // paredes encierran los (hasta) 10 destacados dentro de la silueta.
+                    // (Con 1.7 el mundo era mayor y los círculos de orden exterior
+                    // quedaban fuera, difuminados, y se veían menos.)
                     worldScale: 1.0,
                     fadesAtEdges: true,
                     onTapBackground: onExpand
@@ -320,7 +384,9 @@ struct FestivalPosterPage: View {
 
 struct FullscreenClusterOverlay: View {
     let festival: Festival
-    @ObservedObject var physics: ClusterPhysics
+    /// Sin `@ObservedObject`: solo se pasa hacia abajo; observarlo re-renderizaría
+    /// el overlay completo con cada publicación del motor (60 Hz).
+    let physics: ClusterPhysics
     let namespace: Namespace.ID
     var zoomedArtistID: String?
     /// Mismo día que la portada: así la simulación es exactamente la misma que ya
@@ -352,23 +418,19 @@ struct FullscreenClusterOverlay: View {
                 accent: festival.accentColor,
                 interactive: true,
                 isActive: true,
+                worldScale: 1.6,
                 zoomedArtistID: zoomedArtistID,
-                matchNamespace: namespace,
                 onSelect: onSelect
             )
-            .ignoresSafeArea(edges: .bottom)
+            // Marco de pantalla COMPLETA (sin safe areas): así el centro de la
+            // ventana del cúmulo es el centro real de la pantalla y el zoom a un
+            // artista deja su círculo exactamente centrado.
+            .ignoresSafeArea()
 
             if zoomedArtistID == nil {
                 VStack {
                     HStack {
-                        Button(action: onClose) {
-                            Image(systemName: "xmark")
-                                .font(.headline)
-                                .foregroundStyle(.white)
-                                .padding(12)
-                                .background(.black.opacity(0.3), in: Circle())
-                        }
-                        .accessibilityLabel("Cerrar cartel")
+                        CloseCircleButton(label: "Cerrar cartel", action: onClose)
                         Spacer()
                         Text(festival.name)
                             .font(.headline)
@@ -448,6 +510,26 @@ struct SharedPlayButton: View {
         case .error(let msg):     msg
         default:                  "Reproducir \(festival.name)"
         }
+    }
+}
+
+// MARK: - Botón circular de cerrar (compartido)
+
+/// Xmark sobre un círculo translúcido: lo usan el zoom de artista y el header
+/// del cartel expandido.
+private struct CloseCircleButton: View {
+    let label: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "xmark")
+                .font(.headline)
+                .foregroundStyle(.white)
+                .padding(12)
+                .background(.black.opacity(0.3), in: Circle())
+        }
+        .accessibilityLabel(label)
     }
 }
 

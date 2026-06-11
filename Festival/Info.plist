@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Opt-in a ProMotion: sin esta llave, iOS limita a 60 Hz las animaciones
+	     dirigidas por la app (TimelineView/CADisplayLink) en iPhone, aunque el
+	     panel sea de 120 Hz. Xcode fusiona este plist con el generado. -->
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
+</plist>

@@ -5,7 +5,7 @@ import Combine
 
 struct PhysicsBody: Identifiable, Sendable {
     let artist: LineupArtist
-    let radius: CGFloat
+    var radius: CGFloat
     var position: CGPoint
     var velocity: CGVector = .zero
     /// Posición radial deseada (0 = centro … 1 = borde) según el lugar en el
@@ -19,7 +19,7 @@ struct PhysicsBody: Identifiable, Sendable {
 
 /// Motor de física muy ligero: gravedad centrípeta + colisiones + paredes.
 ///
-/// El cómputo (step, configure, drag) se ejecuta en una **cola serial dedicada**
+/// El cómputo (step, configure) se ejecuta en una **cola serial dedicada**
 /// fuera del main thread. Sólo la publicación del snapshot a `@Published bodies`
 /// vuelve al main para que SwiftUI re-renderice. Con dos festivales y 50 cuerpos
 /// cada uno, mantener el step en main saturaba el run loop y bloqueaba gestos.
@@ -33,10 +33,13 @@ final class ClusterPhysics: ObservableObject {
     // Estado interno: SÓLO se accede dentro de `queue`.
     private var simBodies: [PhysicsBody] = []
     private var simBounds: CGSize = .zero
-    private var simDraggingID: String?
     private var simConfiguredIDs: [String] = []
     private var simRestFrames = 0
     private var simAtRest = false
+    /// Radio del disco que empaca justo todos los círculos (ver `clusterPacking`).
+    /// Tope del alcance del cúmulo: con carteles chicos en marcos grandes los
+    /// mantiene agrupados al centro en vez de repartidos por todo el marco.
+    private var simPackReach: CGFloat = .infinity
 
     /// Evita acumular trabajo si el cómputo va más lento que el reloj. Sólo se
     /// lee/escribe desde main thread.
@@ -47,6 +50,10 @@ final class ClusterPhysics: ObservableObject {
     private let wallRestitution: CGFloat = 0.32
     private let bodyRestitution: CGFloat = 0.18
     private let linearDamping: CGFloat = 0.90
+    /// Densidad de empaque del cúmulo (fracción del disco ocupada por círculos).
+    /// Más alto = cúmulo más apretado. Determina `simPackReach`: con 0.68 los
+    /// círculos de un cartel chico quedan rozándose en torno al centro.
+    private let clusterPacking: CGFloat = 0.68
 
     // MARK: Configuración
 
@@ -68,7 +75,8 @@ final class ClusterPhysics: ObservableObject {
                                  minRadius: CGFloat, maxRadius: CGFloat) {
         let ids = artists.map(\.id)
         if ids == simConfiguredIDs, !simBodies.isEmpty {
-            rescaleLocked(to: size)
+            rescaleLocked(to: size, artists: artists,
+                          minRadius: minRadius, maxRadius: maxRadius)
             return
         }
 
@@ -88,10 +96,8 @@ final class ClusterPhysics: ObservableObject {
         simBounds = size
         wakeLocked()
 
-        // Radio por peso (área ∝ peso → sqrt para una percepción visual correcta).
-        let radii = artists.map { a in
-            minRadius + (maxRadius - minRadius) * CGFloat(sqrt(a.billingWeight))
-        }
+        let radii = packedRadiiLocked(for: artists, size: size,
+                                      minRadius: minRadius, maxRadius: maxRadius)
         let center = CGPoint(x: size.width / 2, y: size.height / 2)
         let count = artists.count
         // `orderT` (radio objetivo) es un gradiente continuo por índice sobre el
@@ -118,14 +124,56 @@ final class ClusterPhysics: ObservableObject {
         }
     }
 
-    private func rescaleLocked(to size: CGSize) {
+    /// Radios por categoría escalados al área del marco. Tres tamaños discretos
+    /// (cabezas de cartel > estelares > resto) interpolando entre min y maxRadius
+    /// según el factor del tier; luego una escala proporcional al área disponible:
+    /// si la suma de las áreas de los círculos supera una fracción del marco (no
+    /// caben sin solaparse), se encogen todos por igual hasta que quepan. Si sobra
+    /// sitio, pueden crecer (hasta un tope) para llenar la silueta. `packing` < 1
+    /// deja aire entre ellos (los círculos no teselan el plano perfectamente).
+    ///
+    /// Actualiza también `simPackReach` —el radio del disco que contiene justo
+    /// todos los círculos: Σπr² = clusterPacking · πR² → R = √(Σr²/packing)—
+    /// porque depende de los radios resultantes. En carteles grandes supera al
+    /// alcance geométrico del marco y no actúa; en los chicos compacta el cúmulo
+    /// para que los círculos siempre queden agrupados.
+    private func packedRadiiLocked(for artists: [LineupArtist], size: CGSize,
+                                   minRadius: CGFloat, maxRadius: CGFloat) -> [CGFloat] {
+        var radii = artists.map { a in
+            minRadius + (maxRadius - minRadius) * a.circleSizeFactor
+        }
+        if !radii.isEmpty {
+            let packing: CGFloat = 0.42
+            let frameArea = size.width * size.height
+            let circlesArea = radii.reduce(0) { $0 + .pi * $1 * $1 }
+            if circlesArea > 0 {
+                let fit = sqrt(packing * frameArea / circlesArea)
+                let scale = min(fit, 1.6)   // encoge sin tope; crece hasta 1.6×
+                radii = radii.map { $0 * scale }
+            }
+        }
+        let sumR2 = radii.reduce(0) { $0 + $1 * $1 }
+        simPackReach = sumR2 > 0 ? sqrt(sumR2 / clusterPacking) : .infinity
+        return radii
+    }
+
+    private func rescaleLocked(to size: CGSize, artists: [LineupArtist],
+                               minRadius: CGFloat, maxRadius: CGFloat) {
         guard simBounds.width > 1, simBounds.height > 1 else { simBounds = size; return }
         let sx = size.width / simBounds.width
         let sy = size.height / simBounds.height
         guard abs(sx - 1) > 0.001 || abs(sy - 1) > 0.001 else { return }
+        // Los radios dependen del área del marco (ver packedRadiiLocked): hay que
+        // recomputarlos para el nuevo tamaño, no solo reescalar posiciones. Sin
+        // esto, un cartel que simula los mismos ids en la silueta y a pantalla
+        // completa (festivales o días de ≤10 artistas) conserva al expandir los
+        // radios chicos de la portada, y al colapsar los grandes del overlay.
+        let radii = packedRadiiLocked(for: artists, size: size,
+                                      minRadius: minRadius, maxRadius: maxRadius)
         for i in simBodies.indices {
             simBodies[i].position.x *= sx
             simBodies[i].position.y *= sy
+            simBodies[i].radius = radii[i]
         }
         simBounds = size
         // Sin perturbación aleatoria: el reescalado es proporcional desde el
@@ -147,7 +195,7 @@ final class ClusterPhysics: ObservableObject {
 
     /// Despacha un paso de simulación a la cola serial. Si ya hay un step en
     /// vuelo, descarta éste (preferimos perder un frame de física antes que
-    /// acumular trabajo cuando la cola está ocupada con drags/configure).
+    /// acumular trabajo cuando la cola está ocupada con configure).
     func step(_ dt: CGFloat) {
         guard !stepInFlight else { return }
         stepInFlight = true
@@ -157,10 +205,9 @@ final class ClusterPhysics: ObservableObject {
                 return
             }
             self.stepLocked(dt)
-            // Si la simulación está en reposo y no hay drag, no tocamos `bodies`
-            // para no invalidar la View 30 veces/segundo en vano.
-            let publish = !(self.simAtRest && self.simDraggingID == nil)
-            let snapshot = publish ? self.simBodies : nil
+            // Si la simulación está en reposo, no tocamos `bodies` para no
+            // invalidar la View 30 veces/segundo en vano.
+            let snapshot = self.simAtRest ? nil : self.simBodies
             DispatchQueue.main.async {
                 if let snapshot { self.bodies = snapshot }
                 self.stepInFlight = false
@@ -170,14 +217,17 @@ final class ClusterPhysics: ObservableObject {
 
     private func stepLocked(_ dt: CGFloat) {
         guard simBounds.width > 1, !simBodies.isEmpty else { return }
-        if simAtRest && simDraggingID == nil { return }
+        if simAtRest { return }
         let h = min(max(dt, 0), 1.0 / 30.0)   // clamp para saltos de frame
         guard h > 0 else { return }
 
         let center = CGPoint(x: simBounds.width / 2, y: simBounds.height / 2)
-        let maxReach = max(20, min(simBounds.width, simBounds.height) / 2)
+        // Alcance del cúmulo: el menor entre el geométrico (no salirse del marco)
+        // y el de empaque (no dispersarse más de lo que ocupa el contenido).
+        let maxReach = max(20, min(min(simBounds.width, simBounds.height) / 2,
+                                   simPackReach))
 
-        for i in simBodies.indices where simBodies[i].id != simDraggingID {
+        for i in simBodies.indices {
             // Resorte radial hacia el anillo objetivo (orden centrípeto): la
             // distancia al centro tiende a `target`, mientras el componente
             // tangencial queda libre para que floten y se repartan.
@@ -197,25 +247,21 @@ final class ClusterPhysics: ObservableObject {
             simBodies[i].position.y += simBodies[i].velocity.dy * h
         }
 
-        // Varias iteraciones de relajación estabilizan el reparto.
-        for _ in 0..<4 { resolveCollisionsLocked() }
+        // Más iteraciones = cero solapamiento garantizado en cada frame.
+        for _ in 0..<10 { resolveCollisionsLocked() }
         resolveWallsLocked()
 
         // Detección de reposo: si todo se mueve por debajo de un umbral durante
         // varios frames, congelamos velocidades y dejamos de publicar.
-        if simDraggingID == nil {
-            var maxSpeed: CGFloat = 0
-            for b in simBodies {
-                maxSpeed = max(maxSpeed, abs(b.velocity.dx) + abs(b.velocity.dy))
-            }
-            if maxSpeed < 3 {
-                simRestFrames += 1
-                if simRestFrames > 24 {
-                    for i in simBodies.indices { simBodies[i].velocity = .zero }
-                    simAtRest = true
-                }
-            } else {
-                simRestFrames = 0
+        var maxSpeed: CGFloat = 0
+        for b in simBodies {
+            maxSpeed = max(maxSpeed, abs(b.velocity.dx) + abs(b.velocity.dy))
+        }
+        if maxSpeed < 3 {
+            simRestFrames += 1
+            if simRestFrames > 24 {
+                for i in simBodies.indices { simBodies[i].velocity = .zero }
+                simAtRest = true
             }
         } else {
             simRestFrames = 0
@@ -235,22 +281,11 @@ final class ClusterPhysics: ObservableObject {
                 let nx = dx / dist, ny = dy / dist
                 let overlap = minDist - dist
 
-                let aMoves = simBodies[i].id != simDraggingID
-                let bMoves = simBodies[j].id != simDraggingID
-
                 // Corrección posicional.
-                if aMoves && bMoves {
-                    simBodies[i].position.x -= nx * overlap / 2
-                    simBodies[i].position.y -= ny * overlap / 2
-                    simBodies[j].position.x += nx * overlap / 2
-                    simBodies[j].position.y += ny * overlap / 2
-                } else if aMoves {
-                    simBodies[i].position.x -= nx * overlap
-                    simBodies[i].position.y -= ny * overlap
-                } else if bMoves {
-                    simBodies[j].position.x += nx * overlap
-                    simBodies[j].position.y += ny * overlap
-                }
+                simBodies[i].position.x -= nx * overlap / 2
+                simBodies[i].position.y -= ny * overlap / 2
+                simBodies[j].position.x += nx * overlap / 2
+                simBodies[j].position.y += ny * overlap / 2
 
                 // Respuesta de velocidad a lo largo de la normal.
                 let rvx = simBodies[j].velocity.dx - simBodies[i].velocity.dx
@@ -258,14 +293,10 @@ final class ClusterPhysics: ObservableObject {
                 let vn = rvx * nx + rvy * ny
                 if vn < 0 {
                     let impulse = -(1 + bodyRestitution) * vn / 2
-                    if aMoves {
-                        simBodies[i].velocity.dx -= impulse * nx
-                        simBodies[i].velocity.dy -= impulse * ny
-                    }
-                    if bMoves {
-                        simBodies[j].velocity.dx += impulse * nx
-                        simBodies[j].velocity.dy += impulse * ny
-                    }
+                    simBodies[i].velocity.dx -= impulse * nx
+                    simBodies[i].velocity.dy -= impulse * ny
+                    simBodies[j].velocity.dx += impulse * nx
+                    simBodies[j].velocity.dy += impulse * ny
                 }
             }
         }
@@ -288,36 +319,6 @@ final class ClusterPhysics: ObservableObject {
                 simBodies[i].position.y = simBounds.height - r
                 simBodies[i].velocity.dy = -abs(simBodies[i].velocity.dy) * wallRestitution
             }
-        }
-    }
-
-    // MARK: Arrastre
-
-    func beginDrag(_ id: String) {
-        queue.async { [weak self] in
-            guard let self else { return }
-            self.simDraggingID = id
-            self.wakeLocked()
-        }
-    }
-
-    func drag(_ id: String, to point: CGPoint) {
-        queue.async { [weak self] in
-            guard let self else { return }
-            guard let i = self.simBodies.firstIndex(where: { $0.id == id }) else { return }
-            self.simBodies[i].position = self.clampInsideLocked(point,
-                                                                radius: self.simBodies[i].radius)
-            self.simBodies[i].velocity = .zero
-        }
-    }
-
-    /// Suelta el círculo con la velocidad del gesto (puntos/segundo).
-    func endDrag(_ id: String, velocity: CGSize) {
-        queue.async { [weak self] in
-            guard let self else { return }
-            defer { self.simDraggingID = nil }
-            guard let i = self.simBodies.firstIndex(where: { $0.id == id }) else { return }
-            self.simBodies[i].velocity = CGVector(dx: velocity.width, dy: velocity.height)
         }
     }
 
