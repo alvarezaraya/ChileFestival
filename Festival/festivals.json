@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-10",
+  "updatedAt": "2026-07-01",
   "festivals": [
     {
       "id": "primavera-sound-santiago-2022",
@@ -2177,7 +2177,7 @@
           "id": "the-strokes",
           "name": "The Strokes",
           "tier": "headliner",
-          "day": null,
+          "day": 2,
           "genres": [
             "indie rock",
             "garage rock"
@@ -2191,7 +2191,7 @@
           "id": "fka-twigs",
           "name": "FKA twigs",
           "tier": "headliner",
-          "day": null,
+          "day": 2,
           "genres": [
             "art pop",
             "electronic",
@@ -2206,7 +2206,7 @@
           "id": "godspeed-you-black-emperor",
           "name": "Godspeed You! Black Emperor",
           "tier": "mid",
-          "day": null,
+          "day": 1,
           "genres": [
             "post-rock"
           ],
@@ -2219,7 +2219,7 @@
           "id": "new-order",
           "name": "New Order",
           "tier": "headliner",
-          "day": null,
+          "day": 3,
           "genres": [
             "new wave",
             "electronic",
@@ -2234,7 +2234,7 @@
           "id": "johnny-marr",
           "name": "Johnny Marr",
           "tier": "main",
-          "day": null,
+          "day": 3,
           "genres": [
             "indie rock",
             "alternative rock"
@@ -2248,7 +2248,7 @@
           "id": "tricky",
           "name": "Tricky",
           "tier": "mid",
-          "day": null,
+          "day": 3,
           "genres": [
             "trip hop",
             "electronic"
@@ -2262,7 +2262,7 @@
           "id": "of-monsters-and-men",
           "name": "Of Monsters and Men",
           "tier": "main",
-          "day": null,
+          "day": 3,
           "genres": [
             "indie folk",
             "indie pop"
@@ -2276,7 +2276,7 @@
           "id": "courtney-barnett",
           "name": "Courtney Barnett",
           "tier": "main",
-          "day": null,
+          "day": 2,
           "genres": [
             "indie rock"
           ],
@@ -2289,7 +2289,7 @@
           "id": "yung-lean",
           "name": "Yung Lean",
           "tier": "mid",
-          "day": null,
+          "day": 2,
           "genres": [
             "cloud rap",
             "hip hop"
@@ -2303,7 +2303,7 @@
           "id": "american-football",
           "name": "American Football",
           "tier": "mid",
-          "day": null,
+          "day": 3,
           "genres": [
             "emo",
             "midwest emo"
@@ -2317,7 +2317,7 @@
           "id": "santiago-motorizado",
           "name": "Santiago Motorizado",
           "tier": "mid",
-          "day": null,
+          "day": 2,
           "genres": [
             "indie rock",
             "rock argentino"
@@ -2331,7 +2331,7 @@
           "id": "juliana-gattas",
           "name": "Juliana Gattas",
           "tier": "mid",
-          "day": null,
+          "day": 1,
           "genres": [
             "pop"
           ],
@@ -2344,7 +2344,7 @@
           "id": "panico",
           "name": "Pánico",
           "tier": "mid",
-          "day": null,
+          "day": 3,
           "genres": [
             "post-punk",
             "rock chileno"
@@ -2358,7 +2358,7 @@
           "id": "el-zar",
           "name": "El Zar",
           "tier": "mid",
-          "day": null,
+          "day": 3,
           "genres": [
             "indie rock chileno"
           ],
@@ -2371,7 +2371,7 @@
           "id": "peces-raros",
           "name": "Peces Raros",
           "tier": "mid",
-          "day": null,
+          "day": 3,
           "genres": [
             "indie",
             "electropop"
@@ -2385,7 +2385,7 @@
           "id": "la-ciencia-simple",
           "name": "La Ciencia Simple",
           "tier": "emerging",
-          "day": null,
+          "day": 1,
           "genres": [
             "indie rock chileno"
           ],
@@ -2398,7 +2398,7 @@
           "id": "javiera-electra",
           "name": "Javiera Electra",
           "tier": "emerging",
-          "day": null,
+          "day": 3,
           "genres": [
             "pop",
             "electrónica"
@@ -2412,7 +2412,7 @@
           "id": "mariana-montenegro",
           "name": "Mariana Montenegro",
           "tier": "emerging",
-          "day": null,
+          "day": 3,
           "genres": [
             "electropop"
           ],
@@ -2425,7 +2425,7 @@
           "id": "nico-castro",
           "name": "Nico Castro",
           "tier": "emerging",
-          "day": null,
+          "day": 3,
           "genres": [
             "pop chileno"
           ],
@@ -2438,7 +2438,7 @@
           "id": "asia-menor",
           "name": "Asia Menor",
           "tier": "emerging",
-          "day": null,
+          "day": 2,
           "genres": [
             "indie",
             "rock chileno"
@@ -2452,7 +2452,7 @@
           "id": "hesse-kassel",
           "name": "Hesse Kassel",
           "tier": "emerging",
-          "day": null,
+          "day": 1,
           "genres": [
             "indie",
             "electronic"
@@ -2466,9 +2466,67 @@
           "id": "melania-wonder",
           "name": "Melania Wonder",
           "tier": "emerging",
-          "day": null,
+          "day": 3,
           "genres": [
             "pop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "hot-chip",
+          "name": "Hot Chip",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "synth-pop",
+            "electronic",
+            "indietronica"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "moyka",
+          "name": "Moyka",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop",
+            "electropop"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "underworld",
+          "name": "Underworld",
+          "tier": "headliner",
+          "day": 3,
+          "genres": [
+            "electronic",
+            "techno",
+            "progressive house"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "winona-riders",
+          "name": "Winona Riders",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "indie rock",
+            "pop rock"
           ],
           "appleMusicArtistID": null,
           "setlistfmMBID": null,
