@@ -289,15 +289,18 @@ private struct ClusterWorld: View, Equatable {
                 .modifier(EdgeFadeMask(visible: visible, enabled: fadesAtEdges))
                 .modifier(FlattenCluster(enabled: !interactive))
 
-            // Motor: avanza la simulación a ~30 Hz en la silueta —dos festivales
-            // del TabView a tasa completa saturan el main thread— y a 60 Hz en
-            // la vista expandida. Publicar a 120 Hz no aporta (la deriva de las
-            // burbujas es lenta) y duplica el trabajo del main thread; los
-            // gestos y springs de SwiftUI sí corren a la tasa del display
-            // (60/120 con ProMotion). Si un paso no alcanza, se descarta
-            // (`stepInFlight`). Durante el zoom a un artista se pausa: el fondo
-            // queda congelado y el ancla del zoom no se mueve bajo la animación.
-            TimelineView(.animation(minimumInterval: interactive ? 1.0 / 60.0 : 1.0 / 30.0,
+            // Motor: avanza la simulación a ~60 Hz. La silueta iba a 30 Hz de
+            // cuando las páginas vecinas del TabView estepeaban a la vez; hoy
+            // solo la página visible está activa (`isVisible` en
+            // FestivalsScreen), así que puede ir a tasa completa — a 30 Hz las
+            // burbujas se movían a saltos visibles. Publicar a 120 Hz no aporta
+            // (la deriva de las burbujas es lenta) y duplica el trabajo del
+            // main thread; los gestos y springs de SwiftUI sí corren a la tasa
+            // del display (60/120 con ProMotion). Si un paso no alcanza, se
+            // descarta (`stepInFlight`). Durante el zoom a un artista se pausa:
+            // el fondo queda congelado y el ancla del zoom no se mueve bajo la
+            // animación.
+            TimelineView(.animation(minimumInterval: 1.0 / 60.0,
                                     paused: !isActive || zoomedArtistID != nil)) { tl in
                 Color.clear
                     .onChange(of: tl.date) { _, date in
