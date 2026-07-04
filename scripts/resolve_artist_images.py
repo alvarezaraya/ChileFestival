@@ -18,18 +18,25 @@ Uso:
 
 import argparse
 import difflib
+import http.client
 import json
 import os
 import re
-import sys
 import time
 import unicodedata
+import urllib.error
 import urllib.parse
 import urllib.request
 
 SEARCH = "https://itunes.apple.com/search"
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15"
 ART_SIZE = "600x600cc"   # recorte cuadrado, rellena (crop-center)
+
+# La iTunes Search API limita ~20 req/min y responde 429 cuando se la satura.
+# Reintentamos con backoff exponencial (respetando Retry-After) para que un 429
+# transitorio no tumbe toda la corrida.
+MAX_RETRIES = 5
+PAUSE = 0.5              # cortesía entre artistas (segundos)
 
 # Artistas sin match fiable en Apple Music: NO auto-resolver (la búsqueda solo
 # encuentra homónimos). Clave = `id` slug del feed. Se dejan con ID/imagen nulos
@@ -60,10 +67,39 @@ def normalize(s: str) -> str:
     return " ".join(s.split())
 
 
-def get(url: str) -> bytes:
+def get(url: str, retries: int = MAX_RETRIES) -> bytes:
     req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=25) as r:
-        return r.read()
+    delay = 2.0
+    for attempt in range(retries + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=25) as r:
+                return r.read()
+        except urllib.error.HTTPError as e:
+            # 429 (rate limit) y 5xx (errores del servidor) son transitorios.
+            if e.code != 429 and not (500 <= e.code < 600):
+                raise
+            if attempt >= retries:
+                raise
+            wait = delay
+            retry_after = e.headers.get("Retry-After") if e.headers else None
+            if retry_after:
+                try:
+                    wait = max(wait, float(retry_after))
+                except ValueError:
+                    pass
+            print(f"    … HTTP {e.code}; reintento en {wait:.0f}s "
+                  f"({attempt + 1}/{retries})")
+            time.sleep(wait)
+            delay = min(delay * 2, 60)
+        except (urllib.error.URLError, http.client.HTTPException,
+                TimeoutError) as e:
+            if attempt >= retries:
+                raise
+            print(f"    … error de red ({e}); reintento en {delay:.0f}s "
+                  f"({attempt + 1}/{retries})")
+            time.sleep(delay)
+            delay = min(delay * 2, 60)
+    raise RuntimeError(f"agotados los reintentos para {url}")  # inalcanzable
 
 
 def search_artists(name: str, limit: int = 8):
@@ -135,7 +171,13 @@ def resolve(artist, refresh):
     if have_id and have_img and not refresh:
         return False
 
-    candidates = search_artists(name)
+    try:
+        candidates = search_artists(name)
+    except Exception as e:                            # noqa: BLE001
+        # Tras agotar los reintentos seguimos con el resto: lo ya resuelto se
+        # conserva y este artista se reintenta en la próxima corrida.
+        print(f"  ! búsqueda falló para {name}: {e}")
+        return False
     match = best_match(name, candidates)
     if not match:
         print(f"  ? sin match: {name}")
@@ -177,7 +219,7 @@ def main():
         for artist in festival["lineup"]:
             if resolve(artist, args.refresh):
                 changed += 1
-            time.sleep(0.25)                          # cortesía con la API
+            time.sleep(PAUSE)                         # cortesía con la API
 
     if changed:
         os.replace(args.json_path, args.json_path + ".bak")

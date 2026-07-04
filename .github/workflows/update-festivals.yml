@@ -22,8 +22,12 @@ jobs:
       # el feed curado con carteles incompletos, así que NO está en el cron. Wirea
       # los scrapers reales y agrégalo antes del resolver cuando estén listos.
 
+      # Sin --refresh: solo resuelve artistas nuevos o con ID/imagen faltante.
+      # Re-resolver los 169 cada semana saturaba la iTunes Search API (HTTP 429)
+      # y tumbaba la corrida. Para forzar un refresh completo, correr a mano:
+      #   python scripts/resolve_artist_images.py festivals.json --refresh
       - name: Resolver IDs y fotos de Apple Music (sin token)
-        run: python scripts/resolve_artist_images.py festivals.json --refresh
+        run: python scripts/resolve_artist_images.py festivals.json
 
       - name: Sincronizar copia del bundle
         run: cp festivals.json Festival/festivals.json
