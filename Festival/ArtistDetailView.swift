@@ -54,7 +54,8 @@ enum ArtistCatalog {
     }
 
     /// Round-robin: toma una de cada pool por vuelta hasta agotarlas.
-    private static func interleave<T>(_ pools: [[T]]) -> [T] {
+    /// (También lo usa `FestivalPlayer` para armar el mix del festival.)
+    static func interleave<T>(_ pools: [[T]]) -> [T] {
         var pools = pools
         var result: [T] = []
         var keepGoing = true
@@ -202,7 +203,13 @@ struct ArtistZoomView: View {
 
     private var playButton: some View {
         Button {
-            Task { await player.playMix(for: [artist]) }
+            // Si la lista de abajo ya cargó, se reproduce ESA (las mismas top
+            // songs visibles); si aún no, cae al mix por catálogo del artista.
+            if case .loaded(let songs) = model.state {
+                Task { await player.playSongs(songs) }
+            } else {
+                Task { await player.playMix(for: [artist]) }
+            }
             onClose()
         } label: {
             HStack {
