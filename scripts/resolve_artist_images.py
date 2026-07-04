@@ -43,6 +43,8 @@ PAUSE = 0.5              # cortesía entre artistas (segundos)
 # a propósito; si algún día aparecen en el catálogo, poblar a mano.
 SKIP_IDS = {
     "melania-wonder",  # único candidato era "Melania Pacheco" (score 0.62), otro artista
+    "la-banda-de-la-memoria",  # gana "La Original Banda El Limón..." (score 0.51), otro artista
+    "full-la-musica-de-fulano",  # gana "Fulanito", merengue dominicano (score 0.35), otro artista
 }
 
 # Artistas con homónimos en Apple Music resueltos a mano: el mejor match por
