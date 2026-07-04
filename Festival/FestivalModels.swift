@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-// MARK: - Feed (raíz del festivals.json alojado en GitHub)
+// MARK: - Feed (raíz del festivals.json incluido en el bundle)
 
 struct FestivalFeed: Codable {
     let version: Int
@@ -198,58 +198,14 @@ enum Tier: String, Codable, CaseIterable, Sendable {
     }
 }
 
-// MARK: - Backfill (rellena con el bundle lo que el remoto traiga incompleto)
+// MARK: - Loader (100 % local: el bundle es la fuente canónica)
 //
-// El feed remoto es la fuente de verdad, pero puede ir por detrás del bundle
-// curado (p. ej. fotos/IDs de Apple Music ya resueltos localmente y aún no
-// pusheados). Sin esto, el refresco remoto "borraría" esas fotos en runtime.
-// El backfill empareja por id de festival y de artista y solo rellena campos
-// nulos; nunca sobrescribe datos que el remoto sí trae.
-
-extension FestivalFeed {
-    func backfilled(from fallback: FestivalFeed) -> FestivalFeed {
-        let byID = Dictionary(fallback.festivals.map { ($0.id, $0) },
-                              uniquingKeysWith: { a, _ in a })
-        let merged = festivals.map { fest in
-            byID[fest.id].map(fest.backfilled(from:)) ?? fest
-        }
-        return FestivalFeed(version: version, updatedAt: updatedAt, festivals: merged)
-    }
-}
-
-extension Festival {
-    func backfilled(from fallback: Festival) -> Festival {
-        let byID = Dictionary(fallback.lineup.map { ($0.id, $0) },
-                              uniquingKeysWith: { a, _ in a })
-        let mergedLineup = lineup.map { artist in
-            byID[artist.id].map(artist.backfilled(from:)) ?? artist
-        }
-        return Festival(id: id, name: name, edition: edition, venue: venue, city: city,
-                        region: region, dates: dates, accentColorHex: accentColorHex,
-                        posterImageURL: posterImageURL, lineup: mergedLineup)
-    }
-}
-
-extension LineupArtist {
-    func backfilled(from fallback: LineupArtist) -> LineupArtist {
-        LineupArtist(
-            id: id, name: name, tier: tier, day: day, genres: genres,
-            appleMusicArtistID: appleMusicArtistID ?? fallback.appleMusicArtistID,
-            additionalAppleMusicArtistIDs: additionalAppleMusicArtistIDs
-                ?? fallback.additionalAppleMusicArtistIDs,
-            setlistfmMBID: setlistfmMBID ?? fallback.setlistfmMBID,
-            imageURL: imageURL ?? fallback.imageURL,
-            accentColorHex: accentColorHex ?? fallback.accentColorHex)
-    }
-}
-
-// MARK: - Loader (patrón Plaza: bundle offline + remoto en GitHub)
+// No hay feed remoto: los datos viajan con cada versión de la app y el
+// pipeline (scripts/resolve_artist_images.py) se corre localmente antes de
+// cada release. Lo único "vivo" en runtime son las APIs oficiales de Apple
+// (MusicKit para fotos/top songs y el CDN mzstatic para las imageURL).
 
 enum FestivalLoader {
-
-    /// Apunta esto a tu raw de GitHub una vez que subas el JSON.
-    static let feedURL = URL(string:
-        "https://raw.githubusercontent.com/alvarezaraya/ChileFestival/main/festivals.json")!
 
     static func makeDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
@@ -261,21 +217,12 @@ enum FestivalLoader {
         return decoder
     }
 
-    /// Copia incluida en el bundle: arranque instantáneo y modo offline.
+    /// Feed incluido en el bundle: arranque instantáneo, sin red.
     static func loadBundled() throws -> FestivalFeed {
         guard let url = Bundle.main.url(forResource: "festivals", withExtension: "json") else {
             throw CocoaError(.fileNoSuchFile)
         }
         let data = try Data(contentsOf: url)
-        return try makeDecoder().decode(FestivalFeed.self, from: data).chronological
-    }
-
-    /// Remoto desde GitHub. Lanza error si falla (sin fallback interno).
-    static func loadRemote() async throws -> FestivalFeed {
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 8
-        config.timeoutIntervalForResource = 8
-        let (data, _) = try await URLSession(configuration: config).data(from: feedURL)
         return try makeDecoder().decode(FestivalFeed.self, from: data).chronological
     }
 }

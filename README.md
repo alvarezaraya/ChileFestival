@@ -11,7 +11,7 @@ en el cartel, y reproduce un mix aleatorio de sus canciones más conocidas vía
 
 | Decisión | Motivo |
 |---|---|
-| **Datos de festivales en JSON curado (GitHub), no setlist.fm** | La API de setlist.fm no expone festivales ni shows próximos: es un archivo de *setlists pasados*. Se replica el patrón "Plaza": scraper + GitHub Actions → `festivals.json`. |
+| **Datos de festivales en JSON curado LOCAL, no setlist.fm ni feed remoto** | La API de setlist.fm no expone festivales ni shows próximos: es un archivo de *setlists pasados*. El `festivals.json` del bundle es la única fuente en runtime; se actualiza corriendo el pipeline localmente y publicando una nueva versión de la app. Sin dependencia de GitHub (raw ni Actions) en producción. |
 | **`appleMusicArtistID` cacheado en el JSON** | Evita búsquedas por nombre en runtime (donde fallan los matchings como "Tyler, The Creator"). Se resuelve una vez en curación. |
 | **Modelo `LineupArtist` (no `Artist`)** | `MusicKit` ya define `Artist`; usar ese nombre rompería la compilación por ambigüedad. |
 | **`tier` → `billingWeight`** | El enum (headliner/main/mid/emerging) define el radio del círculo en el packing. |
@@ -22,12 +22,11 @@ en el cartel, y reproduce un mix aleatorio de sus canciones más conocidas vía
 
 ```mermaid
 flowchart LR
-    A[Sitios de festivales] -->|scrape_festivals.py| B[festivals.json]
-    B -->|resolve_apple_music_ids.py| B
-    B -->|commit, GitHub Actions| C[(GitHub raw)]
-    C -->|FestivalLoader.loadRemote| D[App iOS]
-    D -->|fallback offline| E[festivals.json en bundle]
-    D --> F[Cúmulo + Reproductor MusicKit]
+    A[Sitios de festivales] -->|scrape_festivals.py, local| B[festivals.json]
+    B -->|resolve_artist_images.py, local| B
+    B -->|cp al bundle + release| C[festivals.json en bundle]
+    C -->|FestivalLoader.loadBundled| D[App iOS]
+    D -->|APIs oficiales de Apple| F[Fotos en vivo + Reproductor MusicKit]
 ```
 
 ---
@@ -39,28 +38,30 @@ flowchart LR
 | Archivo | Rol |
 |---|---|
 | `Festival/FestivalApp.swift` | `@main`, `RootView`, `FeedViewModel` (estados cargando/cargado/error), `ErrorView`. (Aloja lo que en el diseño original era `FestivalesApp.swift`.) |
-| `Festival/FestivalModels.swift` | Modelos Codable (`FestivalFeed`, `Festival`, `LineupArtist`, `Tier`), `FestivalLoader` (remoto + bundle), `Color(hex:)`. |
+| `Festival/FestivalModels.swift` | Modelos Codable (`FestivalFeed`, `Festival`, `LineupArtist`, `Tier`), `FestivalLoader` (solo bundle, 100 % local), `Color(hex:)`. |
 | `Festival/FestivalsScreen.swift` | Paginado horizontal de festivales, página con chips por día, barra inferior, sheet de detalle. |
 | `Festival/FestivalClusterView.swift` | `CirclePacker` (packing por relajación), cúmulo y `ArtistBubble` (foto del artista como contenido). |
 | `Festival/FestivalPlayer.swift` | Reproductor MusicKit: top songs, mezcla intercalada, metadata en vivo, controles, fallback de previews. |
 | `Festival/MiniPlayerView.swift` | Mini-player con carátula y controles (anterior / play-pausa / siguiente). |
 | `Festival/ArtistDetailView.swift` | Detalle al tocar una burbuja (foto, tier/día/géneros, top songs) + `ArtistCatalog` (fetch de catálogo compartido). |
 
-### Pipeline de datos (Python + CI)
+### Pipeline de datos (Python, se corre localmente)
 
 | Archivo | Rol |
 |---|---|
-| `festivals.json` (raíz) | Feed canónico servido por GitHub raw. Copia espejo en `Festival/festivals.json` para el bundle/offline. |
+| `festivals.json` (raíz) | Copia de trabajo del pipeline. La fuente que usa la app es la copia espejo `Festival/festivals.json` (bundle); mantener ambas en sync (`cp festivals.json Festival/festivals.json`). |
 | `scripts/resolve_artist_images.py` | **Recomendado.** Resuelve `appleMusicArtistID` + `imageURL` SIN developer token (iTunes Search API + `og:image` de la página del artista). |
 | `scripts/resolve_apple_music_ids.py` | Alternativa: resuelve `appleMusicArtistID` vía Apple Music API (requiere developer token). No trae fotos. |
 | `scripts/scrape_festivals.py` | Scaffold de scrapers (STUBS); fusiona preservando IDs ya resueltos. |
-| `.github/workflows/update-festivals.yml` | CI: refresca IDs + fotos semanalmente con `resolve_artist_images.py` (sin secrets) y espeja al bundle. El scraper stub queda fuera del cron. |
+
+No hay CI ni cron: antes de una release con datos nuevos, correr localmente
+`python3 scripts/resolve_artist_images.py festivals.json` y espejar al bundle.
 
 ---
 
 ## 3. Hecho
 
-- [x] Modelo de datos Codable + loader remoto con fallback offline.
+- [x] Modelo de datos Codable + loader 100 % local desde el bundle (sin feed remoto).
 - [x] JSON de muestra con dos festivales chilenos 2026.
 - [x] Cúmulo de círculos con tamaño por jerarquía, tappable, cómputo en background.
 - [x] Vistas horizontales (paginado por festival) + filtro por día.
@@ -69,9 +70,9 @@ flowchart LR
 - [x] Metadata en vivo (título / artista / carátula) y controles siguiente / anterior.
 - [x] Mini-player que reemplaza al botón al reproducir.
 - [x] App con estados de carga / error / reintento.
-- [x] Script de resolución de IDs (modo interactivo y `--auto` apto para CI).
+- [x] Script de resolución de IDs (modo interactivo y `--auto`).
 - [x] Scaffold de scraper con merge que preserva lo resuelto.
-- [x] Workflow de GitHub Actions.
+- [x] Runtime sin dependencia de GitHub: bundle local + APIs oficiales de Apple (el workflow de Actions se eliminó a propósito).
 
 ---
 
@@ -80,20 +81,20 @@ flowchart LR
 ### Xcode
 - [x] `Info.plist`: **`NSAppleMusicUsageDescription`** (vía `INFOPLIST_KEY_…` en el target).
 - [x] **`festivals.json` en el bundle** (synchronized group; copia en `Festival/`).
-- [x] `FestivalLoader.feedURL` apunta a `alvarezaraya/ChileFestival`.
+- [x] Loader 100 % local (no hay `feedURL` que configurar).
 - [x] Un solo `@main` (`FestivalApp.swift`); `Color(hex:)` solo en el modelo.
 - [ ] Activar capability **MusicKit** (Signing & Capabilities) y registrar el App ID con MusicKit. **Sin esto, la reproducción y las top songs del detalle fallan con "Failed to request developer token".** (Las fotos de las burbujas NO lo necesitan: vienen cacheadas en el feed.)
 
-### GitHub (Secrets → Actions)
-- El CI por defecto usa `resolve_artist_images.py`, que **no requiere secrets**.
-- Opcional, solo si prefieres `resolve_apple_music_ids.py` (API con token): crear una **MusicKit Key** (Keys → MusicKit) y cargar `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY_P8`.
+### Pipeline local
+- `resolve_artist_images.py` **no requiere secrets** (iTunes Search API pública).
+- Opcional, solo si prefieres `resolve_apple_music_ids.py` (API con token): exportar `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` (la key `.p8` vive fuera del repo, en `~/.secrets/festival/`).
 
 ---
 
 ## 5. Pendiente por hacer
 
 - [x] **Resolución de `appleMusicArtistID` + `imageURL`** (token-free) para el feed de muestra.
-- [ ] **Completar los scrapers reales** en `scripts/scrape_festivals.py` (hoy son stubs); recién entonces agregarlos al cron, antes del resolver.
+- [ ] **Completar los scrapers reales** en `scripts/scrape_festivals.py` (hoy son stubs); se corren localmente antes del resolver.
 - [ ] **Verificar la asignación de días** del JSON de muestra (es placeholder) y los colores de acento.
 - [ ] Validar en device que `Entry.subtitle` / `Entry.artwork` llegan poblados en modo completo; si no, forzar metadata desde el `Song`.
 - [ ] Cachear en runtime la resolución de artistas y sus top songs (evitar re-buscar en cada Play).
