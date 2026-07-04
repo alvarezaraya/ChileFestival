@@ -1,0 +1,33 @@
+{
+  "identifier" : "8F2C1D64-3A9B-4E27-9C51-D0B7A6F41E88",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "1A7E4B02-6C3D-4F58-8A19-5E2D9C0B74F3",
+      "localizations" : [
+        {
+          "description" : "Sigue todos los festivales que quieras, sin límite.",
+          "displayName" : "Festivales sin límite",
+          "locale" : "es_MX"
+        }
+      ],
+      "productID" : "cl.alvarezaraya.Festival.follows.unlimited",
+      "referenceName" : "Festivales sin límite",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
