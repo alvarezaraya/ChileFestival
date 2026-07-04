@@ -154,6 +154,11 @@ def og_image(link: str):
     if not m:
         return None
     raw = m.group(1)
+    # Artistas sin foto en el catálogo devuelven el logo genérico de Apple
+    # Music como og:image; eso no es un retrato y en la app se ve peor que
+    # las iniciales de respaldo.
+    if "/assets/meta/" in raw:
+        return None
     # Normaliza el tamaño/recorte al final de la plantilla mzstatic.
     return re.sub(r"/\d+x\d+[a-z]*\.(png|jpg|jpeg)", f"/{ART_SIZE}.png", raw)
 

@@ -23,53 +23,40 @@ struct RootView: View {
     var body: some View {
         Group {
             switch model.state {
-            case .idle, .loading:
-                ProgressView("Cargando festivales…")
-                    .tint(.white)
             case .loaded(let feed):
                 FestivalsScreen(feed: feed)
             case .failed(let message):
-                ErrorView(message: message) {
-                    Task { await model.load() }
-                }
+                ErrorView(message: message) { model.load() }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.black)
         .preferredColorScheme(.dark)
-        .task { await model.load() }
     }
 }
 
 // MARK: - ViewModel
+//
+// Carga 100 % local: el festivals.json del bundle es la única fuente en
+// runtime (los datos se actualizan con cada versión de la app). `failed` solo
+// puede darse si el JSON incluido viene malformado — se notaría en desarrollo.
 
 @MainActor
 final class FeedViewModel: ObservableObject {
     enum State {
-        case idle, loading
         case loaded(FestivalFeed)
         case failed(String)
     }
 
-    @Published private(set) var state: State = .idle
+    @Published private(set) var state: State
 
-    func load() async {
-        state = .loading
-        // 1. Bundle primero → arranque instantáneo, sin esperar red.
-        let bundle = try? FestivalLoader.loadBundled()
-        if let bundle { state = .loaded(bundle) }
-        // 2. Refresco remoto silencioso (8 s de timeout). Se rellenan con el
-        //    bundle los datos que el remoto traiga incompletos (fotos / IDs de
-        //    Apple Music), para que un feed remoto más viejo no borre en runtime
-        //    imágenes ya curadas localmente.
-        do {
-            let remote = try await FestivalLoader.loadRemote()
-            state = .loaded(bundle.map(remote.backfilled(from:)) ?? remote)
-        } catch {
-            if bundle == nil {
-                state = .failed(error.localizedDescription)
-            }
-        }
+    init() { state = Self.loadState() }
+
+    func load() { state = Self.loadState() }
+
+    private static func loadState() -> State {
+        do    { return .loaded(try FestivalLoader.loadBundled()) }
+        catch { return .failed(error.localizedDescription) }
     }
 }
 
@@ -81,7 +68,7 @@ struct ErrorView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: "wifi.exclamationmark")
+            Image(systemName: "exclamationmark.triangle")
                 .font(.largeTitle)
             Text("No pude cargar los festivales")
                 .font(.headline)
