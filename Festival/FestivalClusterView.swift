@@ -435,7 +435,15 @@ struct ArtistBubble: View, Equatable {
     /// círculo en zoom se agranda; sin esto la foto se vería borrosa).
     var imagePoints: CGFloat? = nil
 
+    /// Foto oficial del catálogo de Apple Music, resuelta en vivo (nil mientras
+    /// llega, si no hay autorización o si el artista no tiene id de catálogo).
+    @State private var liveArtworkURL: URL?
+
     private var diameter: CGFloat { radius * 2 }
+
+    /// La foto en vivo manda; la del feed es el respaldo (offline, sin
+    /// autorización de Apple Music o artista sin id resuelto).
+    private var imageURL: URL? { liveArtworkURL ?? artist.imageURL }
 
     // Igualdad por contenido visual: permite a SwiftUI saltarse el re-render
     // (incluido el Canvas del nombre) mientras la física solo cambia la posición.
@@ -448,7 +456,7 @@ struct ArtistBubble: View, Equatable {
         ZStack {
             Circle().fill((artist.accentColor ?? accent).gradient)
 
-            if let url = artist.imageURL {
+            if let url = imageURL {
                 // La foto del artista es el contenido: llena el círculo. Se decodifica
                 // a tamaño y se cachea, así no satura el hilo principal con 56 PNG.
                 CachedArtworkImage(url: url, pointSize: max(diameter, imagePoints ?? 0)) {
@@ -472,6 +480,11 @@ struct ArtistBubble: View, Equatable {
         }
         .frame(width: diameter, height: diameter)
         .overlay(Circle().stroke(.white.opacity(0.25), lineWidth: 1))
+        // Resuelve la foto del catálogo al aparecer. Las burbujas del mismo
+        // render se agrupan en una sola consulta (ver LiveArtistArtwork).
+        // Mientras tanto (o si devuelve nil) se ve la del feed: el cambio, si
+        // lo hay, suele ser imperceptible porque ambas vienen de Apple.
+        .task(id: artist.id) { liveArtworkURL = await LiveArtistArtwork.url(for: artist) }
     }
 
     private var showsFullName: Bool { radius >= 40 }

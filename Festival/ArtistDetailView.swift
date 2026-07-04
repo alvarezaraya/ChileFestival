@@ -77,6 +77,72 @@ enum ArtistCatalog {
     }
 }
 
+// MARK: - Fotos en vivo desde Apple Music (con el feed de respaldo)
+//
+// Las burbujas del cúmulo piden aquí la foto oficial del catálogo y solo caen
+// a la `imageURL` del feed si esto devuelve nil. NUNCA pide autorización (una
+// alerta de permisos solo por mostrar fotos sería invasiva): mientras el
+// usuario no la haya dado —la pide el primer play o el detalle de artista—,
+// se usa el feed. Requiere `appleMusicArtistID` en el feed: la búsqueda por
+// texto puede traer un homónimo y preferimos la foto curada antes que una
+// equivocada.
+
+@MainActor
+enum LiveArtistArtwork {
+
+    /// URL resuelta por id de LINEUP (no de catálogo). `.some(nil)` significa
+    /// "el catálogo no tiene artwork": también se cachea para no re-consultar.
+    private static var resolved: [String: URL?] = [:]
+    /// Tanda en curso: las burbujas que aparecen en el mismo frame se agrupan
+    /// en UNA consulta al catálogo en vez de una request por círculo.
+    private static var pending: [String: LineupArtist] = [:]
+    private static var flushTask: Task<Void, Never>?
+
+    static func url(for artist: LineupArtist) async -> URL? {
+        guard artist.appleMusicArtistID != nil,
+              MusicAuthorization.currentStatus == .authorized else { return nil }
+        if let hit = resolved[artist.id] { return hit }
+
+        pending[artist.id] = artist
+        if flushTask == nil {
+            flushTask = Task {
+                // Ventana corta para juntar todas las burbujas del mismo render.
+                try? await Task.sleep(for: .milliseconds(80))
+                let batch = Array(pending.values)
+                pending = [:]
+                flushTask = nil
+                await resolveBatch(batch)
+            }
+        }
+        await flushTask?.value
+        // Los errores de red no se cachean: si la tanda falló, esto devuelve
+        // nil (se usa el feed) y la próxima aparición de la burbuja reintenta.
+        return resolved[artist.id] ?? nil
+    }
+
+    private static func resolveBatch(_ batch: [LineupArtist]) async {
+        let byCatalogID = Dictionary(
+            batch.compactMap { a in a.appleMusicArtistID.map { ($0, a) } },
+            uniquingKeysWith: { a, _ in a })
+        let ids = Array(byCatalogID.keys)
+        // El endpoint de artistas múltiples acepta hasta ~25 ids por request.
+        for start in stride(from: 0, to: ids.count, by: 25) {
+            let chunk = Array(ids[start..<min(start + 25, ids.count)])
+            let request = MusicCatalogResourceRequest<MusicKit.Artist>(
+                matching: \.id, memberOf: chunk.map { MusicItemID($0) })
+            guard let items = try? await request.response().items else { continue }
+            for id in chunk {
+                guard let lineupArtist = byCatalogID[id] else { continue }
+                let artwork = items.first { $0.id.rawValue == id }?.artwork
+                // `updateValue` y no subscript: hay que GUARDAR el nil (sin
+                // artwork en el catálogo), no borrar la entrada.
+                resolved.updateValue(artwork?.url(width: 600, height: 600),
+                                     forKey: lineupArtist.id)
+            }
+        }
+    }
+}
+
 // MARK: - ViewModel del detalle
 
 @MainActor
