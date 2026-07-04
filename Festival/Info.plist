@@ -7,5 +7,12 @@
 	     panel sea de 120 Hz. Xcode fusiona este plist con el generado. -->
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<!-- Los previews de 30 s (AVQueuePlayer propio) siguen sonando con la
+	     pantalla bloqueada o la app en segundo plano. La reproducción completa
+	     no lo necesita (suena en la app Música, proceso aparte). -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 </dict>
 </plist>

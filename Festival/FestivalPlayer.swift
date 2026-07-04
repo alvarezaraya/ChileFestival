@@ -1,6 +1,7 @@
 import Foundation
 import MusicKit
 import AVFoundation
+import MediaPlayer
 import Combine
 
 @MainActor
@@ -54,6 +55,11 @@ final class FestivalPlayer: ObservableObject {
     private var previewURLs: [URL] = []
     private var previewIndex = 0
     private var previewEndToken: NSObjectProtocol?
+    // Now Playing (pantalla bloqueada / Centro de Control) para los previews.
+    // En reproducción completa no se toca: la cola es de la app Música y el
+    // sistema ya publica su metadata.
+    private var remoteCommandsActive = false
+    private var artworkFetchTask: Task<Void, Never>?
 
     // MARK: - Acción principal
 
@@ -64,34 +70,48 @@ final class FestivalPlayer: ObservableObject {
         guard await MusicAuthorization.request() == .authorized else {
             mode = .needsAuthorization; return
         }
-        do {
-            var pools: [[Song]] = []
-            for artist in artists {
-                let songs = try await topSongs(for: artist)
-                if !songs.isEmpty { pools.append(songs) }
-            }
-            guard !pools.isEmpty else {
-                mode = .error("No encontré canciones para este cartel."); return
-            }
-            let mix = interleaveShuffle(pools)
+        // Top songs de todos los artistas EN PARALELO (concurrencia acotada):
+        // en serie, un cartel grande eran decenas de round-trips encadenados y
+        // el play tardaba varios segundos en arrancar.
+        let (pools, firstError) = await topSongPools(for: artists)
+        guard !pools.isEmpty else {
+            mode = .error(firstError?.localizedDescription
+                          ?? "No encontré canciones para este cartel.")
+            return
+        }
+        await startPlayback(interleaveShuffle(pools))
+    }
 
-            let subscription = try? await MusicSubscription.current
-            if subscription?.canPlayCatalogContent == true {
-                try await playFull(mix)
-            } else {
-                playPreviews(mix)
-            }
-        } catch {
-            mode = .error(error.localizedDescription)
+    /// Reproduce una lista ya resuelta (p. ej. las top songs que el detalle del
+    /// artista ya muestra), sin volver a consultar el catálogo.
+    func playSongs(_ songs: [Song]) async {
+        teardownObservers()
+        mode = .loading
+
+        guard await MusicAuthorization.request() == .authorized else {
+            mode = .needsAuthorization; return
+        }
+        guard !songs.isEmpty else {
+            mode = .error("No encontré canciones."); return
+        }
+        await startPlayback(songs)
+    }
+
+    private func startPlayback(_ songs: [Song]) async {
+        let subscription = try? await MusicSubscription.current
+        if subscription?.canPlayCatalogContent == true {
+            do { try await playFull(songs) }
+            catch { mode = .error(error.localizedDescription) }
+        } else {
+            playPreviews(songs)
         }
     }
 
     // MARK: - Controles
 
     func togglePlayPause() {
-        if let queue = previewQueue {
-            isPlaying ? queue.pause() : queue.play()
-            isPlaying.toggle()
+        if previewQueue != nil {
+            setPreviewPlaying(!isPlaying)
         } else {
             Task {
                 if isPlaying { player.pause() } else { try? await player.play() }
@@ -113,8 +133,7 @@ final class FestivalPlayer: ObservableObject {
         // No detenemos el reproductor del sistema (= app Música): su cola es
         // compartida y el usuario espera que Música siga sonando al salir.
         // Solo soltamos nuestro backend de previews y los observers.
-        previewQueue?.pause()
-        previewQueue = nil
+        stopPreviewBackend()
         teardownObservers()
         observingSystem = false
         isPlaying = false
@@ -124,27 +143,46 @@ final class FestivalPlayer: ObservableObject {
 
     // MARK: - Top songs
 
-    private func topSongs(for artist: LineupArtist) async throws -> [Song] {
-        try await ArtistCatalog.topSongs(for: artist, limit: songsPerArtist)
-    }
-
-    private func interleaveShuffle(_ pools: [[Song]]) -> [Song] {
-        var pools = pools.map { $0.shuffled() }
-        var result: [Song] = []
-        var keepGoing = true
-        while keepGoing {
-            keepGoing = false
-            for i in pools.indices where !pools[i].isEmpty {
-                result.append(pools[i].removeFirst()); keepGoing = true
+    /// Resuelve las top songs de cada artista en paralelo (máx. 6 consultas
+    /// simultáneas para no gatillar rate-limiting del catálogo), preservando el
+    /// orden del cartel. Los artistas que fallen o vengan vacíos se omiten; se
+    /// devuelve el primer error por si TODOS fallaron (p. ej. sin red).
+    private func topSongPools(for artists: [LineupArtist])
+        async -> (pools: [[Song]], firstError: Error?) {
+        var pools = [[Song]?](repeating: nil, count: artists.count)
+        var firstError: Error?
+        let limit = songsPerArtist
+        await withTaskGroup(of: (Int, Result<[Song], Error>).self) { group in
+            var iterator = artists.enumerated().makeIterator()
+            func addNext() {
+                guard let (i, artist) = iterator.next() else { return }
+                group.addTask {
+                    do { return (i, .success(try await ArtistCatalog.topSongs(for: artist, limit: limit))) }
+                    catch { return (i, .failure(error)) }
+                }
+            }
+            for _ in 0..<6 { addNext() }
+            while let (i, result) = await group.next() {
+                switch result {
+                case .success(let songs): pools[i] = songs
+                case .failure(let error): if firstError == nil { firstError = error }
+                }
+                addNext()
             }
         }
-        return result
+        return (pools.compactMap { $0 }.filter { !$0.isEmpty }, firstError)
+    }
+
+    /// Baraja cada pool y las intercala round-robin: todos los artistas quedan
+    /// representados desde el comienzo del mix.
+    private func interleaveShuffle(_ pools: [[Song]]) -> [Song] {
+        ArtistCatalog.interleave(pools.map { $0.shuffled() })
     }
 
     // MARK: - Reproducción completa (con suscripción)
 
     private func playFull(_ songs: [Song]) async throws {
-        previewQueue = nil
+        stopPreviewBackend()
         player.queue = SystemMusicPlayer.Queue(for: songs)
         player.state.shuffleMode = .off
         try await player.play()
@@ -207,6 +245,7 @@ final class FestivalPlayer: ObservableObject {
         }
         try? AVAudioSession.sharedInstance().setCategory(.playback)
         try? AVAudioSession.sharedInstance().setActive(true)
+        activateRemoteCommands()
         mode = .previewPlayback
         startPreview(at: 0)
     }
@@ -243,6 +282,100 @@ final class FestivalPlayer: ObservableObject {
         nowPlayingTitle = song.title
         nowPlayingArtist = song.artistName
         artworkURL = song.artwork?.url(width: 600, height: 600)
+        updateNowPlayingInfo()
+    }
+
+    // MARK: - Now Playing + controles remotos (solo previews)
+
+    private func setPreviewPlaying(_ playing: Bool) {
+        guard let queue = previewQueue else { return }
+        playing ? queue.play() : queue.pause()
+        isPlaying = playing
+        updateNowPlayingInfo()
+    }
+
+    /// Publica el preview actual en la pantalla bloqueada / Centro de Control.
+    /// La carátula llega después (descarga cacheada) y se re-publica al llegar.
+    private func updateNowPlayingInfo() {
+        guard let queue = previewQueue else { return }
+        var info: [String: Any] = [
+            MPNowPlayingInfoPropertyMediaType: MPNowPlayingInfoMediaType.audio.rawValue,
+            MPNowPlayingInfoPropertyPlaybackRate: isPlaying ? 1.0 : 0.0
+        ]
+        if let nowPlayingTitle { info[MPMediaItemPropertyTitle] = nowPlayingTitle }
+        if let nowPlayingArtist { info[MPMediaItemPropertyArtist] = nowPlayingArtist }
+        if let item = queue.currentItem {
+            let duration = item.duration.seconds
+            if duration.isFinite, duration > 0 {
+                info[MPMediaItemPropertyPlaybackDuration] = duration
+            }
+            info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = item.currentTime().seconds
+        }
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+
+        artworkFetchTask?.cancel()
+        guard let url = artworkURL else { return }
+        artworkFetchTask = Task { [weak self] in
+            guard let image = await ArtworkImageCache.shared.image(for: url, maxPixel: 600),
+                  !Task.isCancelled, let self, self.previewQueue != nil else { return }
+            var current = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+            current[MPMediaItemPropertyArtwork] =
+                MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = current
+        }
+    }
+
+    /// Engancha play/pausa/siguiente/anterior del sistema al backend de
+    /// previews (idempotente). En reproducción completa no hace falta: los
+    /// controles remotos ya los maneja la app Música.
+    private func activateRemoteCommands() {
+        guard !remoteCommandsActive else { return }
+        remoteCommandsActive = true
+        let center = MPRemoteCommandCenter.shared()
+        center.playCommand.addTarget { [weak self] _ in
+            Task { @MainActor in self?.setPreviewPlaying(true) }
+            return .success
+        }
+        center.pauseCommand.addTarget { [weak self] _ in
+            Task { @MainActor in self?.setPreviewPlaying(false) }
+            return .success
+        }
+        center.togglePlayPauseCommand.addTarget { [weak self] _ in
+            Task { @MainActor in self?.togglePlayPause() }
+            return .success
+        }
+        center.nextTrackCommand.addTarget { [weak self] _ in
+            Task { @MainActor in await self?.next() }
+            return .success
+        }
+        center.previousTrackCommand.addTarget { [weak self] _ in
+            Task { @MainActor in await self?.previous() }
+            return .success
+        }
+    }
+
+    private func deactivateRemoteCommands() {
+        guard remoteCommandsActive else { return }
+        remoteCommandsActive = false
+        let center = MPRemoteCommandCenter.shared()
+        [center.playCommand, center.pauseCommand, center.togglePlayPauseCommand,
+         center.nextTrackCommand, center.previousTrackCommand]
+            .forEach { $0.removeTarget(nil) }
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+    }
+
+    /// Suelta TODO el backend de previews: cola, carátula en vuelo, controles
+    /// remotos, Now Playing y la sesión de audio (devuelve el audio a otras
+    /// apps). No toca el reproductor del sistema.
+    private func stopPreviewBackend() {
+        guard previewQueue != nil || remoteCommandsActive else { return }
+        previewQueue?.pause()
+        previewQueue = nil
+        artworkFetchTask?.cancel()
+        artworkFetchTask = nil
+        deactivateRemoteCommands()
+        try? AVAudioSession.sharedInstance().setActive(
+            false, options: .notifyOthersOnDeactivation)
     }
 
     // MARK: - Limpieza

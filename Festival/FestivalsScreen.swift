@@ -135,6 +135,10 @@ struct FestivalsScreen: View {
             }
         }
         .background(.black)
+        // Confirmación táctil al expandir/colapsar el cartel y al entrar/salir
+        // del zoom de artista.
+        .sensoryFeedback(.impact(weight: .light), trigger: isExpanded)
+        .sensoryFeedback(.selection, trigger: zoomArtist?.id)
         .onDisappear { player.stop() }
         .onChange(of: player.isActive) { _, active in
             if !active { activePlayerFestivalID = nil }
@@ -207,6 +211,8 @@ struct FestivalsScreen: View {
             .animation(.spring(response: 0.35, dampingFraction: 0.8), value: safeIndex)
         }
         .frame(width: containerW, height: dotSize)
+        // Decorativo: VoiceOver ya pagina el carrusel deslizando en el TabView.
+        .accessibilityHidden(true)
         .mask(
             LinearGradient(stops: [
                 .init(color: showAll ? .black : .clear, location: 0),
