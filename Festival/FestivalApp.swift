@@ -16,15 +16,42 @@ struct FestivalApp: App {
 }
 
 // MARK: - Root: decide qué mostrar según el estado de carga
+//
+// Primer arranque → onboarding (elegir hasta 3 festivales a seguir; desde el
+// cuarto, paywall). Después → carrusel filtrado a lo seguido, con un botón para
+// reabrir la misma pantalla de selección como sheet.
 
 struct RootView: View {
     @StateObject private var model = FeedViewModel()
+    @StateObject private var followStore = FollowStore()
+    @StateObject private var entitlements = EntitlementStore()
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @State private var showFollowEditor = false
 
     var body: some View {
         Group {
             switch model.state {
             case .loaded(let feed):
-                FestivalsScreen(feed: feed)
+                if hasCompletedOnboarding {
+                    FestivalsScreen(
+                        feed: feed.filtered(bySeriesKeys: followStore.followedKeys),
+                        onEditFollows: { showFollowEditor = true }
+                    )
+                    .sheet(isPresented: $showFollowEditor) {
+                        FestivalSelectionScreen(
+                            feed: feed, mode: .edit,
+                            followStore: followStore, entitlements: entitlements,
+                            onFinished: { showFollowEditor = false },
+                            onCancel: { showFollowEditor = false }
+                        )
+                    }
+                } else {
+                    FestivalSelectionScreen(
+                        feed: feed, mode: .onboarding,
+                        followStore: followStore, entitlements: entitlements,
+                        onFinished: { hasCompletedOnboarding = true }
+                    )
+                }
             case .failed(let message):
                 ErrorView(message: message) { model.load() }
             }

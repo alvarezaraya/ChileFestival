@@ -8,6 +8,8 @@ import SwiftUI
 /// silueta y cambia de color / selección musical según el festival visible.
 struct FestivalsScreen: View {
     let feed: FestivalFeed
+    /// Abre la pantalla de selección de festivales seguidos (sheet del RootView).
+    var onEditFollows: (() -> Void)? = nil
 
     @StateObject private var player = FestivalPlayer()
     @StateObject private var physicsStore = PhysicsStore()
@@ -22,8 +24,9 @@ struct FestivalsScreen: View {
     @State private var selectedDays: [String: Int] = [:]
     @Namespace private var ns
 
-    init(feed: FestivalFeed) {
+    init(feed: FestivalFeed, onEditFollows: (() -> Void)? = nil) {
         self.feed = feed
+        self.onEditFollows = onEditFollows
         // Arrancar en el festival más próximo a realizarse (o el último si todos pasaron).
         let today = Date()
         let idx = feed.festivals.firstIndex { $0.endDate.addingTimeInterval(86_400) > today }
@@ -72,6 +75,27 @@ struct FestivalsScreen: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .disabled(isExpanded)
+
+            // Botón flotante para cambiar los festivales seguidos. Solo en la
+            // vista de carrusel: al expandir el cartel o abrir un artista estorba.
+            if let onEditFollows, !isExpanded, zoomArtist == nil {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button(action: onEditFollows) {
+                            Image(systemName: "slider.horizontal.3")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.white.opacity(0.85))
+                                .padding(10)
+                                .background(.white.opacity(0.12), in: Circle())
+                        }
+                        .accessibilityLabel("Elegir festivales a seguir")
+                    }
+                    .padding(.horizontal)
+                    Spacer()
+                }
+                .transition(.opacity)
+            }
 
             // Botón dinámico compartido + indicador de página (fuera de la silueta).
             if zoomArtist == nil {
@@ -253,6 +277,8 @@ struct FestivalPosterPage: View {
     var body: some View {
         VStack(spacing: 12) {
             header
+                // Despeja el botón flotante de "elegir festivales" (top-trailing).
+                .padding(.horizontal, 44)
             // Solo si el cartel ya tiene artistas repartidos por jornada. Si el
             // lineup está vacío o aún sin desglose por día, el selector no aporta
             // (serían chips deshabilitados) y se omite.
@@ -335,6 +361,7 @@ struct FestivalPosterPage: View {
         VStack(spacing: 3) {
             Text(festival.name)
                 .font(.title2.bold())
+                .multilineTextAlignment(.center)
                 .opacity(festival.isPast ? 0.55 : 1)
             HStack(spacing: 6) {
                 Text(festival.dateRangeLabel)
