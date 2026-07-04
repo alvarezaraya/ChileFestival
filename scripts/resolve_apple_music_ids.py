@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """
-Resuelve los appleMusicArtistID nulos de festivals.json usando la Apple Music API.
+Resuelve appleMusicArtistID y accentColorHex de festivals.json usando la Apple Music API.
 
 Solo necesita un *developer token* (no token de usuario), así que corre headless
 en GitHub Actions. Los IDs de artista son globales: resolver en storefront "cl"
 da un ID reutilizable en cualquier tienda.
+
+Además de IDs, rellena accentColorHex (override por artista, hoy casi siempre
+null) con el artwork.bgColor que devuelve el catálogo para cada artista —el
+mismo color de fondo que usa Apple Music en su propia UI—, sin pisar overrides
+ya seteados a mano.
 
 Requisitos:
     pip install pyjwt cryptography requests
@@ -17,6 +22,7 @@ Variables de entorno (desde tu MusicKit Key en developer.apple.com → Keys):
 Uso:
     python resolve_apple_music_ids.py festivals.json            # interactivo
     python resolve_apple_music_ids.py festivals.json --auto     # acepta matches exactos
+    python resolve_apple_music_ids.py festivals.json --skip-colors  # solo IDs
 """
 
 import argparse
@@ -73,6 +79,31 @@ def search_artists(session, token, storefront, name, limit):
     return []
 
 
+def fetch_colors(session, token, storefront, ids):
+    """Devuelve {artistId: '#RRGGBB'} usando artwork.bgColor (lookup en lotes de 25)."""
+    colors = {}
+    headers = {"Authorization": f"Bearer {token}"}
+    for i in range(0, len(ids), 25):
+        chunk = ids[i:i + 25]
+        params = {"ids": ",".join(chunk)}
+        for attempt in range(4):
+            r = session.get(f"{API}/{storefront}/artists", params=params,
+                            headers=headers, timeout=20)
+            if r.status_code == 429:
+                time.sleep(2 ** attempt)
+                continue
+            r.raise_for_status()
+            break
+        else:
+            continue
+        for a in r.json().get("data", []):
+            bg = a.get("attributes", {}).get("artwork", {}).get("bgColor")
+            if bg:
+                colors[a["id"]] = f"#{bg.upper()}"
+        time.sleep(0.2)
+    return colors
+
+
 def rank(query, candidates):
     nq = normalize(query)
     scored = []
@@ -118,6 +149,8 @@ def main():
     ap.add_argument("--limit", type=int, default=5)
     ap.add_argument("--auto", action="store_true",
                     help="acepta automáticamente matches exactos e inequívocos")
+    ap.add_argument("--skip-colors", action="store_true",
+                    help="no rellenar accentColorHex, solo appleMusicArtistID")
     args = ap.parse_args()
 
     token = make_developer_token()
@@ -141,6 +174,19 @@ def main():
                 skipped.append(f'{festival["id"]} / {artist["name"]}')
             time.sleep(0.2)                     # cortesía con la API
 
+    colored = 0
+    if not args.skip_colors:
+        need_color = [artist for festival in feed["festivals"]
+                      for artist in festival["lineup"]
+                      if artist.get("appleMusicArtistID") and not artist.get("accentColorHex")]
+        ids = sorted({artist["appleMusicArtistID"] for artist in need_color})
+        colors = fetch_colors(session, token, args.storefront, ids) if ids else {}
+        for artist in need_color:
+            color = colors.get(artist["appleMusicArtistID"])
+            if color:
+                artist["accentColorHex"] = color
+                colored += 1
+
     # Respaldo + escritura preservando orden y acentos.
     os.replace(args.json_path, args.json_path + ".bak")
     with open(args.json_path, "w", encoding="utf-8") as f:
@@ -150,6 +196,8 @@ def main():
     print(f"\nResueltos: {resolved}.  Sin resolver: {len(skipped)}.")
     for s in skipped:
         print(f"  – {s}")
+    if not args.skip_colors:
+        print(f"Colores de acento resueltos: {colored}.")
     if skipped:
         sys.exit(0)
 
