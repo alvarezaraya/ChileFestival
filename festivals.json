@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-03",
+  "updatedAt": "2026-07-04",
   "festivals": [
     {
       "id": "primavera-sound-santiago-2022",
@@ -597,6 +597,2373 @@
       ]
     },
     {
+      "id": "lollapalooza-chile-2023",
+      "name": "Lollapalooza Chile",
+      "edition": "2023",
+      "venue": "Parque Bicentenario Cerrillos",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2023-03-17",
+        "2023-03-18",
+        "2023-03-19"
+      ],
+      "accentColorHex": "#E4002B",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "billie-eilish",
+          "name": "Billie Eilish",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "pop",
+            "alt pop"
+          ],
+          "appleMusicArtistID": "1065981054",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/e1/f3/6a/e1f36a60-9897-162d-3697-7501eeafbc3b/a1d41336-49bd-4212-8787-57547ca3f87e_ami-identity-ef10a72d4764d04743b17fa13520b756-2024-04-08T15-24-54.609Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "lil-nas-x",
+          "name": "Lil Nas X",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "hip hop",
+            "pop rap"
+          ],
+          "appleMusicArtistID": "1400730578",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/c5/63/61/c5636143-1d4f-078b-8767-a84be288cfed/ami-identity-d94c9473da215ca283d324844dae767a-2024-11-15T04-55-05.367Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "kali-uchis",
+          "name": "Kali Uchis",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "r&b",
+            "neo soul"
+          ],
+          "appleMusicArtistID": "894731301",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/c2/4d/6a/c24d6afe-bb2e-656b-3d8c-878370683561/ami-identity-8febedf595ea3c164413ad5ed4403a8e-2025-03-18T16-28-54.058Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "rise-against",
+          "name": "Rise Against",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "punk rock",
+            "hardcore melódico"
+          ],
+          "appleMusicArtistID": "16252655",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/91/d7/68/91d7680e-daf2-8f01-7602-8f5d27884e88/ami-identity-7eabd00ad77a25e193338e5b407ea0c9-2025-08-16T19-43-23.855Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "modest-mouse",
+          "name": "Modest Mouse",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "indie rock",
+            "rock alternativo"
+          ],
+          "appleMusicArtistID": "467112",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/fe/cc/fa/feccfa20-58c3-49fd-bbb6-0bd4522f6dbd/mzl.sbqtdktw.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "conan-gray",
+          "name": "Conan Gray",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop",
+            "bedroom pop"
+          ],
+          "appleMusicArtistID": "1168567308",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/b6/41/e5/b641e510-a0f7-2b47-d0eb-7f0de40da994/ami-identity-501fae298d84a5606e4634ff5abdd848-2025-05-22T14-28-46.870Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "polo-pan",
+          "name": "Polo & Pan",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "electrónica",
+            "french house"
+          ],
+          "appleMusicArtistID": "652304906",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/d1/b6/44/d1b644d0-eaee-4ef6-ba19-6fdcc0b9ad85/ami-identity-4a5308a1f42b036c96ec584388f8759a-2025-02-18T15-00-28.764Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "claptone",
+          "name": "Claptone",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "house",
+            "deep house"
+          ],
+          "appleMusicArtistID": "470488523",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/bf/05/a3/bf05a342-5c63-1d50-d016-c1ffb0db6cff/ami-identity-477375f61a56c5d37119d501cee9bb48-2025-04-25T10-34-48.529Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "tokischa",
+          "name": "Tokischa",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "dembow",
+            "urbano"
+          ],
+          "appleMusicArtistID": "1414103446",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features116/v4/61/58/5c/61585ca2-2d5c-8984-e9ab-8928b9c972f2/mzl.vmycodhh.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "mora",
+          "name": "Mora",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "reggaetón",
+            "trap latino"
+          ],
+          "appleMusicArtistID": "1329561467",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/04/11/76/041176c7-49db-77ea-59c2-18d4b08810a0/ami-identity-6398293bdcd4d3678c157c96d018c22f-2025-05-21T17-33-43.914Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "ryan-castro",
+          "name": "Ryan Castro",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "reggaetón",
+            "urbano"
+          ],
+          "appleMusicArtistID": "1263552447",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/65/a7/09/65a709a7-c41a-04d9-4d6c-81c8976e45c9/ami-identity-ee285e1502da9c8192b717e2598337fe-2026-01-12T20-50-59.624Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "dillom",
+          "name": "Dillom",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "trap argentino",
+            "hip hop"
+          ],
+          "appleMusicArtistID": "1448042578",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/9c/3f/cc/9c3fcc20-6b90-e323-0484-87a31452ece2/a8659cab-0a41-4b0d-8b55-0de9329440d4_ami-identity-6875b3f6aa13ad4f8236c1d8902dfdb0-2024-04-22T01-14-42.999Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "usted-senalemelo",
+          "name": "Usted Señálemelo",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "indie rock argentino",
+            "rock alternativo"
+          ],
+          "appleMusicArtistID": "885237407",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/78/88/6f/78886f62-6eb4-e546-e427-bc9c24026f9c/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "conociendo-rusia",
+          "name": "Conociendo Rusia",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "indie pop argentino",
+            "rock"
+          ],
+          "appleMusicArtistID": "1365960956",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/b7/71/2d/b7712d7e-7909-6b58-ab5a-508b81228196/ami-identity-7b3cdb3ac2f920825dbdd9a12054a1cb-2024-12-13T14-34-36.458Z_cropped.png/600x600cc.png",
+          "accentColorHex": "#070300"
+        },
+        {
+          "id": "pailita",
+          "name": "Pailita",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "urbano chileno",
+            "reggaetón"
+          ],
+          "appleMusicArtistID": "1518894345",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features112/v4/ef/b7/ef/efb7efaf-74e6-023e-b0da-6943c1b262b3/mzl.whhxzmun.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "chini-png",
+          "name": "Chini.png",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "indie chileno",
+            "art pop"
+          ],
+          "appleMusicArtistID": "1473308145",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/dc/da/0b/dcda0bf2-d0d8-1177-c148-07e3a8b4b274/199538977592.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "drake",
+          "name": "Drake",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "hip hop",
+            "r&b"
+          ],
+          "appleMusicArtistID": "271256",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages112/v4/1b/71/65/1b716513-b0c1-9c6b-45aa-cbb9198248cc/01607cf1-1d52-43d2-84ce-d6fc1f4a3475_ami-identity-7665599cc626d803af7956b3691905e7-2022-11-30T21-07-19.526Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "rosalia",
+          "name": "Rosalía",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "flamenco pop",
+            "pop experimental"
+          ],
+          "appleMusicArtistID": "313845115",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/71/bb/f0/71bbf0c3-e2eb-4bfb-9384-f25a57890254/ami-identity-bf47da8131eeb5cf8a3e7092ef244a8f-2025-10-27T15-09-02.872Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "cigarettes-after-sex",
+          "name": "Cigarettes After Sex",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "dream pop",
+            "slowcore"
+          ],
+          "appleMusicArtistID": "1069739468",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/88/ea/d1/88ead1f1-b261-3318-9a17-1509611d7e9e/ami-identity-1fca9222a93abfc9c2a07a24708733ae-2026-05-18T03-52-25.561Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "armin-van-buuren",
+          "name": "Armin van Buuren",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "trance",
+            "edm"
+          ],
+          "appleMusicArtistID": "17976294",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/fb/87/46/fb8746ab-c45f-f248-430a-759c96417dcb/ami-identity-133f8309f7cce6851c2ea8fc76b416b0-2025-10-06T08-58-01.615Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "tove-lo",
+          "name": "Tove Lo",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "electropop",
+            "pop"
+          ],
+          "appleMusicArtistID": "570136838",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/d6/6e/d9/d66ed91c-6642-1c4c-4938-af29c4b785af/ami-identity-b8965520dc4d26f3868feee1936695a1-2026-05-11T15-55-40.098Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "aurora",
+          "name": "AURORA",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "art pop",
+            "electropop"
+          ],
+          "appleMusicArtistID": "947171999",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages112/v4/13/d7/a7/13d7a78c-1d3f-1dc9-ec73-cbf9ae6aca16/1af41250-8099-4dcf-87c0-0175324676a9_ami-identity-be5308d2594826cc5f0309b06a6ec8e6-2024-03-28T09-20-32.727Z_cropped.png/600x600cc.png",
+          "accentColorHex": "#4F588C"
+        },
+        {
+          "id": "alison-wonderland",
+          "name": "Alison Wonderland",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "edm",
+            "trap electrónico"
+          ],
+          "appleMusicArtistID": "669831761",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/af/09/a4/af09a406-261f-7f0e-e882-2d3367e8ed71/ami-identity-c043689c018a1fed2a0fc6d338834c7c-2025-08-01T06-17-08.374Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "danny-ocean",
+          "name": "Danny Ocean",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "pop latino",
+            "urbano"
+          ],
+          "appleMusicArtistID": "1248515752",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/ea/ef/be/eaefbe7b-04b4-048e-7c58-8858a9c13588/file_cropped.png/600x600cc.png",
+          "accentColorHex": "#1B1B1B"
+        },
+        {
+          "id": "young-miko",
+          "name": "Young Miko",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "trap latino",
+            "urbano"
+          ],
+          "appleMusicArtistID": "1576521417",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/1d/ef/5c/1def5c93-b5b0-e963-35bc-5004e32db363/ami-identity-fc792862531fff86d8f81ea7db6f594c-2025-10-03T01-08-38.306Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "villano-antillano",
+          "name": "Villano Antillano",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "rap",
+            "urbano"
+          ],
+          "appleMusicArtistID": "1441570441",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/76/89/7f/76897f52-9e9b-c86c-721b-d795d8771032/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "cris-mj",
+          "name": "Cris MJ",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "urbano chileno",
+            "reggaetón"
+          ],
+          "appleMusicArtistID": "1504191840",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features211/v4/d3/e3/fb/d3e3fb46-5134-e912-86c3-60e0191e9a79/mzl.lqiaiotf.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "suki-waterhouse",
+          "name": "Suki Waterhouse",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "indie pop",
+            "dream pop"
+          ],
+          "appleMusicArtistID": "926014669",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/50/68/8e/50688e3e-eff2-c712-4680-e7bc6778392b/ami-identity-f9d5fc50718422ff9b81eaba52cdbc0c-2026-04-21T14-30-49.956Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "ases-falsos",
+          "name": "Ases Falsos",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "indie chileno",
+            "pop rock"
+          ],
+          "appleMusicArtistID": "596047332",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/72/49/d3/7249d3c5-ed41-0d58-c87d-0b2564dd081a/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "pettinellis",
+          "name": "Pettinellis",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "rock chileno"
+          ],
+          "appleMusicArtistID": "1450886247",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/90/cc/09/90cc0988-4b73-1e9e-a6c1-9a52e683bd5c/1afd671e-4c45-419d-b170-b08e69022b45.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "benito-cerati",
+          "name": "Benito Cerati",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "art pop",
+            "indie"
+          ],
+          "appleMusicArtistID": "157363897",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features112/v4/51/77/95/517795d4-d9af-6bbd-4c8a-f09899e9baff/mzl.ckzivxzk.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "young-cister",
+          "name": "Young Cister",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "urbano chileno",
+            "r&b"
+          ],
+          "appleMusicArtistID": "1185835987",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/58/13/06/58130662-b1e3-cf02-3ebb-1813f67af0dc/pr_source.png/600x600cc.png",
+          "accentColorHex": "#0591A9"
+        },
+        {
+          "id": "twenty-one-pilots",
+          "name": "Twenty One Pilots",
+          "tier": "headliner",
+          "day": 3,
+          "genres": [
+            "rock alternativo",
+            "pop rock"
+          ],
+          "appleMusicArtistID": "349736311",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/ca/cd/50/cacd509c-b0d0-9767-afed-2568bb48bb80/ami-identity-c9ba08a71090ad5f6094375f4aa48f32-2025-05-21T14-28-34.785Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "tame-impala",
+          "name": "Tame Impala",
+          "tier": "headliner",
+          "day": 3,
+          "genres": [
+            "rock psicodélico",
+            "neo-psicodelia"
+          ],
+          "appleMusicArtistID": "290242959",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/e4/03/c3/e403c38b-184c-8366-0c31-654de82aa620/ami-identity-6fb2b215289b5ed092cabce39aada4e2-2025-07-22T16-12-31.093Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "the-1975",
+          "name": "The 1975",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "pop rock",
+            "indie pop"
+          ],
+          "appleMusicArtistID": "542640016",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features126/v4/14/ba/24/14ba24a3-d042-5b63-7db1-8897db1041ae/mza_2338388919779827451.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "melanie-martinez",
+          "name": "Melanie Martinez",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "art pop",
+            "electropop"
+          ],
+          "appleMusicArtistID": "993014053",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/e1/db/21/e1db21e9-59e4-823f-f6dc-06221f71b3de/ami-identity-654273e58c5366e36449270c26cb262d-2026-01-23T20-29-28.326Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "jane-s-addiction",
+          "name": "Jane's Addiction",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "rock alternativo",
+            "hard rock"
+          ],
+          "appleMusicArtistID": "175958",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features116/v4/74/20/ff/7420ff4c-3697-8ef4-73b9-7f0d44c927e2/mzl.newsjfrx.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "jamie-xx",
+          "name": "Jamie xx",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "electrónica",
+            "uk bass"
+          ],
+          "appleMusicArtistID": "405563985",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/ed/1e/16/ed1e1616-3174-44b4-36f5-5d440a0848cb/15247603-75cc-4875-954b-538515115e1d_ami-identity-7e5fbc79a6d2824fc3544d3570579702-2024-06-04T09-10-19.937Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "fred-again",
+          "name": "Fred Again..",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "electrónica",
+            "house"
+          ],
+          "appleMusicArtistID": "1455262408",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/3f/9c/d9/3f9cd91a-1ac6-dede-034a-162ad4fb3d45/ami-identity-1a2db2876f619e9b18082e2f4e63737a-2026-05-26T10-34-14.294Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "yungblud",
+          "name": "Yungblud",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "pop punk",
+            "rock alternativo"
+          ],
+          "appleMusicArtistID": "213048599",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/9a/ce/3d/9ace3db5-7565-f8cc-27c1-42d2aa00d3b0/ami-identity-2b2ca99f8e07d135ffe8d30c5bb55fac-2025-05-06T16-54-15.339Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "wallows",
+          "name": "Wallows",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "indie rock",
+            "indie pop"
+          ],
+          "appleMusicArtistID": "1225257328",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/24/e6/24/24e62443-72d9-bf96-80ea-80e81627f590/ami-identity-b69538002e246d5c68a1f6c7d2dde0c2-2025-04-24T06-42-58.234Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "sofi-tukker",
+          "name": "Sofi Tukker",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "dance pop",
+            "house"
+          ],
+          "appleMusicArtistID": "998656537",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/07/88/61/078861b3-ebee-c2fc-8271-314d21716ee9/ami-identity-f80de6117cde6287a76c0c685fd23ceb-2026-01-27T21-34-58.609Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "purple-disco-machine",
+          "name": "Purple Disco Machine",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "disco house",
+            "nu-disco"
+          ],
+          "appleMusicArtistID": "357397685",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/97/33/27/973327fd-b42b-3036-255d-9560ed90e3c2/5dfc676c-fca2-40cd-ad37-4bc2bade6d98_ami-identity-473815cea44e25811a1ae5897ec376b2-2023-03-17T12-14-36.426Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "lit-killah",
+          "name": "Lit Killah",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "trap argentino",
+            "freestyle"
+          ],
+          "appleMusicArtistID": "1316716270",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/da/19/28/da1928a2-dcd5-c499-10ae-bb07e14e2467/ami-identity-8c2fc60879a06f497a3ec04dc25f9944-2026-05-15T22-37-01.828Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "alvaro-diaz",
+          "name": "Álvaro Díaz",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "reggaetón alternativo",
+            "urbano"
+          ],
+          "appleMusicArtistID": "7044841",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/42/af/08/42af0862-85a0-169c-78bb-4b4dde484156/ami-identity-5a0b3a66ff994cb995bf15240f49b826-2025-05-22T00-27-26.569Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "alex-anwandter",
+          "name": "Álex Anwandter",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "pop chileno",
+            "synth pop"
+          ],
+          "appleMusicArtistID": "467526239",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/f9/5c/5b/f95c5b71-fe4b-b137-7fa2-55c8ac2c735c/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "panico",
+          "name": "Pánico",
+          "tier": "emerging",
+          "day": 3,
+          "genres": [
+            "rock chileno",
+            "garage rock"
+          ],
+          "appleMusicArtistID": "1678166227",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music/92/2a/1b/mzi.fblhrotr.jpg/600x600cc.png",
+          "accentColorHex": "#070707"
+        },
+        {
+          "id": "ysy-a",
+          "name": "YSY A",
+          "tier": "emerging",
+          "day": 3,
+          "genres": [
+            "trap argentino",
+            "freestyle"
+          ],
+          "appleMusicArtistID": "1270499144",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/c5/43/51/c5435146-bf05-936b-b4fd-541ce09f4678/e8cadeaf-9b3c-4a82-916e-fd0c75d9d020_ami-identity-87c9c09d2a7631e3e384229a556335f9-2023-11-09T23-44-28.741Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "creamfields-chile-2023",
+      "name": "Creamfields Chile",
+      "edition": "2023",
+      "venue": "Club Hípico de Santiago",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2023-10-14"
+      ],
+      "accentColorHex": "#00B5CC",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "tiesto",
+          "name": "Tiësto",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "big room",
+            "trance"
+          ],
+          "appleMusicArtistID": "4091218",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/ff/77/33/ff7733f9-533c-454f-ec31-738a166cdb8c/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "steve-aoki",
+          "name": "Steve Aoki",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "edm",
+            "electro house"
+          ],
+          "appleMusicArtistID": "271066694",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/b8/55/a6/b855a64e-1b29-fcf0-4f73-dc21bfb4cdff/f821dfcf-bb8a-4bbc-af68-de46c6311393_ami-identity-7285230292295a254044dfa1f8b9e7ab-2024-06-27T19-25-36.553Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "afrojack",
+          "name": "Afrojack",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "electro house",
+            "edm"
+          ],
+          "appleMusicArtistID": "211210469",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/73/e7/0a/73e70a9d-6a30-f587-8c3d-ee8681d22e85/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "porter-robinson",
+          "name": "Porter Robinson",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "electropop",
+            "edm"
+          ],
+          "appleMusicArtistID": "282330711",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages112/v4/ed/82/72/ed8272d3-b6a2-f8da-18b7-e34eefec46d0/f77fbdc4-8cc6-4d94-8026-316944b0a3f5_ami-identity-d22741ac4630696dc6353a596158bc20-2024-03-19T23-53-14.193Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "joris-voorn",
+          "name": "Joris Voorn",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "techno",
+            "tech house"
+          ],
+          "appleMusicArtistID": "121949655",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/e5/80/86/e58086f0-94c2-c5b1-69db-87fcc74aa962/ami-identity-08391cff240d32ff93af36800fce619c-2025-07-17T22-27-17.927Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "kolsch",
+          "name": "Kölsch",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "melodic techno"
+          ],
+          "appleMusicArtistID": "319272560",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/bc/ec/22/bcec2214-b7bc-a3dc-6510-3feec7792515/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "nicole-moudaber",
+          "name": "Nicole Moudaber",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "techno"
+          ],
+          "appleMusicArtistID": "266580448",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/94/66/9c/94669cbb-8e5d-46c7-72c9-16dce19efe1a/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "eats-everything",
+          "name": "Eats Everything",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "house",
+            "tech house"
+          ],
+          "appleMusicArtistID": "380848817",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/18/2b/1d/182b1d13-43cb-dd11-0381-0b52ede7cc28/ami-identity-673a3a6eaa94afd21857be025abf60ac-2025-03-07T08-01-04.651Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "ame",
+          "name": "Âme",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "deep house",
+            "melodic techno"
+          ],
+          "appleMusicArtistID": "1545407582",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features114/v4/45/56/bb/4556bbab-d544-f59a-a0a3-be4335d53d88/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "agents-of-time",
+          "name": "Agents of Time",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "melodic techno"
+          ],
+          "appleMusicArtistID": "794971951",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/99/f6/e9/99f6e9c4-1d82-0d83-0c68-7655000e2bf8/1f02e631-f263-42ca-9631-a46ddf398f63_ami-identity-30992fc4b8a322153c3e7fae99ee35fc-2023-05-16T20-30-57.721Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "sam-feldt",
+          "name": "Sam Feldt",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "tropical house",
+            "dance pop"
+          ],
+          "appleMusicArtistID": "890558420",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/cd/15/99/cd15997c-f2dc-1640-a69f-b11822fc17d6/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "morten",
+          "name": "Morten",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "future rave",
+            "edm"
+          ],
+          "appleMusicArtistID": "155798079",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/3c/ca/a3/3ccaa320-9e4c-7d4c-b3ae-37eb83e4f34c/ami-identity-984c6b98341cd60f6cf7b8d800f11f06-2025-08-18T22-17-14.853Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "da-tweekaz",
+          "name": "Da Tweekaz",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "hardstyle"
+          ],
+          "appleMusicArtistID": "289942206",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/2a/ba/23/2aba230b-03ea-4f40-72f3-7cb5b44d92bb/ami-identity-5533e367f7d87857e4541a6fd027c9f5-2026-03-30T14-05-38.037Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "d-block-s-te-fan",
+          "name": "D-Block & S-te-Fan",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "hardstyle"
+          ],
+          "appleMusicArtistID": "411671053",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/8c/be/02/8cbe026f-009b-6dc0-988b-ca2e2f38c3bb/ami-identity-1ac28cd898d93fee5934e38514d068f7-2025-01-28T08-57-40.455Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "black-tiger-sex-machine",
+          "name": "Black Tiger Sex Machine",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "electro",
+            "bass"
+          ],
+          "appleMusicArtistID": "483164078",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/9c/a9/ae/9ca9ae98-927a-b21b-5895-135e7292f203/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "radical-redemption",
+          "name": "Radical Redemption",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "raw hardstyle"
+          ],
+          "appleMusicArtistID": "498200299",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/f2/3a/dd/f23add80-8972-f786-9eb8-7656eb343652/97ff52c9-7454-4191-a253-5782ed5ae588_file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "ghastly",
+          "name": "Ghastly",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "bass house",
+            "dubstep"
+          ],
+          "appleMusicArtistID": "701313804",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/1c/5b/0c/1c5b0c65-9e1d-35e3-bec6-15770edee049/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "ida-engberg",
+          "name": "Ida Engberg",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "techno"
+          ],
+          "appleMusicArtistID": "257152158",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/be/b5/a7/beb5a7d7-0a3b-f52b-f61a-cdea04e484bf/3614595989182.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "francisco-allendes",
+          "name": "Francisco Allendes",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "tech house",
+            "minimal"
+          ],
+          "appleMusicArtistID": "184596664",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/60/46/5a/60465a90-f61c-a688-b4a6-2034dc4c3336/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "felipe-venegas",
+          "name": "Felipe Venegas",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "house",
+            "tech house"
+          ],
+          "appleMusicArtistID": "308421040",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/26/55/a5/2655a5e0-7137-1514-0c2f-fbe1073b8ca8/cover.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "sistek",
+          "name": "Sistek",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "progressive house"
+          ],
+          "appleMusicArtistID": "1093575107",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/6a/d5/8c/6ad58cb0-f86d-e58a-0e2c-13dd6c441846/ami-identity-081f8264055d3e8a4709fa5afd97e4fb-2026-05-20T19-03-22.709Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "sepha",
+          "name": "Sepha",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "melodic techno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "fauna-primavera-2023",
+      "name": "Fauna Primavera",
+      "edition": "2023",
+      "venue": "Parque Ciudad Empresarial",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2023-11-24",
+        "2023-11-25"
+      ],
+      "accentColorHex": "#1F7A4D",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "blur",
+          "name": "Blur",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "britpop",
+            "rock alternativo"
+          ],
+          "appleMusicArtistID": "528564",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features126/v4/6a/84/db/6a84dbaf-d8a3-5c40-8b48-663abc3add2f/mza_17497871262244788397.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "roisin-murphy",
+          "name": "Róisín Murphy",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "nu-disco",
+            "electropop"
+          ],
+          "appleMusicArtistID": "17128885",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/f3/f7/e0/f3f7e0b7-7f14-3e42-a557-aecef5a78e44/da6f6990-938d-4690-9028-1bd19e9a569f_file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "warpaint",
+          "name": "Warpaint",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "indie rock",
+            "dream pop"
+          ],
+          "appleMusicArtistID": "305664605",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/f7/53/d1/f753d1c4-d229-855b-265e-28c341ef427a/70fe70d8-1202-4927-b815-2c7683f527cc_ami-identity-8a943f08e95b44707432c703a683bcc6-2024-02-14T16-12-31.361Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "weyes-blood",
+          "name": "Weyes Blood",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "chamber pop",
+            "folk barroco"
+          ],
+          "appleMusicArtistID": "434780384",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/e6/4d/00/e64d002c-d6fe-b4ad-fe47-2115be1fb7c5/ami-identity-1ecbb4f3795cdcf463d5d8f3fdb11e70-2024-11-22T23-21-26.587Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "rubio",
+          "name": "Rubio",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "electropop chileno",
+            "experimental"
+          ],
+          "appleMusicArtistID": "34747724",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/b5/90/70/b590702b-a4ad-ee9c-c0ce-2c969c882d88/ami-identity-7ef58934bbd5a060411680441689c08d-2025-08-21T22-47-35.386Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "andres-nusser",
+          "name": "Andrés Nusser",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "indie chileno",
+            "synth pop"
+          ],
+          "appleMusicArtistID": "534516445",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/93/fe/66/93fe6634-d65b-3dbb-5b02-909bac50dae7/ami-identity-b07f87da84a00e4f0dbab2139540b916-2024-10-20T15-06-45.619Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "pulp",
+          "name": "Pulp",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "britpop",
+            "art rock"
+          ],
+          "appleMusicArtistID": "312518",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/eb/01/64/eb01649a-9796-e87d-bf9e-49e717c0a7dd/mza_5629152363173463122.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "babasonicos",
+          "name": "Babasónicos",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "rock argentino",
+            "pop alternativo"
+          ],
+          "appleMusicArtistID": "142116459",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/1d/f5/4d/1df54d82-5732-7b57-6261-c664aee82197/pr_source.png/600x600cc.png",
+          "accentColorHex": "#A3AEA8"
+        },
+        {
+          "id": "fkj",
+          "name": "FKJ",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "french house",
+            "neo soul"
+          ],
+          "appleMusicArtistID": "644688726",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/ae/0f/50/ae0f50b8-c2e5-bca0-d842-67356dd77639/ami-identity-5d2aea8d21d3512e4e008ef6025c21a5-2026-06-01T15-40-59.514Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "the-blessed-madonna",
+          "name": "The Blessed Madonna",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "house",
+            "dance"
+          ],
+          "appleMusicArtistID": "1524829861",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/0d/0f/c5/0d0fc576-022e-faff-3467-fea61a694e64/fc0d15ea-0656-473c-a423-6f2e9b5a22dd_ami-identity-de6dc3111f9793eeeaa11e83b5047b6e-2023-03-10T17-14-08.914Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "whomadewho",
+          "name": "WhoMadeWho",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "indie dance",
+            "electrónica"
+          ],
+          "appleMusicArtistID": "332944048",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/32/5f/25/325f25fa-028a-0556-1c65-6295b76e1af9/ami-identity-ff3ffe17835e86d71911baea6cf84e97-2026-05-12T22-26-07.350Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "molchat-doma",
+          "name": "Molchat Doma",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "post-punk",
+            "synthwave"
+          ],
+          "appleMusicArtistID": "1478740208",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/08/d6/4d/08d64d1e-0476-6d5d-0de6-5791b54083c9/2e192d8c-4bab-47be-ac6c-5dea4e424682_ami-identity-377e19f4210c39c5153677d8c705f710-2024-06-11T12-56-34.829Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "bandalos-chinos",
+          "name": "Bándalos Chinos",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "indie pop argentino",
+            "synth pop"
+          ],
+          "appleMusicArtistID": "949378326",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/3b/2c/e8/3b2ce88c-2217-1d69-379c-a0626f5d8ae8/fa9c5f38-814e-43e7-82b9-263dc7bfde49_ami-identity-0c46f817b233a4de043550013af1c320-2024-05-07T21-55-42.898Z_cropped.png/600x600cc.png",
+          "accentColorHex": "#191E1A"
+        },
+        {
+          "id": "hermanos-gutierrez",
+          "name": "Hermanos Gutiérrez",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "instrumental",
+            "latin folk"
+          ],
+          "appleMusicArtistID": "1218012318",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/40/ee/c3/40eec3ef-a39f-c08b-4ed7-a738ec16730d/ami-identity-5bf530830680b498110fa9ad93ad19fd-2026-06-03T15-01-11.551Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "nick-hakim",
+          "name": "Nick Hakim",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "neo soul",
+            "psych soul"
+          ],
+          "appleMusicArtistID": "556997946",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/cc/88/3b/cc883ba8-5185-d0ba-e0e5-2123ea375ba6/ami-identity-d4795474dcbfa48b57ef813d5dffdc94-2026-05-11T19-12-20.695Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "como-asesinar-a-felipes",
+          "name": "Cómo Asesinar a Felipes",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "hip hop experimental chileno",
+            "jazz rap"
+          ],
+          "appleMusicArtistID": "286954831",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/5d/9c/fa/5d9cfa78-1c20-64f3-3a04-27d8c57fae56/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "lollapalooza-chile-2024",
+      "name": "Lollapalooza Chile",
+      "edition": "2024",
+      "venue": "Parque Bicentenario Cerrillos",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2024-03-15",
+        "2024-03-16",
+        "2024-03-17"
+      ],
+      "accentColorHex": "#E4002B",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "feid",
+          "name": "Feid",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "reggaetón",
+            "urbano"
+          ],
+          "appleMusicArtistID": "194502100",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/13/dd/61/13dd61b0-62a4-7089-aed3-21191f0141ed/ami-identity-3b6171ac786da31711952722cc41532a-2026-06-04T18-09-26.654Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "limp-bizkit",
+          "name": "Limp Bizkit",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "nu metal",
+            "rap rock"
+          ],
+          "appleMusicArtistID": "105544",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features116/v4/0e/35/07/0e350705-7639-4f93-e4ad-a187bdd9a6c1/mzl.hlsyekhw.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "hozier",
+          "name": "Hozier",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "indie folk",
+            "soul"
+          ],
+          "appleMusicArtistID": "342260741",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/5f/d7/4f/5fd74fde-fef2-2299-bf6d-04630ad0fb5c/af48c2b9-543d-49e5-b071-2a8025a17ea0_ami-identity-e8b26be07c0315108fa529e2f615cb38-2023-03-17T11-28-22.617Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "thirty-seconds-to-mars",
+          "name": "Thirty Seconds to Mars",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "rock alternativo",
+            "pop rock"
+          ],
+          "appleMusicArtistID": "2307416",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/41/65/0a/41650af8-8f0c-7acc-b505-9b6a6d9e7885/ami-identity-7770043a046fcefb33c49f380cafab0c-2026-01-22T21-58-25.258Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "king-gizzard-the-lizard-wizard",
+          "name": "King Gizzard & the Lizard Wizard",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "rock psicodélico",
+            "garage rock"
+          ],
+          "appleMusicArtistID": "440629621",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/0d/04/d3/0d04d3e7-cf6d-224b-54e3-8b021ba0a3aa/0e8e3ce0-b4e2-40cf-9bee-a36e70a722d4_ami-identity-0cae00c44626e8d9aecedaf3388cb219-2023-12-12T20-15-38.172Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "meduza",
+          "name": "Meduza",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "house",
+            "edm"
+          ],
+          "appleMusicArtistID": "1449138676",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/9e/1b/fe/9e1bfed4-b599-1b35-32bd-ea6e0fa4b1f7/ami-identity-878f41c1b75008bd45b979465fe194d8-2026-03-24T21-19-03.079Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "zhu",
+          "name": "Zhu",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "electrónica",
+            "deep house"
+          ],
+          "appleMusicArtistID": "261545033",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/7b/40/02/7b40027f-d888-695c-0390-9dda52dd0b9e/ami-identity-d780029c400d22045b0eb3871d25ff8b-2026-01-16T02-41-25.480Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "pierce-the-veil",
+          "name": "Pierce the Veil",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "post-hardcore",
+            "rock alternativo"
+          ],
+          "appleMusicArtistID": "258668501",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/cc/f9/31/ccf93172-e677-514f-922f-1067f311dd3e/ami-identity-2000b694fae90a5b9a050fe37fb362dc-2025-08-14T17-49-03.917Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "el-mato-a-un-policia",
+          "name": "El Mató a un Policía Motorizado",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "indie rock argentino",
+            "noise pop"
+          ],
+          "appleMusicArtistID": "477506590",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/47/99/72/47997227-6123-092d-335e-10d200683b69/mzl.tislwcfj.jpg/600x600cc.png",
+          "accentColorHex": "#413C3C"
+        },
+        {
+          "id": "kenia-os",
+          "name": "Kenia Os",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop latino",
+            "urbano"
+          ],
+          "appleMusicArtistID": "1426003035",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/a0/02/98/a002982a-ca67-be6d-fae0-168fe1037157/ami-identity-baa6ab0a6b5fb7e540a25a681f8b9960-2026-03-10T17-38-57.598Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "dayglow",
+          "name": "Dayglow",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "indie pop",
+            "bedroom pop"
+          ],
+          "appleMusicArtistID": "199833229",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/51/90/5b/51905b37-894c-10c2-ac46-5f1a99e9af2a/ami-identity-d8c5b3ac2eaeafdfce6cc9d172ea9347-2025-06-05T16-45-20.937Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "leon-larregui",
+          "name": "León Larregui",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "rock latino",
+            "pop psicodélico"
+          ],
+          "appleMusicArtistID": "267289467",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/47/ba/81/47ba81d2-3008-63cc-5e22-55621dc7db5a/963e3d1f-01da-48a7-b4ee-4537103587c4_ami-identity-e3e0e49058a8b63d170f8b12ee3925f4-2023-02-08T18-49-24.775Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "latin-mafia",
+          "name": "Latin Mafia",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "urbano mexicano",
+            "pop alternativo"
+          ],
+          "appleMusicArtistID": "1566074159",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/93/04/90/93049014-79f0-6e72-6275-4408c65fd764/ami-identity-6ed6c5899b92f9ab8a24b819712b4424-2025-07-21T20-47-16.073Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "akriila",
+          "name": "Akriila",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "pop experimental chileno",
+            "hyperpop"
+          ],
+          "appleMusicArtistID": "1526015823",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/19/cb/74/19cb7431-f8e7-780c-e8e0-8ae980ac16d7/file_cropped.png/600x600cc.png",
+          "accentColorHex": "#99818C"
+        },
+        {
+          "id": "blink-182",
+          "name": "Blink-182",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "pop punk",
+            "rock"
+          ],
+          "appleMusicArtistID": "116851",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/65/62/19/656219e0-9f60-ea44-806a-f396784d0992/a54cf2c0-30ca-4c31-87e0-3f4b3b5d0548_ami-identity-e3a39a439aad3816a4fd61791faa2231-2023-09-18T15-59-58.456Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "arcade-fire",
+          "name": "Arcade Fire",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "indie rock",
+            "art rock"
+          ],
+          "appleMusicArtistID": "23203991",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/a3/03/6c/a3036ca4-b571-7975-0173-6437a8949e09/ami-identity-aff243d20d9b4a7a6355ec74d75edb1a-2025-04-08T16-08-31.818Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "the-offspring",
+          "name": "The Offspring",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "punk rock"
+          ],
+          "appleMusicArtistID": "2820865",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/32/fe/54/32fe544a-7970-ee4c-d0d1-3729297c1a23/d41ca883-99ff-4ec7-8294-bf9146519e32_ami-identity-b0c2652ec5adf71fc58c7e8490935a78-2023-09-05T16-57-30.078Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "diplo",
+          "name": "Diplo",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "edm",
+            "dance"
+          ],
+          "appleMusicArtistID": "1468290871",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages123/v4/44/17/30/4417304a-7ba8-e1e3-bdb3-ff86eec7da9d/51c06a87-6b84-4892-853c-c415ea8d836a_ami-identity-e2cfa91d8e6f4b507976bb4f592a39b0-2023-01-12T20-58-21.638Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "the-blaze",
+          "name": "The Blaze",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "electrónica",
+            "french touch"
+          ],
+          "appleMusicArtistID": "314585555",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/f4/a4/2e/f4a42e3b-defe-2ae8-1cee-ca97019874d2/91232c0b-29f1-41a6-88aa-15a925c7486a_ami-identity-946e97daf78ecd5a148bf5b8a060a849-2023-02-10T11-53-25.473Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "dom-dolla",
+          "name": "Dom Dolla",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "tech house"
+          ],
+          "appleMusicArtistID": "555348065",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/70/49/e4/7049e4b7-ff4a-6286-6f8c-716e45673b63/ami-identity-c6c635053f24329b3909292a4b9c9958-2025-02-06T22-56-58.728Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "fletcher",
+          "name": "Fletcher",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "pop"
+          ],
+          "appleMusicArtistID": "1131301545",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/f3/3d/56/f33d5698-1e1a-96fb-8848-c882f25f13fc/ami-identity-08fde63fbdfd5266791558be5a31ef6c-2025-06-03T17-19-19.691Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "francisca-valenzuela",
+          "name": "Francisca Valenzuela",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "pop chileno",
+            "piano pop"
+          ],
+          "appleMusicArtistID": "277140196",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/4b/d0/6c/4bd06cba-01d2-660e-ad5a-c4dcef93e6e9/ami-identity-a082f2bc2496c6f6dde6bf28fc992aca-2026-04-06T07-34-34.182Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "cami",
+          "name": "Cami",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "pop chileno",
+            "balada"
+          ],
+          "appleMusicArtistID": "58914538",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/57/cc/4d/57cc4dee-3362-d864-6fbc-266efa5901e4/ami-identity-8726ebb90651b322f5eec630fdbbe107-2025-03-20T01-16-43.229Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "movimiento-original",
+          "name": "Movimiento Original",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "hip hop chileno",
+            "reggae"
+          ],
+          "appleMusicArtistID": "390239894",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/25/33/25/2533259c-8b50-3132-2769-b988f0874f93/mzl.qsrlrbkh.jpeg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "kidd-voodoo",
+          "name": "Kidd Voodoo",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "urbano chileno",
+            "reggaetón"
+          ],
+          "appleMusicArtistID": "1493258622",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/a3/49/95/a3499571-e52c-84c0-e42e-e0b7a4d047df/820233076807.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "jose-madero",
+          "name": "José Madero",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "rock en español",
+            "pop punk"
+          ],
+          "appleMusicArtistID": "371104606",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages112/v4/d1/c2/aa/d1c2aabc-3597-f1a3-3b68-4848ce40813d/23b5134a-b422-433f-8bed-f0aed7aa0b12_file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "monsieur-perine",
+          "name": "Monsieur Periné",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "pop colombiano",
+            "swing latino"
+          ],
+          "appleMusicArtistID": "524000465",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/96/3a/69/963a69b8-e755-fab2-a619-86bb26afcdc2/ami-identity-93f38ecb5433cab61b5716e7ae6cc22d-2026-04-30T14-36-13.963Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "glup",
+          "name": "Glup!",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "rock chileno",
+            "power pop"
+          ],
+          "appleMusicArtistID": "643001192",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/32/dd/22/32dd2227-a7a0-18cf-674c-a63d835c07a7/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "farmacos",
+          "name": "Fármacos",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "indie chileno",
+            "synth pop"
+          ],
+          "appleMusicArtistID": "812765896",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/f6/18/08/f61808f0-1299-a9af-937f-813a45319659/a1a19222-8fce-4bba-ae06-33ef866f4953_file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "tenemos-explosivos",
+          "name": "Tenemos Explosivos",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "post-hardcore chileno"
+          ],
+          "appleMusicArtistID": "990523576",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music49/v4/54/d2/82/54d282ea-0c51-795a-4494-614af349b764/artwork.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "sza",
+          "name": "SZA",
+          "tier": "headliner",
+          "day": 3,
+          "genres": [
+            "r&b",
+            "neo soul"
+          ],
+          "appleMusicArtistID": "605800394",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/6e/00/30/6e003069-1d1f-480c-aab8-806892e73877/ami-identity-294a220289779df8e389876bc46ac060-2024-12-20T20-08-51.286Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "sam-smith",
+          "name": "Sam Smith",
+          "tier": "headliner",
+          "day": 3,
+          "genres": [
+            "pop",
+            "soul"
+          ],
+          "appleMusicArtistID": "156488786",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/f0/1a/1b/f01a1b9e-ae9b-7544-f77e-c743c155d380/ami-identity-a9d9c72c23307ab2a64018246fe99b36-2026-06-19T14-20-25.398Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "phoenix",
+          "name": "Phoenix",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "indie pop",
+            "synth pop"
+          ],
+          "appleMusicArtistID": "5500360",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages122/v4/89/60/90/896090de-c58d-981a-1766-2d6b7c4611a6/19c3c950-de14-4b2b-acba-36569279a3db_ami-identity-a7056c52b89bfd9046f81875536629c6-2022-10-21T18-18-26.222Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "jungle",
+          "name": "Jungle",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "neo soul",
+            "dance"
+          ],
+          "appleMusicArtistID": "825833522",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages112/v4/7b/15/d1/7b15d14a-b977-62bd-d8c8-272ed24e1964/e0dd5df2-fe55-497f-9f2c-0ef1a83df3df_ami-identity-58133e55b4dcab7b9343e535bf87f466-2024-03-04T17-55-32.772Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "chencho-corleone",
+          "name": "Chencho Corleone",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "reggaetón"
+          ],
+          "appleMusicArtistID": "1055034875",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/b7/1f/a0/b71fa0c1-a16d-6fae-9a06-4d845ce45188/bf478cd4-7a37-4b31-9461-41c217484774_file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "omar-apollo",
+          "name": "Omar Apollo",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "r&b alternativo",
+            "pop"
+          ],
+          "appleMusicArtistID": "1258165134",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/65/ca/b6/65cab660-2c27-55ff-1191-a29369e28dbf/d5bdc703-d014-4e4c-9d28-58f79397aa8d_ami-identity-c3a28aa5d157b353a2a86dce8256d5cb-2024-04-03T17-41-46.028Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "ana-tijoux",
+          "name": "Ana Tijoux",
+          "tier": "main",
+          "day": 3,
+          "genres": [
+            "hip hop chileno",
+            "rap latino"
+          ],
+          "appleMusicArtistID": "355779585",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features126/v4/c6/c5/92/c6c5925c-252e-7f98-0e65-f45460b059e0/mzl.wvkslazi.png/600x600cc.png",
+          "accentColorHex": "#B42B00"
+        },
+        {
+          "id": "above-beyond",
+          "name": "Above & Beyond",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "trance",
+            "progressive house"
+          ],
+          "appleMusicArtistID": "20318188",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/4b/b8/a0/4bb8a017-ba9c-37ed-d268-27c107879a23/ami-identity-4773370484caf0aa096d664fefb21bb3-2025-07-17T12-42-30.169Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "nothing-but-thieves",
+          "name": "Nothing But Thieves",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "rock alternativo",
+            "indie rock"
+          ],
+          "appleMusicArtistID": "524830875",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/a3/d8/54/a3d854df-e666-6c93-3cc7-75ae3d2b4cce/ami-identity-96efaea2e058da095020a9708fde11a3-2026-05-21T11-17-56.497Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "the-driver-era",
+          "name": "The Driver Era",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "pop rock",
+            "alt pop"
+          ],
+          "appleMusicArtistID": "1355956702",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/7b/76/ff/7b76fff0-6fa1-78af-4d24-fbbdcda3eff5/ami-identity-bc2af23a7c2c17b55f23b65dec60aebd-2025-03-19T13-14-13.394Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "timmy-trumpet",
+          "name": "Timmy Trumpet",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "big room",
+            "edm"
+          ],
+          "appleMusicArtistID": "270602804",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/71/8f/26/718f2685-4a37-ce18-597d-fe2c120df8e9/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "grupo-frontera",
+          "name": "Grupo Frontera",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "norteño",
+            "cumbia"
+          ],
+          "appleMusicArtistID": "1613772487",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/16/98/af/1698afd6-18b9-cf48-1c8a-c2444ed47487/ami-identity-7907042271cbf36807ba2b279f43dbaf-2026-06-05T20-33-05.017Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "congreso",
+          "name": "Congreso",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "fusión latinoamericana",
+            "jazz rock"
+          ],
+          "appleMusicArtistID": "135236017",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/61/1a/3e/611a3ebe-640e-61d3-74cc-612e7486fdd7/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "denise-rosenthal",
+          "name": "Denise Rosenthal",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "pop chileno"
+          ],
+          "appleMusicArtistID": "296675898",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/11/90/f1/1190f139-04dc-f6e6-f57b-325be4e587f8/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "nicole",
+          "name": "Nicole",
+          "tier": "mid",
+          "day": 3,
+          "genres": [
+            "pop rock chileno"
+          ],
+          "appleMusicArtistID": "720145508",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features4/v4/09/35/e5/0935e51d-a726-86af-cc4b-f7be46dc9da6/mzl.skqvbgrw.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "jere-klein",
+          "name": "Jere Klein",
+          "tier": "emerging",
+          "day": 3,
+          "genres": [
+            "urbano chileno",
+            "trap"
+          ],
+          "appleMusicArtistID": "1539048077",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/ce/ff/64/ceff64b7-a4dc-e5a4-0660-dc8657b1145c/ami-identity-74cb2be1737a1a17521fac28085ab415-2026-03-07T02-22-46.088Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "fauna-primavera-2024",
+      "name": "Fauna Primavera",
+      "edition": "2024",
+      "venue": "Parque Ciudad Empresarial",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2024-11-08",
+        "2024-11-09"
+      ],
+      "accentColorHex": "#1F7A4D",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "the-smashing-pumpkins",
+          "name": "The Smashing Pumpkins",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "rock alternativo",
+            "grunge"
+          ],
+          "appleMusicArtistID": "1646302",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/67/b0/d0/67b0d009-cfe5-f68d-5296-891eb86209cb/ami-identity-8e1c3d516591a3f1ae95545b0ce45c27-2026-05-15T00-17-03.775Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "air",
+          "name": "Air",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "downtempo",
+            "electrónica francesa"
+          ],
+          "appleMusicArtistID": "5641488",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/58/e7/48/58e748a0-a946-1e6e-e0bd-d3190bb0d286/ami-identity-334d52e2a21ac60da64dd31d27a6f960-2025-09-30T10-00-36.266Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "jerry-cantrell",
+          "name": "Jerry Cantrell",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "grunge",
+            "hard rock"
+          ],
+          "appleMusicArtistID": "462225",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/2d/c6/ea/2dc6ea5c-5995-d165-bb23-d46d2b7520ae/ami-identity-188898806aad9258f52abc928d317997-2025-04-21T23-19-27.497Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "lianne-la-havas",
+          "name": "Lianne La Havas",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "soul",
+            "folk"
+          ],
+          "appleMusicArtistID": "469983553",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/1f/ab/91/1fab9132-43af-1808-49b9-b3bfaa940fa7/ami-identity-02de1a627a7eeb0805e3299764552402-2025-10-01T00-26-23.263Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "usted-senalemelo",
+          "name": "Usted Señálemelo",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "indie rock argentino",
+            "rock alternativo"
+          ],
+          "appleMusicArtistID": "885237407",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/78/88/6f/78886f62-6eb4-e546-e427-bc9c24026f9c/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "francisco-victoria",
+          "name": "Francisco Victoria",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop chileno",
+            "indie"
+          ],
+          "appleMusicArtistID": "1293104825",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages112/v4/d2/d1/8f/d2d18ffa-eae9-095b-b73f-e961d9fadeb3/e284512a-c217-4145-82a9-3a42e24685a0_file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "chini-png",
+          "name": "Chini.png",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "indie chileno",
+            "art pop"
+          ],
+          "appleMusicArtistID": "1473308145",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/dc/da/0b/dcda0bf2-d0d8-1177-c148-07e3a8b4b274/199538977592.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "franz-ferdinand",
+          "name": "Franz Ferdinand",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "indie rock",
+            "post-punk revival"
+          ],
+          "appleMusicArtistID": "6596751",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features221/v4/8e/f9/89/8ef989d7-09e7-99ef-c6ea-e25c72e60ffd/mzl.amybjfen.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "the-kooks",
+          "name": "The Kooks",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "indie rock",
+            "britpop"
+          ],
+          "appleMusicArtistID": "68448386",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/b0/97/d0/b097d0d2-2cf8-5d42-faae-25a327583884/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "dinosaur-jr",
+          "name": "Dinosaur Jr.",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "rock alternativo",
+            "noise rock"
+          ],
+          "appleMusicArtistID": "509577",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/31/8e/47/318e4792-01d4-7198-f4f9-b64814380384/ami-identity-5ab0ce9b255a243053adebb5f6f0a176-2026-06-30T16-01-31.814Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "denver",
+          "name": "Dënver",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "pop chileno",
+            "indie pop"
+          ],
+          "appleMusicArtistID": "2621236",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features116/v4/68/0d/6b/680d6b2e-3088-a482-b3d4-2e42ceb95fcf/mzl.jfslzqvx.png/600x600cc.png",
+          "accentColorHex": "#27191F"
+        },
+        {
+          "id": "sofia-kourtesis",
+          "name": "Sofia Kourtesis",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "house",
+            "electrónica"
+          ],
+          "appleMusicArtistID": "931699087",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/2b/f7/36/2bf73674-df87-519b-5bfb-2c229ddc2e1f/ami-identity-13f1b67a9740dc04d32a3edcb5b40a00-2026-02-11T10-46-25.025Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "the-magic-numbers",
+          "name": "The Magic Numbers",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "indie pop",
+            "folk rock"
+          ],
+          "appleMusicArtistID": "61616208",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/1c/c2/76/1cc276ca-e612-f489-ad3f-bdaa47adbb4b/mzl.rgogexis.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "nation-of-language",
+          "name": "Nation of Language",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "synth pop",
+            "new wave"
+          ],
+          "appleMusicArtistID": "1160352768",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/8e/6d/2b/8e6d2be6-32f7-b765-f9e5-cd8ed30a1bff/ami-identity-550e49431c7a6fd469b053674a01d090-2025-05-17T17-04-43.414Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "las-ligas-menores",
+          "name": "Las Ligas Menores",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "indie rock argentino"
+          ],
+          "appleMusicArtistID": "1017830319",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features221/v4/94/ef/bf/94efbf2c-0f82-2a24-7db8-1813d296ca8c/mzl.dkvtegba.jpg/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "creamfields-chile-2024",
+      "name": "Creamfields Chile",
+      "edition": "2024",
+      "venue": "Club Hípico de Santiago",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2024-11-16",
+        "2024-11-17"
+      ],
+      "accentColorHex": "#00B5CC",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "swedish-house-mafia",
+          "name": "Swedish House Mafia",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "progressive house",
+            "edm"
+          ],
+          "appleMusicArtistID": "375569761",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/99/fb/0d/99fb0d53-486a-07bf-c006-8649b0dc1c6e/ami-identity-a6d59b14cfc04a14ef7bce3ed3dcb6b5-2025-09-18T11-09-38.275Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "alan-walker",
+          "name": "Alan Walker",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "edm",
+            "electro house"
+          ],
+          "appleMusicArtistID": "1062085272",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/ed/2b/66/ed2b6697-02fc-0a39-36ca-949fa2ca82ea/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "don-diablo",
+          "name": "Don Diablo",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "future house",
+            "edm"
+          ],
+          "appleMusicArtistID": "76849154",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/5a/1c/62/5a1c6295-2d95-5fdc-8d9d-c21967e8096c/ami-identity-c73978637f26b033de030695190eaaf3-2026-06-24T15-19-39.414Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "nina-kraviz",
+          "name": "Nina Kraviz",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "techno"
+          ],
+          "appleMusicArtistID": "277068027",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/4f/7a/72/4f7a7278-c282-e571-3a8e-fa5ce62e7b4f/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "richie-hawtin",
+          "name": "Richie Hawtin",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "minimal techno"
+          ],
+          "appleMusicArtistID": "4090861",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/07/57/c6/0757c6b3-a544-1a50-ad0d-c32125315b35/385330f3-ea3d-4233-9659-f76b586d85a9_ami-identity-646f6fdcad28a4abf6ca06dd15ca309b-2023-11-30T17-25-24.035Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "green-velvet",
+          "name": "Green Velvet",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "tech house"
+          ],
+          "appleMusicArtistID": "4638965",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/1b/3e/e4/1b3ee41a-fbd5-6beb-a790-50fa41a40bec/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "jonas-blue",
+          "name": "Jonas Blue",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "dance pop",
+            "tropical house"
+          ],
+          "appleMusicArtistID": "405728790",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/9f/cd/0b/9fcd0b0a-990b-941a-6791-fc0e24862e14/ami-identity-05f1f190bec7cc15f5ab17ec519dd949-2026-05-29T12-55-54.923Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "flak",
+          "name": "Flak",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "techno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "isabella-serafini",
+          "name": "Isabella Serafini",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "house"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "alesso",
+          "name": "Alesso",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "progressive house",
+            "edm"
+          ],
+          "appleMusicArtistID": "432464201",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/63/47/4e/63474eb0-9134-3901-8d1a-3acc73fb5f33/ami-identity-036a7e142d84a31d841e966c74b780ba-2026-02-04T21-20-52.082Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "steve-aoki",
+          "name": "Steve Aoki",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "edm",
+            "electro house"
+          ],
+          "appleMusicArtistID": "271066694",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/b8/55/a6/b855a64e-1b29-fcf0-4f73-dc21bfb4cdff/f821dfcf-bb8a-4bbc-af68-de46c6311393_ami-identity-7285230292295a254044dfa1f8b9e7ab-2024-06-27T19-25-36.553Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "fisher",
+          "name": "Fisher",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "tech house"
+          ],
+          "appleMusicArtistID": "1256012920",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/4e/ac/77/4eac7756-e229-b0b2-ad65-95bd316ee988/ami-identity-7e8b0ad9eb34429792a4de55b6fdaa20-2025-07-02T19-27-42.005Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "helena-hauff",
+          "name": "Helena Hauff",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "electro",
+            "techno"
+          ],
+          "appleMusicArtistID": "661110323",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/85/9f/b8/859fb87a-8778-3195-550e-acf9212f9e3a/mzl.kegoxydu.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "paco-osuna",
+          "name": "Paco Osuna",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "techno"
+          ],
+          "appleMusicArtistID": "136038933",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features114/v4/c5/97/67/c59767cf-0017-0682-74f3-07d86a945a8b/mzl.irmwfymq.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "marcel-dettmann",
+          "name": "Marcel Dettmann",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "techno"
+          ],
+          "appleMusicArtistID": "256394865",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/77/45/3e/77453e2d-36ed-510b-216e-16f2b4e81dcf/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "cat-dealers",
+          "name": "Cat Dealers",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "brazilian bass",
+            "house"
+          ],
+          "appleMusicArtistID": "1087506590",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features112/v4/20/d3/85/20d38526-a976-bc95-ecc5-ac7633588b98/mzl.oichlxyf.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "andrea-paz",
+          "name": "Andrea Paz",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "house",
+            "electrónica"
+          ],
+          "appleMusicArtistID": "878216400",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/60/23/70/602370ca-2ac2-c7d0-dd8c-e0e019e676e9/cover_4064832685060.jpg/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
       "id": "lollapalooza-chile-2025",
       "name": "Lollapalooza Chile",
       "edition": "2025",
@@ -954,6 +3321,570 @@
           "setlistfmMBID": null,
           "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/73/91/6f/73916f72-d419-6b2e-fb2d-c065369a9c72/ami-identity-ac7c5f8c0e596d7a47c313dbee581e57-2026-03-28T17-16-55.026Z_cropped.png/600x600cc.png",
           "accentColorHex": "#594528"
+        }
+      ]
+    },
+    {
+      "id": "ruidosa-fest-2025",
+      "name": "Ruidosa Fest",
+      "edition": "2025",
+      "venue": "Parque O'Higgins",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2025-10-11",
+        "2025-10-12"
+      ],
+      "accentColorHex": "#E81C7A",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "myriam-hernandez",
+          "name": "Myriam Hernández",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "balada",
+            "pop latino"
+          ],
+          "appleMusicArtistID": "565391",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/b8/ea/3a/b8ea3ac6-247e-ffb6-e7db-40e9a396db9e/mzl.djxjmddu.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "princesa-alba",
+          "name": "Princesa Alba",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop chileno",
+            "urbano"
+          ],
+          "appleMusicArtistID": "1265324498",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/7d/4a/26/7d4a26ca-d5a9-e0e3-e34c-13f1a22ea493/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "javiera-parra",
+          "name": "Javiera Parra",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop rock chileno"
+          ],
+          "appleMusicArtistID": "329996064",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/39/fb/d5/39fbd5b8-7364-a59c-576e-95deb6f89989/8445162073929.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "nicole",
+          "name": "Nicole",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop rock chileno"
+          ],
+          "appleMusicArtistID": "720145508",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features4/v4/09/35/e5/0935e51d-a726-86af-cc4b-f7be46dc9da6/mzl.skqvbgrw.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "entremares",
+          "name": "Entremares",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "indie chileno",
+            "dream pop"
+          ],
+          "appleMusicArtistID": "1236145107",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features114/v4/eb/a6/e9/eba6e91e-e52a-669b-ced8-6363c250d1a4/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "paula-rivas",
+          "name": "Paula Rivas",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop chileno"
+          ],
+          "appleMusicArtistID": "663678342",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/bd/40/88/bd408898-94a2-d3ef-d251-4812720728dc/8720765752816.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "supernova",
+          "name": "Supernova",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "pop chileno",
+            "teen pop"
+          ],
+          "appleMusicArtistID": "1529114473",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/77/7d/3d/777d3d2c-28e1-b384-7d0a-347015c5006a/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "fran-maira",
+          "name": "Fran Maira",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "urbano chileno",
+            "pop"
+          ],
+          "appleMusicArtistID": "1732916541",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/9f/17/85/9f1785f6-71bd-0885-390b-37d8466b1a72/0.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "catalina-y-las-bordonas-de-oro",
+          "name": "Catalina y las Bordonas de Oro",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "música de raíz chilena",
+            "bolero"
+          ],
+          "appleMusicArtistID": "1689276687",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features211/v4/22/dd/8e/22dd8eda-3539-893f-6e5d-e70cdd1e0875/mzl.twitnlgn.jpg/600x600cc.png",
+          "accentColorHex": "#5C3A00"
+        },
+        {
+          "id": "laia",
+          "name": "Laia",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "urbano chileno"
+          ],
+          "appleMusicArtistID": "1656577766",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages122/v4/5d/62/b9/5d62b960-b9ab-d2ba-14c3-6017b290688e/dcb5e3bf-b599-49c3-982c-a47ff7b987e8_file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "karla-grunewaldt",
+          "name": "Karla Grunewaldt",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "pop chileno",
+            "r&b"
+          ],
+          "appleMusicArtistID": "1217788919",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/62/4f/a6/624fa6c5-2c54-d2be-12b6-4007e850ae15/646789d7-2e18-4cdf-8b5e-aec5c3a2cc60_ami-identity-f2c5a3225b82b21170e8ba945845f70c-2023-11-27T13-58-23.773Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "nekki",
+          "name": "Nekki",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "pop chileno"
+          ],
+          "appleMusicArtistID": "1038353225",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/57/1c/3e/571c3ea2-8cea-635d-de4a-fb74c705e7f0/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "mon-laferte",
+          "name": "Mon Laferte",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "pop latino",
+            "bolero"
+          ],
+          "appleMusicArtistID": "447436990",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/33/99/d6/3399d666-7f49-a3e5-331f-4d583961198f/ami-identity-b08897c453943183aa5a049633c9cc8d-2025-11-18T20-26-33.077Z_cropped.png/600x600cc.png",
+          "accentColorHex": "#B2B2B2"
+        },
+        {
+          "id": "francisca-valenzuela",
+          "name": "Francisca Valenzuela",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "pop chileno",
+            "piano pop"
+          ],
+          "appleMusicArtistID": "277140196",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/4b/d0/6c/4bd06cba-01d2-660e-ad5a-c4dcef93e6e9/ami-identity-a082f2bc2496c6f6dde6bf28fc992aca-2026-04-06T07-34-34.182Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "javiera-mena",
+          "name": "Javiera Mena",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "electropop chileno"
+          ],
+          "appleMusicArtistID": "160525641",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/69/34/67/6934673a-cf01-c7f8-68d1-cbb9b63e8c25/pr_source.png/600x600cc.png",
+          "accentColorHex": "#171A21"
+        },
+        {
+          "id": "villano-antillano",
+          "name": "Villano Antillano",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "rap",
+            "urbano"
+          ],
+          "appleMusicArtistID": "1441570441",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/76/89/7f/76897f52-9e9b-c86c-721b-d795d8771032/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "cami",
+          "name": "Cami",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "pop chileno",
+            "balada"
+          ],
+          "appleMusicArtistID": "58914538",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/57/cc/4d/57cc4dee-3362-d864-6fbc-266efa5901e4/ami-identity-8726ebb90651b322f5eec630fdbbe107-2025-03-20T01-16-43.229Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "ms-nina",
+          "name": "Ms Nina",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "neoperreo",
+            "reggaetón"
+          ],
+          "appleMusicArtistID": "182061720",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/28/66/7f/28667f5e-c1bb-291d-71bc-df5cd4621de7/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "akriila",
+          "name": "Akriila",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "pop experimental chileno",
+            "hyperpop"
+          ],
+          "appleMusicArtistID": "1526015823",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/19/cb/74/19cb7431-f8e7-780c-e8e0-8ae980ac16d7/file_cropped.png/600x600cc.png",
+          "accentColorHex": "#99818C"
+        },
+        {
+          "id": "chini-png",
+          "name": "Chini.png",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "indie chileno",
+            "art pop"
+          ],
+          "appleMusicArtistID": "1473308145",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/dc/da/0b/dcda0bf2-d0d8-1177-c148-07e3a8b4b274/199538977592.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "javiera-electra",
+          "name": "Javiera Electra",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "pop experimental chileno"
+          ],
+          "appleMusicArtistID": "1639979838",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/53/0c/09/530c0985-c435-2b75-8118-e8d4baccd58c/ami-identity-ba27b004c03b9251882d00230d33c8d5-2025-09-27T01-27-19.728Z_cropped.png/600x600cc.png",
+          "accentColorHex": "#0C0D0D"
+        },
+        {
+          "id": "daniela-millaleo",
+          "name": "Daniela Millaleo",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "folk mapuche",
+            "canción de raíz"
+          ],
+          "appleMusicArtistID": "845311537",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/66/e6/b6/66e6b6f4-a504-8583-63c9-e5837ca3e2a9/8445162694490.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "masquemusica",
+          "name": "Masquemusica",
+          "tier": "emerging",
+          "day": 2,
+          "genres": [
+            "electrónica",
+            "dj set"
+          ],
+          "appleMusicArtistID": "1527843231",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/ca/a1/fb/caa1fbdb-b994-e7bd-518e-82e8cb9c15d4/820233073783.jpg/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "creamfields-chile-2025",
+      "name": "Creamfields Chile",
+      "edition": "2025",
+      "venue": "Espacio Riesco",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2025-10-11",
+        "2025-10-12"
+      ],
+      "accentColorHex": "#00B5CC",
+      "posterImageURL": null,
+      "lineup": [
+        {
+          "id": "deadmau5",
+          "name": "Deadmau5",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "progressive house",
+            "electro house"
+          ],
+          "appleMusicArtistID": "78011850",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages112/v4/85/0f/ff/850fffac-877b-d99a-43ae-f9d94513900b/d8293e57-a341-46f4-898c-48ba205a6f95_ami-identity-2a919783c75de20116a9badf1ab7cb9e-2024-02-21T12-38-27.643Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "timmy-trumpet",
+          "name": "Timmy Trumpet",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "big room",
+            "edm"
+          ],
+          "appleMusicArtistID": "270602804",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/71/8f/26/718f2685-4a37-ce18-597d-fe2c120df8e9/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "robin-schulz",
+          "name": "Robin Schulz",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "deep house",
+            "dance pop"
+          ],
+          "appleMusicArtistID": "347433400",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/7a/7b/95/7a7b955e-fe98-48f5-a86d-6883b5df3ad6/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "lost-frequencies",
+          "name": "Lost Frequencies",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "tropical house",
+            "dance"
+          ],
+          "appleMusicArtistID": "877792512",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/eb/1f/f8/eb1ff89f-7ec8-a6c7-8bfd-8239c72319c3/ami-identity-78fa7d2ed5554241cf8bdd780d53444f-2026-02-15T13-34-25.692Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "argy",
+          "name": "Argy",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "melodic techno"
+          ],
+          "appleMusicArtistID": "67916691",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/42/d0/78/42d0787a-27cb-ebb8-5cb9-562979e8e614/ami-identity-51b842260198fd4b600eb99cbc9b9c2b-2026-01-26T16-37-10.084Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "stella-bossi",
+          "name": "Stella Bossi",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "techno"
+          ],
+          "appleMusicArtistID": "1538224977",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/df/bb/78/dfbb78c5-d8fc-67b3-9481-63cbaa94e43c/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "blk",
+          "name": "BLK",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "techno"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "dual-damage",
+          "name": "Dual Damage",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "hardstyle"
+          ],
+          "appleMusicArtistID": "1663559419",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/dd/7b/8d/dd7b8dcf-58fd-8e46-2402-ff71ec5e1898/8721253495598.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "david-guetta",
+          "name": "David Guetta",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "edm",
+            "dance pop"
+          ],
+          "appleMusicArtistID": "5557599",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/59/80/98/598098fd-ce30-abca-e220-d98f89f48fcb/56f3f326-8833-4ca9-a617-b9ac642a1153_ami-identity-01d023cabaf55c4d7122ac830b90b612-2024-01-25T11-21-34.069Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "armin-van-buuren",
+          "name": "Armin van Buuren",
+          "tier": "headliner",
+          "day": 2,
+          "genres": [
+            "trance",
+            "edm"
+          ],
+          "appleMusicArtistID": "17976294",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/fb/87/46/fb8746ab-c45f-f248-430a-759c96417dcb/ami-identity-133f8309f7cce6851c2ea8fc76b416b0-2025-10-06T08-58-01.615Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "claptone",
+          "name": "Claptone",
+          "tier": "main",
+          "day": 2,
+          "genres": [
+            "house",
+            "deep house"
+          ],
+          "appleMusicArtistID": "470488523",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/bf/05/a3/bf05a342-5c63-1d50-d016-c1ffb0db6cff/ami-identity-477375f61a56c5d37119d501cee9bb48-2025-04-25T10-34-48.529Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "mathame",
+          "name": "Mathame",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "melodic techno"
+          ],
+          "appleMusicArtistID": "952851477",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/da/21/f3/da21f3aa-cf63-2bfe-d2e3-710099204ffb/ami-identity-5dc28a2f7ed9ee45ebd137099687bfdd-2025-08-28T10-12-28.314Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "miss-monique",
+          "name": "Miss Monique",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "progressive house",
+            "melodic techno"
+          ],
+          "appleMusicArtistID": "401265174",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/4c/b3/4d/4cb34d6b-2e0c-e25d-7241-c8f62f84f8ef/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "reinier-zonneveld",
+          "name": "Reinier Zonneveld",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "acid techno",
+            "live techno"
+          ],
+          "appleMusicArtistID": "501992249",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/8c/06/e3/8c06e30a-eb92-5727-3fa8-749699706685/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "mind-against",
+          "name": "Mind Against",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "melodic techno"
+          ],
+          "appleMusicArtistID": "434367753",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/15/ea/31/15ea3169-8258-faa4-fdc2-5e0fb67294d1/951b4a75-d15f-4348-928c-1208da902916_ami-identity-ac4c4a39698ce8f5786ebbc83c77432c-2024-01-31T20-03-12.440Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "agents-of-time",
+          "name": "Agents of Time",
+          "tier": "mid",
+          "day": 2,
+          "genres": [
+            "melodic techno"
+          ],
+          "appleMusicArtistID": "794971951",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/99/f6/e9/99f6e9c4-1d82-0d83-0c68-7655000e2bf8/1f02e631-f263-42ca-9631-a46ddf398f63_ami-identity-30992fc4b8a322153c3e7fae99ee35fc-2023-05-16T20-30-57.721Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
         }
       ]
     },
@@ -2756,7 +5687,7 @@
           ],
           "appleMusicArtistID": "24375409",
           "setlistfmMBID": null,
-          "imageURL": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/c1/42/bf/c142bf45-f2fb-ca87-656f-e066b13d4de0/ami-identity-00a6dd4f16045bf096c2352cd94d8ff7-2026-04-16T09-20-25.950Z_cropped.png/600x600cc.png",
           "accentColorHex": "#000000"
         },
         {
@@ -2768,9 +5699,9 @@
             "pop",
             "electropop"
           ],
-          "appleMusicArtistID": null,
+          "appleMusicArtistID": "1453921853",
           "setlistfmMBID": null,
-          "imageURL": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/cf/e6/fb/cfe6fb9d-5434-0110-5bab-c19445923fd5/file_cropped.png/600x600cc.png",
           "accentColorHex": null
         },
         {
@@ -2785,7 +5716,7 @@
           ],
           "appleMusicArtistID": "996876",
           "setlistfmMBID": null,
-          "imageURL": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/d0/82/b0/d082b012-04de-461d-3b34-b224977b88de/ami-identity-37b6f24bf996f900b55da80ee8107e57-2024-11-22T10-06-14.967Z_cropped.png/600x600cc.png",
           "accentColorHex": "#1A1A19"
         },
         {
@@ -2799,7 +5730,7 @@
           ],
           "appleMusicArtistID": "1593455718",
           "setlistfmMBID": null,
-          "imageURL": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/5f/d8/70/5fd870a2-4d9c-816c-863e-17096d4c8221/099b43d0-34f8-49e0-a49b-c4cceab3f9b3_ami-identity-a33d64da27646b3800cfcbdad242a834-2023-12-24T22-55-29.196Z_cropped.png/600x600cc.png",
           "accentColorHex": "#FFFFFF"
         }
       ]
