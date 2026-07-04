@@ -45,6 +45,10 @@ SKIP_IDS = {
     "melania-wonder",  # único candidato era "Melania Pacheco" (score 0.62), otro artista
     "la-banda-de-la-memoria",  # gana "La Original Banda El Limón..." (score 0.51), otro artista
     "full-la-musica-de-fulano",  # gana "Fulanito", merengue dominicano (score 0.35), otro artista
+    "flak",  # DJ chileno (Creamfields 2024); gana "FLAK" punk y otros homónimos rap/dance
+    "isabella-serafini",  # DJ chilena (Creamfields 2024); único match es una cantante góspel
+    "sepha",  # DJ chileno (Creamfields 2023); gana "Sepha." alternativo en inglés
+    "blk",  # DJ hardstyle (Creamfields 2025); ganan homónimos "blk." dance y BLK rap ruso
 }
 
 # Artistas con homónimos en Apple Music resueltos a mano: el mejor match por
@@ -55,6 +59,9 @@ PINNED_IDS = {
     "panico",       # banda chilena (Kick, 2010) = 1678166227; gana un productor dance europeo
     "seamoon",      # proyecto en español = 1654057479; gana un Seamoon downtempo en inglés
     "nico-castro",  # pop/house chileno = 1639100824; gana un homónimo de puros features
+    "nicole",       # pop chilena ("Esperando Nada") = 720145508; gana una Nicole new age
+    "supernova",    # grupo pop chileno ("Maldito Amor") = 1529114473; gana un dúo house
+    "laia",         # LAIA chilena ("Lo más bonito") = 1656577766; gana una Laia r&b en inglés
 }
 
 
