@@ -7,6 +7,14 @@ struct FestivalFeed: Codable {
     let version: Int
     let updatedAt: Date
     let festivals: [Festival]
+
+    /// Copia con los festivales ordenados por fecha de inicio (pasados primero,
+    /// próximos al final). Los loaders la aplican siempre, así el carrusel no
+    /// depende del orden en que se agregaron los festivales al JSON.
+    var chronological: FestivalFeed {
+        FestivalFeed(version: version, updatedAt: updatedAt,
+                     festivals: festivals.sorted { $0.startDate < $1.startDate })
+    }
 }
 
 // MARK: - Festival
@@ -259,7 +267,7 @@ enum FestivalLoader {
             throw CocoaError(.fileNoSuchFile)
         }
         let data = try Data(contentsOf: url)
-        return try makeDecoder().decode(FestivalFeed.self, from: data)
+        return try makeDecoder().decode(FestivalFeed.self, from: data).chronological
     }
 
     /// Remoto desde GitHub. Lanza error si falla (sin fallback interno).
@@ -268,7 +276,7 @@ enum FestivalLoader {
         config.timeoutIntervalForRequest = 8
         config.timeoutIntervalForResource = 8
         let (data, _) = try await URLSession(configuration: config).data(from: feedURL)
-        return try makeDecoder().decode(FestivalFeed.self, from: data)
+        return try makeDecoder().decode(FestivalFeed.self, from: data).chronological
     }
 }
 

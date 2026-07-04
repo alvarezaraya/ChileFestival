@@ -361,7 +361,7 @@ struct FestivalPosterPage: View {
                 .foregroundStyle(.white)
                 .padding(.horizontal, 7).padding(.vertical, 3)
                 .background(.green.opacity(0.75), in: Capsule())
-        } else if festival.daysUntilStart <= 90 {
+        } else {
             Text("En \(festival.daysUntilStart) día\(festival.daysUntilStart == 1 ? "" : "s")")
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(festival.accentColor)
