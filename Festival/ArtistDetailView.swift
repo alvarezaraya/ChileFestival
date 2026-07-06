@@ -53,8 +53,58 @@ enum ArtistCatalog {
         return Array(interleave(pools).prefix(limit))
     }
 
+    /// Top songs de TODO el cartel para el mix, en tandas de ~25 ids por
+    /// consulta (el mismo batching que `LiveArtistArtwork` usa para las fotos).
+    /// Consultar artista por artista —dos requests cada uno, en ráfaga— gatillaba
+    /// el rate-limiting del catálogo con carteles grandes y los rechazados se
+    /// omitían en silencio: el mix quedaba con un puñado de artistas.
+    /// Cada pool viene junto a su artista (el mix necesita el tier para elegir
+    /// con quién abrir); las entradas sin id resuelto caen a la búsqueda por
+    /// texto individual. Devuelve el primer error por si TODOS fallaron
+    /// (p. ej. sin red).
+    static func topSongPools(for artists: [LineupArtist], limit: Int)
+        async -> (pools: [(artist: LineupArtist, songs: [Song])], firstError: Error?) {
+        var firstError: Error?
+
+        // Top songs de cada id de catálogo, en tandas.
+        var seen = Set<String>()
+        let ids = artists.flatMap(\.appleMusicArtistIDs)
+            .filter { seen.insert($0).inserted }
+        var songsByID: [String: [Song]] = [:]
+        for start in stride(from: 0, to: ids.count, by: 25) {
+            let chunk = Array(ids[start..<min(start + 25, ids.count)])
+            var request = MusicCatalogResourceRequest<MusicKit.Artist>(
+                matching: \.id, memberOf: chunk.map { MusicItemID($0) })
+            request.properties = [.topSongs]
+            do {
+                for item in try await request.response().items {
+                    songsByID[item.id.rawValue] = Array(item.topSongs ?? [])
+                }
+            } catch {
+                if firstError == nil { firstError = error }
+            }
+        }
+
+        // Pool por entrada del cartel: sus ids combinados (intercalados si la
+        // entrada agrupa a varios artistas), recortados al límite del mix.
+        var pools: [(artist: LineupArtist, songs: [Song])] = []
+        for artist in artists {
+            let songs: [Song]
+            if artist.appleMusicArtistIDs.isEmpty {
+                do { songs = try await topSongs(for: artist, limit: limit) }
+                catch { if firstError == nil { firstError = error }; continue }
+            } else {
+                let subPools = artist.appleMusicArtistIDs
+                    .compactMap { songsByID[$0] }
+                    .filter { !$0.isEmpty }
+                songs = Array(interleave(subPools).prefix(limit))
+            }
+            if !songs.isEmpty { pools.append((artist, songs)) }
+        }
+        return (pools, firstError)
+    }
+
     /// Round-robin: toma una de cada pool por vuelta hasta agotarlas.
-    /// (También lo usa `FestivalPlayer` para armar el mix del festival.)
     static func interleave<T>(_ pools: [[T]]) -> [T] {
         var pools = pools
         var result: [T] = []
