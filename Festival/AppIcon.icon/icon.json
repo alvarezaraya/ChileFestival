@@ -4,27 +4,13 @@
     {
       "layers" : [
         {
-          "fill-specializations" : [
-            {
-              "appearance" : "tinted",
-              "value" : {
-                "solid" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
-              }
-            }
-          ],
-          "image-name" : "0CF0A883-7AEE-4A64-AD89-385030F2BC38.png",
-          "name" : "0CF0A883-7AEE-4A64-AD89-385030F2BC38",
-          "opacity-specializations" : [
-            {
-              "appearance" : "tinted",
-              "value" : 0.8
-            }
-          ],
+          "image-name" : "0363c970c6fd9aa92d7e7bae2d0cc105a1749df9b742b5f79ee3713ed66dd694.png",
+          "name" : "0363c970c6fd9aa92d7e7bae2d0cc105a1749df9b742b5f79ee3713ed66dd694",
           "position" : {
-            "scale" : 1,
+            "scale" : 0.75,
             "translation-in-points" : [
-              -1.3515625,
-              3.796875
+              -1.125,
+              20.10468750000001
             ]
           }
         }
