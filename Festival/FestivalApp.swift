@@ -45,6 +45,13 @@ struct RootView: View {
                             onCancel: { showFollowEditor = false }
                         )
                     }
+                    // Reagenda los recordatorios al entrar al carrusel (incluye
+                    // el primer arranque tras el onboarding, donde además se
+                    // pide el permiso de notificaciones) y al editar follows.
+                    .task(id: followStore.followedKeys) {
+                        await FestivalReminders.sync(feed: feed,
+                                                     followedKeys: followStore.followedKeys)
+                    }
                 } else {
                     FestivalSelectionScreen(
                         feed: feed, mode: .onboarding,
