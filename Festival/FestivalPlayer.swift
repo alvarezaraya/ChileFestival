@@ -70,16 +70,17 @@ final class FestivalPlayer: ObservableObject {
         guard await MusicAuthorization.request() == .authorized else {
             mode = .needsAuthorization; return
         }
-        // Top songs de todos los artistas EN PARALELO (concurrencia acotada):
-        // en serie, un cartel grande eran decenas de round-trips encadenados y
-        // el play tardaba varios segundos en arrancar.
-        let (pools, firstError) = await topSongPools(for: artists)
+        // Top songs de todo el cartel en tandas de ~25 ids por consulta: pocas
+        // requests aunque el cartel sea grande, sin gatillar el rate-limiting
+        // del catálogo (que dejaba el mix con un puñado de artistas).
+        let (pools, firstError) = await ArtistCatalog.topSongPools(
+            for: artists, limit: songsPerArtist)
         guard !pools.isEmpty else {
             mode = .error(firstError?.localizedDescription
                           ?? "No encontré canciones para este cartel.")
             return
         }
-        await startPlayback(interleaveShuffle(pools))
+        await startPlayback(shuffledMix(pools))
     }
 
     /// Reproduce una lista ya resuelta (p. ej. las top songs que el detalle del
@@ -141,42 +142,21 @@ final class FestivalPlayer: ObservableObject {
         mode = .idle
     }
 
-    // MARK: - Top songs
+    // MARK: - Mix
 
-    /// Resuelve las top songs de cada artista en paralelo (máx. 6 consultas
-    /// simultáneas para no gatillar rate-limiting del catálogo), preservando el
-    /// orden del cartel. Los artistas que fallen o vengan vacíos se omiten; se
-    /// devuelve el primer error por si TODOS fallaron (p. ej. sin red).
-    private func topSongPools(for artists: [LineupArtist])
-        async -> (pools: [[Song]], firstError: Error?) {
-        var pools = [[Song]?](repeating: nil, count: artists.count)
-        var firstError: Error?
-        let limit = songsPerArtist
-        await withTaskGroup(of: (Int, Result<[Song], Error>).self) { group in
-            var iterator = artists.enumerated().makeIterator()
-            func addNext() {
-                guard let (i, artist) = iterator.next() else { return }
-                group.addTask {
-                    do { return (i, .success(try await ArtistCatalog.topSongs(for: artist, limit: limit))) }
-                    catch { return (i, .failure(error)) }
-                }
-            }
-            for _ in 0..<6 { addNext() }
-            while let (i, result) = await group.next() {
-                switch result {
-                case .success(let songs): pools[i] = songs
-                case .failure(let error): if firstError == nil { firstError = error }
-                }
-                addNext()
-            }
+    /// Baraja TODAS las canciones del cartel al azar, pero el mix siempre abre
+    /// con una cabeza de cartel: la primera canción de ese tier se intercambia
+    /// al puesto 0. Se usa el mayor peso presente en los pools (y no
+    /// `.headliner` a secas) por si un cartel aún no confirma headliners.
+    private func shuffledMix(_ pools: [(artist: LineupArtist, songs: [Song])]) -> [Song] {
+        var songs = pools.flatMap(\.songs).shuffled()
+        let topWeight = pools.map(\.artist.billingWeight).max() ?? 0
+        let openers = Set(pools.filter { $0.artist.billingWeight == topWeight }
+                               .flatMap(\.songs).map(\.id))
+        if let i = songs.firstIndex(where: { openers.contains($0.id) }), i > 0 {
+            songs.swapAt(0, i)
         }
-        return (pools.compactMap { $0 }.filter { !$0.isEmpty }, firstError)
-    }
-
-    /// Baraja cada pool y las intercala round-robin: todos los artistas quedan
-    /// representados desde el comienzo del mix.
-    private func interleaveShuffle(_ pools: [[Song]]) -> [Song] {
-        ArtistCatalog.interleave(pools.map { $0.shuffled() })
+        return songs
     }
 
     // MARK: - Reproducción completa (con suscripción)
