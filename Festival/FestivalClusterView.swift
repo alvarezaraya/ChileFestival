@@ -341,8 +341,15 @@ private struct ClusterWorld: View, Equatable {
                 )
                 // El círculo en zoom viaja por encima de sus vecinos.
                 .zIndex(zoomedArtistID == body.id ? 1 : 0)
+                .transition(.scale.combined(with: .opacity))
             }
         }
+        // Cambiar el filtro (búsqueda o día) inserta y quita burbujas: animar
+        // sobre los ids hace que se fundan/escalen en vez de saltar de golpe,
+        // y como el value son los ids —no las posiciones— los ticks de la
+        // física a 60 Hz no disparan animación alguna.
+        .animation(.spring(response: 0.35, dampingFraction: 0.85),
+                   value: physics.bodies.map(\.id))
     }
 }
 

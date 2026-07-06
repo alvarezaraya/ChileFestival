@@ -430,11 +430,14 @@ struct FullscreenClusterOverlay: View {
             .sorted { $0.billingWeight > $1.billingWeight }
     }
 
-    /// Coincidencias dentro del cartel visible (respeta el día seleccionado),
-    /// insensible a mayúsculas y tildes.
-    private var searchResults: [LineupArtist] {
-        let query = searchText.trimmingCharacters(in: .whitespaces)
-        guard !query.isEmpty else { return [] }
+    /// Consulta normalizada del buscador.
+    private var query: String { searchText.trimmingCharacters(in: .whitespaces) }
+
+    /// Artistas visibles en el cúmulo: con búsqueda activa quedan solo las
+    /// coincidencias (insensible a mayúsculas y tildes); sin búsqueda, el
+    /// cartel completo del día seleccionado.
+    private var visibleArtists: [LineupArtist] {
+        guard !query.isEmpty else { return artists }
         return artists.filter { $0.name.localizedStandardContains(query) }
     }
 
@@ -448,7 +451,7 @@ struct FullscreenClusterOverlay: View {
                 .ignoresSafeArea()
 
             PhysicsClusterView(
-                artists: artists,
+                artists: visibleArtists,
                 physics: physics,
                 accent: festival.accentColor,
                 interactive: true,
@@ -464,24 +467,58 @@ struct FullscreenClusterOverlay: View {
 
             if zoomedArtistID == nil {
                 VStack {
-                    HStack {
-                        CloseCircleButton(label: "Cerrar cartel", action: onClose)
-                        Spacer()
-                        Text(festival.name)
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 14).padding(.vertical, 8)
-                            .background(.black.opacity(0.25), in: Capsule())
-                        Spacer()
-                        Color.clear.frame(width: 44, height: 44)
+                    VStack(spacing: 0) {
+                        HStack {
+                            CloseCircleButton(label: "Cerrar cartel", action: onClose)
+                            Spacer()
+                            Text(festival.name)
+                                .font(.headline)
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 14).padding(.vertical, 8)
+                                .background(.black.opacity(0.25), in: Capsule())
+                            Spacer()
+                            Color.clear.frame(width: 44, height: 44)
+                        }
+                        .padding(.horizontal)
+                        // Mismos filtros por día que la portada, arriba del cartel
+                        // expandido. Comparten estado, así ambas vistas quedan en sync.
+                        if festival.hasDayBreakdown {
+                            DaySelector(festival: festival, selectedDay: $selectedDay)
+                                .padding(.horizontal)
+                                .padding(.top, 10)
+                        }
                     }
-                    .padding(.horizontal)
-                    // Mismos filtros por día que la portada, arriba del cartel
-                    // expandido. Comparten estado, así ambas vistas quedan en sync.
-                    if festival.hasDayBreakdown {
-                        DaySelector(festival: festival, selectedDay: $selectedDay)
-                            .padding(.horizontal)
-                            .padding(.top, 10)
+                    // Aire extra bajo los chips: el scrim cubre también esta zona,
+                    // así el degradado muere en fade y no en un corte visible.
+                    .padding(.bottom, 28)
+                    // Scrim tras el header: los chips del día flotan sobre las
+                    // fotos de las burbujas y sin esto no contrastan. Material
+                    // desenfocado + degradado oscuro, ambos fundidos hacia abajo
+                    // con la misma máscara (blur "progresivo": el material no
+                    // admite radio variable, pero desvanecer su opacidad da el
+                    // mismo efecto). Sube hasta el borde físico de la pantalla.
+                    .background {
+                        let fade = LinearGradient(
+                            stops: [.init(color: .black, location: 0),
+                                    .init(color: .black, location: 0.45),
+                                    .init(color: .black.opacity(0.35), location: 0.75),
+                                    .init(color: .clear, location: 1)],
+                            startPoint: .top, endPoint: .bottom)
+                        ZStack {
+                            Rectangle()
+                                .fill(.ultraThinMaterial)
+                                // El material se adapta al esquema; fijarlo en
+                                // oscuro evita que aclare las fotos de fondo.
+                                .environment(\.colorScheme, .dark)
+                            LinearGradient(
+                                stops: [.init(color: .black.opacity(0.75), location: 0),
+                                        .init(color: .black.opacity(0.50), location: 0.55),
+                                        .init(color: .clear, location: 1)],
+                                startPoint: .top, endPoint: .bottom)
+                        }
+                        .mask(fade)
+                        .ignoresSafeArea(edges: .top)
+                        .allowsHitTesting(false)
                     }
                     Spacer()
                     bottomSearchBar
@@ -493,18 +530,17 @@ struct FullscreenClusterOverlay: View {
 
     // MARK: Buscador de artistas (borde inferior)
 
-    /// Pista + campo de búsqueda anclados abajo. Al escribir, las coincidencias
-    /// aparecen sobre el campo; tocar una abre al artista con el mismo zoom que
-    /// tocar su burbuja. El bloque vive dentro de las safe areas, así que el
-    /// teclado lo empuja hacia arriba sin tapar los resultados.
+    /// Pista + campo de búsqueda anclados abajo. Al escribir, el propio cúmulo
+    /// se filtra en vivo: las burbujas que no coinciden desaparecen y quedan
+    /// solo las coincidencias, tappables como siempre. Enter abre la primera.
+    /// El bloque vive dentro de las safe areas, así que el teclado lo empuja
+    /// hacia arriba sin tapar el campo.
     private var bottomSearchBar: some View {
         VStack(spacing: 10) {
-            if !searchResults.isEmpty {
-                searchResultsList
-            } else if !searchText.trimmingCharacters(in: .whitespaces).isEmpty {
-                Text("Sin coincidencias en este cartel")
+            if !query.isEmpty {
+                Text(matchCountLabel)
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.6))
+                    .foregroundStyle(.white.opacity(visibleArtists.isEmpty ? 0.6 : 0.8))
                     .padding(.horizontal, 12).padding(.vertical, 6)
                     .background(.black.opacity(0.25), in: Capsule())
             } else if !searchFieldFocused {
@@ -518,7 +554,16 @@ struct FullscreenClusterOverlay: View {
         }
         .padding(.horizontal)
         .padding(.bottom, 12)
-        .animation(.easeInOut(duration: 0.2), value: searchResults)
+        .animation(.easeInOut(duration: 0.2), value: visibleArtists)
+        .animation(.easeInOut(duration: 0.2), value: searchFieldFocused)
+    }
+
+    private var matchCountLabel: String {
+        switch visibleArtists.count {
+        case 0:  "Sin coincidencias en este cartel"
+        case 1:  "1 coincidencia — toca su burbuja o presiona buscar"
+        default: "\(visibleArtists.count) coincidencias"
+        }
     }
 
     private var searchField: some View {
@@ -532,8 +577,8 @@ struct FullscreenClusterOverlay: View {
                 .submitLabel(.search)
                 .autocorrectionDisabled()
                 .onSubmit {
-                    // Enter abre la primera coincidencia (si la hay).
-                    if let first = searchResults.first { select(first) }
+                    // Enter abre la primera coincidencia (si hay búsqueda activa).
+                    if !query.isEmpty, let first = visibleArtists.first { select(first) }
                 }
             if !searchText.isEmpty {
                 Button { searchText = "" } label: {
@@ -548,46 +593,10 @@ struct FullscreenClusterOverlay: View {
         .overlay(Capsule().strokeBorder(.white.opacity(0.15), lineWidth: 1))
     }
 
-    /// Hasta 5 coincidencias en un panel compacto; con más, se invita a seguir
-    /// escribiendo (evita un ScrollView que acapararía altura fija).
-    private var searchResultsList: some View {
-        VStack(spacing: 0) {
-            ForEach(searchResults.prefix(5)) { artist in
-                Button { select(artist) } label: {
-                    HStack {
-                        Text(artist.name)
-                            .font(.subheadline.weight(.medium))
-                            .foregroundStyle(.white)
-                            .lineLimit(1)
-                        Spacer()
-                        Image(systemName: "arrow.up.right")
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.45))
-                    }
-                    .padding(.horizontal, 16).padding(.vertical, 11)
-                    .contentShape(Rectangle())
-                }
-                if artist.id != searchResults.prefix(5).last?.id {
-                    Divider().overlay(.white.opacity(0.12))
-                }
-            }
-            if searchResults.count > 5 {
-                Text("y \(searchResults.count - 5) más — sigue escribiendo")
-                    .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.5))
-                    .padding(.vertical, 7)
-            }
-        }
-        .background(.black.opacity(0.55), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .strokeBorder(.white.opacity(0.12), lineWidth: 1)
-        )
-    }
-
     private func select(_ artist: LineupArtist) {
+        // La búsqueda se conserva: al cerrar el artista, el cartel sigue
+        // filtrado con la misma consulta (el X del campo la limpia).
         searchFieldFocused = false
-        searchText = ""
         onSelect(artist)
     }
 }
