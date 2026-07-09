@@ -54,10 +54,23 @@ struct PhysicsClusterView: View {
     /// segunda vista ni fundidos. El overlay del detalle solo aporta contenido.
     var zoomedArtistID: String? = nil
 
+    /// Coordenada Y **global** bajo la cual no deben quedar burbujas: el borde
+    /// superior del buscador cuando hay una búsqueda activa (el teclado empuja
+    /// ese borde hacia arriba). La ventana útil del cúmulo termina ahí, así
+    /// las coincidencias filtradas no quedan tapadas por el teclado ni por el
+    /// campo. `nil` = ventana completa (comportamiento de siempre).
+    var clearBelowGlobalY: CGFloat? = nil
+
     var onTapBackground: () -> Void = {}
     var onSelect: (LineupArtist) -> Void = { _ in }
 
     @State private var boundsSize: CGSize = .zero
+
+    /// Franja inferior efectivamente aplicada a la ventana útil. Sigue a la
+    /// pedida (`clearBelowGlobalY`) salvo mientras hay un artista en zoom:
+    /// reencuadrar los cuerpos bajo la cámara desalinearía el círculo centrado,
+    /// así que el valor se congela y se pone al día al cerrar el zoom.
+    @State private var appliedClearance: CGFloat = 0
 
     /// Desplazamiento acumulado del mundo respecto al centro (pan). Solo se usa en
     /// modo interactivo: arrastrando se recorre el mundo, que es mayor que la
@@ -68,19 +81,28 @@ struct PhysicsClusterView: View {
 
     var body: some View {
         GeometryReader { geo in
-            // El "mundo" físico puede ser mayor que la ventana visible: el contenido
-            // se centra y desborda, de modo que la silueta (clip del padre) solo deja
-            // ver la parte central.
-            let world = CGSize(width: geo.size.width * worldScale,
-                               height: geo.size.height * worldScale)
+            // Franja inferior pedida (buscador + teclado). Se aplica vía
+            // `appliedClearance` (congelada durante el zoom, ver onChange abajo).
+            let requestedClearance: CGFloat = clearBelowGlobalY.map {
+                max(0, geo.frame(in: .global).maxY - $0 + 8)
+            } ?? 0
+            // Ventana útil: anclada al borde superior, el recorte va abajo.
+            // Sin búsqueda activa coincide con la ventana visible completa.
+            let window = Self.windowSize(geo.size, clearance: appliedClearance)
+            // El "mundo" físico puede ser mayor que la ventana útil: el contenido
+            // se centra sobre ella y desborda, de modo que la silueta (clip del
+            // padre) solo deja ver la parte central.
+            let world = CGSize(width: window.width * worldScale,
+                               height: window.height * worldScale)
             // Margen máximo de pan en cada eje: la mitad del desborde del mundo.
-            let panLimit = CGSize(width: max(0, (world.width - geo.size.width) / 2),
-                                  height: max(0, (world.height - geo.size.height) / 2))
+            let panLimit = CGSize(width: max(0, (world.width - window.width) / 2),
+                                  height: max(0, (world.height - window.height) / 2))
             // Pan acumulado, recortado al límite. No incluye el arrastre en curso
             // (eso es un delta visual dentro de PanLayer); al tocar un artista no
             // puede haber arrastre activo, así que el zoom siempre lo ve completo.
             let offset = panOffset.clamped(to: panLimit)
-            let zoom = zoomTransform(world: world, visible: geo.size, pan: offset)
+            let zoom = zoomTransform(world: world, window: window,
+                                     visible: geo.size, pan: offset)
             ZStack {
                 // Capa de fondo para expandir: mide SOLO la ventana visible
                 // (`geo.size`), no el mundo desbordado. Si viviera dentro del marco
@@ -130,24 +152,21 @@ struct PhysicsClusterView: View {
                         onSelect: onSelect
                     )
                     .equatable()
-                    // Marco del mundo, centrado sobre la ventana visible (desborda
-                    // y se recorta).
+                    // Marco del mundo, centrado sobre la ventana ÚTIL (no la
+                    // visible): con la franja del buscador activa, el cúmulo
+                    // entero sube y deja libre la zona del teclado/campo.
                     .frame(width: world.width, height: world.height)
-                    .position(x: geo.size.width / 2 + offset.width,
-                              y: geo.size.height / 2 + offset.height)
+                    .position(x: window.width / 2 + offset.width,
+                              y: window.height / 2 + offset.height)
                 }
                 // Zoom proximal: acerca el mundo entero hacia el círculo tocado
                 // y lo deja centrado, en la misma transacción que el héroe.
                 .scaleEffect(zoom?.scale ?? 1, anchor: zoom?.anchor ?? .center)
                 .offset(zoom?.offset ?? .zero)
             }
-            .onAppear {
-                boundsSize = world
-                if isActive { physics.configure(artists: artists, size: world) }
-            }
-            .onChange(of: geo.size) { _, _ in
-                boundsSize = world
-                if isActive { physics.configure(artists: artists, size: world) }
+            .onAppear { applyClearance(requestedClearance, geoSize: geo.size) }
+            .onChange(of: geo.size) { _, size in
+                applyClearance(appliedClearance, geoSize: size)
             }
             // Cambiar el día (u otro filtro) reconstruye el cúmulo.
             .onChange(of: artists.map(\.id)) { _, _ in
@@ -159,7 +178,34 @@ struct PhysicsClusterView: View {
                     physics.configure(artists: artists, size: boundsSize)
                 }
             }
+            // La franja del buscador cambió (el teclado sube o baja, la búsqueda
+            // empieza o termina). Con un artista en zoom se pospone: mover los
+            // cuerpos bajo la cámara desalinearía el círculo centrado; al cerrar
+            // el zoom se aplica el valor vigente.
+            .onChange(of: requestedClearance) { _, clearance in
+                if zoomedArtistID == nil { applyClearance(clearance, geoSize: geo.size) }
+            }
+            .onChange(of: zoomedArtistID) { _, id in
+                if id == nil, appliedClearance != requestedClearance {
+                    applyClearance(requestedClearance, geoSize: geo.size)
+                }
+            }
         }
+    }
+
+    private static func windowSize(_ size: CGSize, clearance: CGFloat) -> CGSize {
+        CGSize(width: size.width, height: max(size.height - clearance, 120))
+    }
+
+    /// Aplica una franja inferior nueva: reencuadra el mundo a la ventana útil
+    /// resultante y reconfigura la física (los cuerpos persisten; solo se
+    /// reescalan al marco nuevo, ver `ClusterPhysics.configure`).
+    private func applyClearance(_ clearance: CGFloat, geoSize: CGSize) {
+        appliedClearance = clearance
+        let window = Self.windowSize(geoSize, clearance: clearance)
+        boundsSize = CGSize(width: window.width * worldScale,
+                            height: window.height * worldScale)
+        if isActive { physics.configure(artists: artists, size: boundsSize) }
     }
 
     /// Zoom proximal hacia el círculo seleccionado: UNA transformación —escala
@@ -167,15 +213,21 @@ struct PhysicsClusterView: View {
     /// que acerca todo el mundo hacia él. La escala deja la burbuja exactamente
     /// al tamaño del círculo de la página de artista; el overlay del detalle
     /// (transparente arriba) la deja ver centrada detrás.
-    private func zoomTransform(world: CGSize, visible: CGSize, pan: CGSize)
+    private func zoomTransform(world: CGSize, window: CGSize, visible: CGSize, pan: CGSize)
         -> (scale: CGFloat, anchor: UnitPoint, offset: CGSize)? {
         guard interactive, let id = zoomedArtistID,
               let body = physics.bodies.first(where: { $0.id == id }),
               world.width > 0, world.height > 0 else { return nil }
-        // Posición del círculo en la ventana visible (mundo centrado + pan).
+        // Posición del círculo en pantalla: el mundo va centrado sobre la
+        // ventana ÚTIL, que arranca en el borde superior (su recorte es la
+        // franja inferior del buscador), así que la coordenada dentro de la
+        // ventana es directamente la coordenada en pantalla. La escala y la
+        // traslación de destino, en cambio, van contra la ventana VISIBLE
+        // completa: el círculo debe terminar en el centro real de la pantalla,
+        // que es donde ArtistZoomView dibuja su hueco.
         let screen = CGPoint(
-            x: body.position.x - (world.width - visible.width) / 2 + pan.width,
-            y: body.position.y - (world.height - visible.height) / 2 + pan.height)
+            x: body.position.x - (world.width - window.width) / 2 + pan.width,
+            y: body.position.y - (world.height - window.height) / 2 + pan.height)
         // Mismo tamaño que el círculo de ArtistZoomView.
         let heroSize = heroCircleDiameter(forHeight: visible.height)
         // OJO con el ancla: `.position` envuelve el mundo en un marco del tamaño
@@ -341,13 +393,16 @@ private struct ClusterWorld: View, Equatable {
                 )
                 // El círculo en zoom viaja por encima de sus vecinos.
                 .zIndex(zoomedArtistID == body.id ? 1 : 0)
-                .transition(.scale.combined(with: .opacity))
+                // Asimétrica a propósito: las burbujas APARECEN sin efecto
+                // (nada de popup al cargar el cúmulo por primera vez ni al
+                // limpiar la búsqueda) y solo se desvanecen al ser filtradas.
+                .transition(.asymmetric(insertion: .identity, removal: .opacity))
             }
         }
-        // Cambiar el filtro (búsqueda o día) inserta y quita burbujas: animar
-        // sobre los ids hace que se fundan/escalen en vez de saltar de golpe,
-        // y como el value son los ids —no las posiciones— los ticks de la
-        // física a 60 Hz no disparan animación alguna.
+        // Cambiar el filtro (búsqueda o día) quita burbujas: animar sobre los
+        // ids hace que se fundan en vez de desaparecer de golpe, y como el
+        // value son los ids —no las posiciones— los ticks de la física a
+        // 60 Hz no disparan animación alguna.
         .animation(.spring(response: 0.35, dampingFraction: 0.85),
                    value: physics.bodies.map(\.id))
     }
