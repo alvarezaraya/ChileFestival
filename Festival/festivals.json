@@ -16,6 +16,7 @@
       ],
       "accentColorHex": "#E91E63",
       "posterImageURL": null,
+      "websiteURL": "https://www.primaverasound.com/es/santiago",
       "lineup": [
         {
           "id": "beach-house",
@@ -610,6 +611,7 @@
       ],
       "accentColorHex": "#E4002B",
       "posterImageURL": null,
+      "websiteURL": "https://lollapaloozacl.com",
       "lineup": [
         {
           "id": "billie-eilish",
@@ -1296,6 +1298,7 @@
       ],
       "accentColorHex": "#00B5CC",
       "posterImageURL": null,
+      "websiteURL": "https://creamfields.cl",
       "lineup": [
         {
           "id": "tiesto",
@@ -1611,6 +1614,7 @@
       ],
       "accentColorHex": "#1F7A4D",
       "posterImageURL": null,
+      "websiteURL": "https://faunaprimavera.cl",
       "lineup": [
         {
           "id": "blur",
@@ -1852,6 +1856,7 @@
       ],
       "accentColorHex": "#E4002B",
       "posterImageURL": null,
+      "websiteURL": "https://lollapaloozacl.com",
       "lineup": [
         {
           "id": "feid",
@@ -2505,6 +2510,7 @@
       ],
       "accentColorHex": "#1F7A4D",
       "posterImageURL": null,
+      "websiteURL": "https://faunaprimavera.cl",
       "lineup": [
         {
           "id": "the-smashing-pumpkins",
@@ -2730,6 +2736,7 @@
       ],
       "accentColorHex": "#00B5CC",
       "posterImageURL": null,
+      "websiteURL": "https://creamfields.cl",
       "lineup": [
         {
           "id": "swedish-house-mafia",
@@ -2977,6 +2984,7 @@
       ],
       "accentColorHex": "#E4002B",
       "posterImageURL": null,
+      "websiteURL": "https://lollapaloozacl.com",
       "lineup": [
         {
           "id": "olivia-rodrigo",
@@ -3337,6 +3345,7 @@
       ],
       "accentColorHex": "#E81C7A",
       "posterImageURL": null,
+      "websiteURL": "https://somosruidosa.com",
       "lineup": [
         {
           "id": "myriam-hernandez",
@@ -3668,6 +3677,7 @@
       ],
       "accentColorHex": "#00B5CC",
       "posterImageURL": null,
+      "websiteURL": "https://creamfields.cl",
       "lineup": [
         {
           "id": "deadmau5",
@@ -3901,6 +3911,7 @@
       ],
       "accentColorHex": "#1F7A4D",
       "posterImageURL": null,
+      "websiteURL": "https://faunaprimavera.cl",
       "lineup": [
         {
           "id": "weezer",
@@ -4165,6 +4176,7 @@
       ],
       "accentColorHex": "#E4002B",
       "posterImageURL": null,
+      "websiteURL": "https://lollapaloozacl.com",
       "lineup": [
         {
           "id": "sabrina-carpenter",
@@ -4657,6 +4669,7 @@
       ],
       "accentColorHex": "#4B2E9E",
       "posterImageURL": null,
+      "websiteURL": "https://festivalenorbita.com",
       "lineup": [
         {
           "id": "blonde-redhead",
@@ -4770,6 +4783,7 @@
       ],
       "accentColorHex": "#8B1E3F",
       "posterImageURL": null,
+      "websiteURL": "https://festivalmuda.cl",
       "lineup": [
         {
           "id": "ana-tijoux",
@@ -5039,6 +5053,7 @@
       ],
       "accentColorHex": "#E81C7A",
       "posterImageURL": null,
+      "websiteURL": "https://somosruidosa.com",
       "lineup": []
     },
     {
@@ -5054,6 +5069,7 @@
       ],
       "accentColorHex": "#F5A623",
       "posterImageURL": null,
+      "websiteURL": "https://festivalbamba.cl",
       "lineup": [
         {
           "id": "marc-anthony",
@@ -5356,6 +5372,7 @@
       ],
       "accentColorHex": "#00B5CC",
       "posterImageURL": null,
+      "websiteURL": "https://creamfields.cl",
       "lineup": []
     },
     {
@@ -5372,6 +5389,7 @@
       ],
       "accentColorHex": "#1F7A4D",
       "posterImageURL": null,
+      "websiteURL": "https://faunaprimavera.cl",
       "lineup": [
         {
           "id": "the-strokes",
