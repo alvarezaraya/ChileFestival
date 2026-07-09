@@ -425,10 +425,19 @@ private struct TappableBubble: View {
             .accessibilityElement(children: .ignore)
             .accessibilityAddTraits(.isButton)
             .accessibilityLabel(physicsBody.artist.name)
+            // El lugar en el cartel y el día no se ven en la burbuja (van en el
+            // tamaño del círculo y en el filtro): VoiceOver los anuncia aquí.
+            .accessibilityValue(accessibilityValue)
             .accessibilityHint(interactive ? "Ver artista" : "Explorar cartel")
             .accessibilityAction {
                 if interactive { onSelect(physicsBody.artist) } else { onTapBackground() }
             }
+    }
+
+    private var accessibilityValue: String {
+        var parts = [physicsBody.artist.tier.displayName]
+        if let day = physicsBody.artist.day { parts.append("día \(day)") }
+        return parts.joined(separator: ", ")
     }
 }
 
