@@ -602,7 +602,10 @@ struct FullscreenClusterOverlay: View {
                                 .padding(.horizontal, 14).padding(.vertical, 8)
                                 .background(.black.opacity(0.25), in: Capsule())
                             Spacer()
-                            Color.clear.frame(width: 44, height: 44)
+                            // Comparte el cartel visible (día filtrado incluido)
+                            // como póster. Ocupa el hueco que balanceaba al botón
+                            // de cerrar, así el título sigue centrado.
+                            ShareCartelLink(festival: festival, day: selectedDay)
                         }
                         .padding(.horizontal)
                         // Mismos filtros por día que la portada, arriba del cartel
