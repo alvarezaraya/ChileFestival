@@ -266,6 +266,12 @@ struct ArtistZoomView: View {
                                                  location.y - center.y)
                             if distance > heroSize / 2 { onClose() }
                         }
+                        // El "toca fuera del círculo para cerrar" es invisible
+                        // para VoiceOver: este elemento lo hace explícito.
+                        .accessibilityElement()
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityLabel("Cerrar artista")
+                        .accessibilityAction { onClose() }
                     card
                 }
             }
@@ -275,6 +281,8 @@ struct ArtistZoomView: View {
         // de esta vista y el del zoom de cámara coinciden —el círculo queda en
         // el centro real de la pantalla— y el hueco calza con él.
         .ignoresSafeArea()
+        // Gesto estándar de VoiceOver para descartar (Z con dos dedos).
+        .accessibilityAction(.escape) { onClose() }
         .task(id: artist.id) { await model.load(artist) }
     }
 
@@ -407,6 +415,9 @@ private struct SongRow: View {
             }
         }
         .padding(.vertical, 4)
+        // Una sola parada de VoiceOver por canción (número, título, álbum y
+        // duración juntos) en vez de cuatro elementos sueltos por fila.
+        .accessibilityElement(children: .combine)
     }
 
     private var artwork: some View {
