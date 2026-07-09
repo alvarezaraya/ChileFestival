@@ -359,6 +359,9 @@ struct FestivalPosterPage: View {
     @Binding var selectedDay: Int?
     let onExpand: () -> Void
 
+    /// Abre la página oficial en el navegador (Safari).
+    @Environment(\.openURL) private var openURL
+
     /// Artistas que la portada simula y dibuja: solo cabezas de cartel y estelares.
     /// Al simular únicamente estos, llenan la silueta sea cual sea el tamaño del
     /// cartel (no quedan dispersos en festivales con pocos destacados). Los demás
@@ -472,6 +475,20 @@ struct FestivalPosterPage: View {
             Text("\(festival.venue) · \(festival.city)")
                 .font(.caption2)
                 .foregroundStyle(.white.opacity(festival.isPast ? 0.35 : 0.55))
+            // Enlace a la página oficial del festival: se abre fuera de la app,
+            // en Safari. Solo si el feed trae la URL.
+            if let website = festival.websiteURL {
+                Button { openURL(website) } label: {
+                    Label("Sitio oficial", systemImage: "safari")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(.white.opacity(festival.isPast ? 0.50 : 0.85))
+                        .padding(.horizontal, 10).padding(.vertical, 5)
+                        .background(.white.opacity(0.12), in: Capsule())
+                }
+                .padding(.top, 4)
+                .accessibilityLabel("Sitio oficial de \(festival.name)")
+                .accessibilityHint("Abre la página del festival en Safari")
+            }
         }
     }
 
