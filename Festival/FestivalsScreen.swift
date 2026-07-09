@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // MARK: - Pantalla raíz
 
@@ -106,7 +107,10 @@ struct FestivalsScreen: View {
                                          activePlayerFestivalID = festival.id
                                          Task { await player.playMix(for: mixArtists(for: festival)) }
                                      }, onOpenPlayer: { showNowPlaying = true })
-                    if feed.festivals.count > 1, !isExpanded { pageDots }
+                    if feed.festivals.count > 1, !isExpanded {
+                        PageDotsIndicator(labels: feed.festivals.map(\.name),
+                                          selectedIndex: $selectedIndex)
+                    }
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 28)   // sube el bloque para alejar los dots del
@@ -202,52 +206,143 @@ struct FestivalsScreen: View {
             .animation(.easeInOut(duration: 0.6), value: current.accentColorHex)
     }
 
-    private var pageDots: some View {
-        let dotSize: CGFloat = 7
-        let gap: CGFloat = 7
-        let step = dotSize + gap          // 14 pts por slot
-        let n = feed.festivals.count
-        let sideRadius = 2                // dots visibles a cada lado
+}
 
-        let maxVisible = 2 * sideRadius + 1
-        let showAll = n <= maxVisible
-        let containerW = showAll
-            ? CGFloat(n) * step - gap
-            : CGFloat(maxVisible) * step - gap
+// MARK: - Indicador de página
 
-        // En un ZStack centrado el HStack ya queda centrado; el offset
-        // mueve el strip para que dot[safeIndex] quede en el centro del contenedor.
-        let hstackW = CGFloat(n) * step - gap
-        let xOffset: CGFloat = showAll ? 0
-            : hstackW / 2 - CGFloat(safeIndex) * step - dotSize / 2
+/// Dots de paginado interactivos bajo el botón de reproducir. Además de
+/// indicar la posición, un toque salta al festival correspondiente y
+/// arrastrar sobre el strip recorre las páginas (scrub). Con más de 5
+/// festivales se muestra una ventana deslizante que se detiene en los
+/// extremos (siempre llena); el dot de borde se encoge solo del lado donde
+/// quedan festivales ocultos, como pista de que hay más.
+private struct PageDotsIndicator: View {
+    /// Nombres de los festivales, para el valor de VoiceOver.
+    let labels: [String]
+    @Binding var selectedIndex: Int
 
-        return ZStack {
-            HStack(spacing: gap) {
-                ForEach(feed.festivals.indices, id: \.self) { i in
-                    let d = abs(i - safeIndex)
-                    Circle()
-                        .fill(.white.opacity(
-                            showAll
-                                ? (i == safeIndex ? 0.95 : 0.35)
-                                : (d == 0 ? 0.95 : d == 1 ? 0.60 : d == 2 ? 0.30 : 0.0)
-                        ))
-                        .frame(width: dotSize, height: dotSize)
-                }
+    private static let dotSize: CGFloat = 7
+    private static let activeWidth: CGFloat = 20   // cápsula del dot actual
+    private static let gap: CGFloat = 7
+    private static let step = dotSize + gap        // 14 pts por slot
+    private static let sideRadius = 2              // dots visibles a cada lado
+
+    /// Índice donde arrancó el scrub en curso (nil sin gesto activo).
+    @State private var scrubAnchor: Int? = nil
+
+    private var n: Int { labels.count }
+    private var safeIndex: Int { min(max(selectedIndex, 0), n - 1) }
+    private var maxVisible: Int { 2 * Self.sideRadius + 1 }
+    private var showAll: Bool { n <= maxVisible }
+
+    /// Centro de la ventana visible: sigue al dot activo pero se detiene en
+    /// los extremos, así la ventana nunca queda medio vacía.
+    private var windowCenter: Int {
+        showAll ? safeIndex
+                : min(max(safeIndex, Self.sideRadius), n - 1 - Self.sideRadius)
+    }
+
+    private var stripWidth: CGFloat {
+        CGFloat(n - 1) * Self.step + Self.activeWidth
+    }
+    private var containerWidth: CGFloat {
+        CGFloat((showAll ? n : maxVisible) - 1) * Self.step + Self.activeWidth
+    }
+    /// Corrimiento que deja el punto medio de la ventana en el centro del
+    /// contenedor (el HStack ya viene centrado por el frame).
+    private var xOffset: CGFloat {
+        guard !showAll else { return 0 }
+        let windowMid = CGFloat(windowCenter) * Self.step
+            + Self.dotSize / 2 + (Self.activeWidth - Self.dotSize) / 2
+        return stripWidth / 2 - windowMid
+    }
+
+    var body: some View {
+        HStack(spacing: Self.gap) {
+            ForEach(0..<n, id: \.self) { i in
+                Capsule()
+                    .fill(.white.opacity(opacity(for: i)))
+                    .frame(width: i == safeIndex ? Self.activeWidth : Self.dotSize,
+                           height: Self.dotSize)
+                    .scaleEffect(scale(for: i))
             }
-            .offset(x: xOffset)
-            .animation(.spring(response: 0.35, dampingFraction: 0.8), value: safeIndex)
         }
-        .frame(width: containerW, height: dotSize)
-        // Decorativo: VoiceOver ya pagina el carrusel deslizando en el TabView.
-        .accessibilityHidden(true)
-        .mask(
-            LinearGradient(stops: [
-                .init(color: showAll ? .black : .clear, location: 0),
-                .init(color: .black,                    location: showAll ? 0 : 0.15),
-                .init(color: .black,                    location: showAll ? 1 : 0.85),
-                .init(color: showAll ? .black : .clear, location: 1)
-            ], startPoint: .leading, endPoint: .trailing)
-        )
+        .offset(x: xOffset)
+        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: safeIndex)
+        .frame(width: containerWidth, height: Self.dotSize)
+        // Área táctil generosa sin mover el layout vecino: el padding entra en
+        // el contentShape pero los dots siguen ocupando 7 pts visuales.
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .contentShape(Rectangle())
+        .gesture(scrubGesture)
+        // Confirmación táctil al cambiar de página (por gesto o por swipe del carrusel).
+        .sensoryFeedback(.selection, trigger: safeIndex)
+        .accessibilityElement()
+        .accessibilityLabel("Festival visible")
+        .accessibilityValue("\(labels[safeIndex]), \(safeIndex + 1) de \(n)")
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+            case .increment: select(safeIndex + 1)
+            case .decrement: select(safeIndex - 1)
+            @unknown default: break
+            }
+        }
+    }
+
+    // MARK: Apariencia por dot
+
+    private func opacity(for i: Int) -> Double {
+        if i == safeIndex { return 0.95 }
+        if showAll { return 0.35 }
+        let d = abs(i - windowCenter)
+        if d > Self.sideRadius { return 0 }                    // fuera de la ventana
+        if d == Self.sideRadius, isTruncated(edgeOf: i) { return 0.30 }
+        return 0.40
+    }
+
+    private func scale(for i: Int) -> CGFloat {
+        guard !showAll else { return 1 }
+        let d = abs(i - windowCenter)
+        if d > Self.sideRadius { return 0.3 }                  // colapsa al salir
+        if d == Self.sideRadius, isTruncated(edgeOf: i) { return 0.6 }
+        return 1
+    }
+
+    /// True si más allá del dot de borde `i` quedan festivales ocultos.
+    private func isTruncated(edgeOf i: Int) -> Bool {
+        i < windowCenter ? i > 0 : i < n - 1
+    }
+
+    // MARK: Gestos
+
+    /// Arrastrar recorre una página por slot; un toque (sin arrastre) salta al
+    /// dot bajo el dedo. Mapeo uniforme por `step`: aproximación suficiente
+    /// aunque la cápsula activa sea más ancha.
+    private var scrubGesture: some Gesture {
+        DragGesture(minimumDistance: 0)
+            .onChanged { value in
+                let anchor = scrubAnchor ?? safeIndex
+                scrubAnchor = anchor
+                let delta = Int((value.translation.width / Self.step).rounded())
+                if delta != 0 { select(anchor + delta) }
+            }
+            .onEnded { value in
+                defer { scrubAnchor = nil }
+                guard abs(value.translation.width) < Self.step / 2 else { return }
+                // location.x viene en el espacio del área táctil (con padding).
+                let x = value.location.x - 12
+                let delta = ((x - containerWidth / 2) / Self.step).rounded()
+                select(windowCenter + Int(delta))
+            }
+    }
+
+    private func select(_ i: Int) {
+        let clamped = min(max(i, 0), n - 1)
+        guard clamped != selectedIndex else { return }
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+            selectedIndex = clamped
+        }
     }
 }
 
@@ -423,6 +518,14 @@ struct FullscreenClusterOverlay: View {
 
     @State private var searchText = ""
     @FocusState private var searchFieldFocused: Bool
+    /// Borde superior del bloque del buscador en coordenadas globales (lo
+    /// publica `bottomSearchBar`; el teclado lo empuja hacia arriba). Con
+    /// búsqueda activa, la ventana útil del cúmulo termina ahí.
+    @State private var searchBarTop: CGFloat? = nil
+
+    /// Con el buscador enfocado o con texto, el cúmulo cede la franja del
+    /// teclado y del campo para que las coincidencias queden a la vista.
+    private var searchActive: Bool { searchFieldFocused || !query.isEmpty }
 
     /// Cartel completo del día seleccionado, mismo orden por peso que la portada.
     private var artists: [LineupArtist] {
@@ -458,11 +561,16 @@ struct FullscreenClusterOverlay: View {
                 isActive: true,
                 worldScale: 1.6,
                 zoomedArtistID: zoomedArtistID,
+                // Buscando: las burbujas se repliegan a la franja sobre el
+                // buscador (y el teclado, que lo empuja), así ninguna
+                // coincidencia queda tapada.
+                clearBelowGlobalY: searchActive ? searchBarTop : nil,
                 onSelect: onSelect
             )
-            // Marco de pantalla COMPLETA (sin safe areas): así el centro de la
-            // ventana del cúmulo es el centro real de la pantalla y el zoom a un
-            // artista deja su círculo exactamente centrado.
+            // Marco de pantalla COMPLETA (sin safe areas): el zoom a un artista
+            // deja su círculo centrado en el centro real de la pantalla (la
+            // ventana útil recortada por la búsqueda se maneja adentro, con
+            // `clearBelowGlobalY`; el marco no cambia).
             .ignoresSafeArea()
 
             if zoomedArtistID == nil {
@@ -489,39 +597,18 @@ struct FullscreenClusterOverlay: View {
                         }
                     }
                     // Aire extra bajo los chips: el scrim cubre también esta zona,
-                    // así el degradado muere en fade y no en un corte visible.
-                    .padding(.bottom, 28)
-                    // Scrim tras el header: los chips del día flotan sobre las
-                    // fotos de las burbujas y sin esto no contrastan. Material
-                    // desenfocado + degradado oscuro, ambos fundidos hacia abajo
-                    // con la misma máscara (blur "progresivo": el material no
-                    // admite radio variable, pero desvanecer su opacidad da el
-                    // mismo efecto). Sube hasta el borde físico de la pantalla.
-                    .background {
-                        let fade = LinearGradient(
-                            stops: [.init(color: .black, location: 0),
-                                    .init(color: .black, location: 0.45),
-                                    .init(color: .black.opacity(0.35), location: 0.75),
-                                    .init(color: .clear, location: 1)],
-                            startPoint: .top, endPoint: .bottom)
-                        ZStack {
-                            Rectangle()
-                                .fill(.ultraThinMaterial)
-                                // El material se adapta al esquema; fijarlo en
-                                // oscuro evita que aclare las fotos de fondo.
-                                .environment(\.colorScheme, .dark)
-                            LinearGradient(
-                                stops: [.init(color: .black.opacity(0.75), location: 0),
-                                        .init(color: .black.opacity(0.50), location: 0.55),
-                                        .init(color: .clear, location: 1)],
-                                startPoint: .top, endPoint: .bottom)
-                        }
-                        .mask(fade)
-                        .ignoresSafeArea(edges: .top)
-                        .allowsHitTesting(false)
-                    }
+                    // así el desenfoque muere en fade gradual y no en un corte.
+                    .padding(.bottom, 36)
+                    // Scrim tras el header (título + filtros de día): los chips
+                    // flotan sobre las fotos de las burbujas y sin esto no
+                    // contrastan. Sube hasta el borde físico de la pantalla.
+                    .background(ProgressiveBlurScrim(edge: .top))
                     Spacer()
                     bottomSearchBar
+                        // Zona de fundido sobre la barra: el Spacer la absorbe
+                        // (la barra no se mueve, solo crece el área del scrim).
+                        .padding(.top, 36)
+                        .background(ProgressiveBlurScrim(edge: .bottom))
                 }
                 .transition(.opacity)
             }
@@ -554,6 +641,13 @@ struct FullscreenClusterOverlay: View {
         }
         .padding(.horizontal)
         .padding(.bottom, 12)
+        // Publica el borde superior del bloque (incluida la píldora de estado):
+        // con búsqueda activa, el cúmulo comprime su ventana hasta aquí para
+        // que ninguna burbuja quede bajo el buscador ni el teclado, que empuja
+        // este bloque —y con él la ventana— hacia arriba.
+        .onGeometryChange(for: CGFloat.self) { proxy in
+            proxy.frame(in: .global).minY
+        } action: { searchBarTop = $0 }
         .animation(.easeInOut(duration: 0.2), value: visibleArtists)
         .animation(.easeInOut(duration: 0.2), value: searchFieldFocused)
     }
@@ -699,6 +793,105 @@ private struct DaySelector: View {
                 }
             }
             .padding(.horizontal, 2)
+        }
+    }
+}
+
+// MARK: - Scrim de blur progresivo (bokeh)
+
+/// Scrim "bokeh" para los controles que flotan sobre el cúmulo: el desenfoque
+/// del fondo crece gradualmente hacia el borde de la pantalla, en vez de solo
+/// fundirse en opacidad. No hay blur de radio variable público, así que se
+/// apilan varias capas de blur puro con máscaras escalonadas: junto al borde
+/// se superponen todas (desenfoque máximo, cada capa desenfoca lo ya
+/// compuesto debajo, incluidas las anteriores) y hacia el interior van
+/// muriendo una a una hasta ninguna. Un velo oscuro mínimo remata la
+/// legibilidad del texto blanco sin apagar los colores.
+private struct ProgressiveBlurScrim: View {
+    /// Borde contra el que se apoya el scrim (ahí el desenfoque es máximo).
+    let edge: VerticalEdge
+
+    /// Fracción del alto (desde el borde) donde termina de desvanecerse cada
+    /// capa de blur: la primera cubre todo, las siguientes mueren cada vez
+    /// más cerca del borde — eso escalona la intensidad del desenfoque.
+    private static let fadeEnds: [CGFloat] = [1.0, 0.65, 0.38]
+
+    var body: some View {
+        ZStack {
+            ForEach(Self.fadeEnds, id: \.self) { end in
+                PureBackdropBlur()
+                    .mask(fadeMask(endingAt: end))
+            }
+            // Velo secundario, solo para asegurar el contraste del texto: el
+            // protagonista es el bokeh y los colores deben traslucirse.
+            LinearGradient(
+                stops: [.init(color: .black.opacity(0.30), location: 0),
+                        .init(color: .black.opacity(0.12), location: 0.6),
+                        .init(color: .clear, location: 1)],
+                startPoint: startPoint, endPoint: endPoint)
+        }
+        // Cubre hasta el borde físico de la pantalla (notch / home indicator).
+        .ignoresSafeArea(edges: edge == .top ? .top : .bottom)
+        .allowsHitTesting(false)
+    }
+
+    private var startPoint: UnitPoint { edge == .top ? .top : .bottom }
+    private var endPoint: UnitPoint { edge == .top ? .bottom : .top }
+
+    /// Máscara opaca junto al borde que se desvanece por completo en `end`
+    /// (fracción del alto). El tramo plano inicial mantiene el blur a plena
+    /// intensidad detrás de los controles antes de empezar a morir.
+    private func fadeMask(endingAt end: CGFloat) -> LinearGradient {
+        LinearGradient(
+            stops: [.init(color: .black, location: 0),
+                    .init(color: .black, location: end * 0.35),
+                    .init(color: .clear, location: end)],
+            startPoint: startPoint, endPoint: endPoint)
+    }
+}
+
+/// Desenfoque gaussiano PURO del contenido de fondo. Los materiales del
+/// sistema (`.ultraThinMaterial` y compañía) suman al blur un velo blanquecino
+/// y desaturación —el look "vidrio esmerilado"— que apaga los colores. Aquí se
+/// usa un `UIVisualEffectView` al que se le ocultan las subvistas de tinte y
+/// se le dejan solo los filtros de desenfoque del backdrop: quedan los colores
+/// del cúmulo desenfocados y traslúcidos, como un fondo fuera de foco (bokeh).
+/// Si UIKit cambiara sus internals, degrada con gracia al material completo.
+private struct PureBackdropBlur: UIViewRepresentable {
+    func makeUIView(context: Context) -> PureBlurEffectView { PureBlurEffectView() }
+    func updateUIView(_ uiView: PureBlurEffectView, context: Context) {}
+}
+
+private final class PureBlurEffectView: UIVisualEffectView {
+    init() { super.init(effect: UIBlurEffect(style: .regular)) }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError("init(coder:) no implementado") }
+
+    // El efecto arma sus capas al entrar en ventana y puede rearmarlas en
+    // layout (p. ej. cambios de trait), así que se poda en ambos puntos.
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        stripFrost()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        stripFrost()
+    }
+
+    /// Deja solo el desenfoque: oculta toda subvista que no sea el backdrop
+    /// (los velos de tinte) y poda del backdrop los filtros que no sean el
+    /// blur gaussiano (desaturación, etc.).
+    private func stripFrost() {
+        for sub in subviews {
+            if String(describing: type(of: sub)).contains("BackdropView") {
+                sub.layer.filters = sub.layer.filters?.filter {
+                    String(describing: $0).lowercased().contains("blur")
+                }
+            } else {
+                sub.alpha = 0
+            }
         }
     }
 }
