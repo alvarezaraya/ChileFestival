@@ -99,6 +99,35 @@ import SwiftUI
         #expect(f.headlineArtists().count == 7)
     }
 
+    @Test func modoDescubrimientoExcluyeLosNombresGrandes() {
+        let f = Fixtures.festival(id: "x-2026", dates: [Fixtures.day(2026, 3, 13)],
+                                  lineup: Fixtures.lineup(count: 12))
+        let discovery = f.discoveryArtists()
+        // La fixture arma 2 headliners + 3 estelares: quedan fuera.
+        #expect(discovery.count == 7)
+        #expect(discovery.allSatisfy { $0.tier == .mid || $0.tier == .emerging })
+    }
+
+    @Test func modoDescubrimientoRespetaElDiaYLosSinConfirmar() {
+        let lineup = [
+            Fixtures.artist("grande", tier: .headliner, day: 1),
+            Fixtures.artist("chico-d1", tier: .mid, day: 1),
+            Fixtures.artist("chico-d2", tier: .emerging, day: 2),
+            Fixtures.artist("chico-sin-dia", tier: .emerging, day: nil),
+        ]
+        let f = Fixtures.festival(id: "x-2026", dates: [Fixtures.day(2026, 3, 13)],
+                                  lineup: lineup)
+        #expect(f.discoveryArtists(onDay: 1).map(\.id) == ["chico-d1", "chico-sin-dia"])
+    }
+
+    @Test func cartelSoloDeGrandesNoTieneDescubrimiento() {
+        let lineup = [Fixtures.artist("a", tier: .headliner),
+                      Fixtures.artist("b", tier: .main)]
+        let f = Fixtures.festival(id: "x-2026", dates: [Fixtures.day(2026, 3, 13)],
+                                  lineup: lineup)
+        #expect(f.discoveryArtists().isEmpty)
+    }
+
     @Test func hasDayBreakdownSoloConDiasAsignados() {
         let sinDias = Fixtures.festival(id: "x-2026", dates: [Fixtures.day(2026, 3, 13)],
                                         lineup: [Fixtures.artist("a"), Fixtures.artist("b")])

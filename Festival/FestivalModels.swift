@@ -105,6 +105,13 @@ struct Festival: Codable, Identifiable, Hashable, Sendable {
     /// nada y se oculta.
     var hasDayBreakdown: Bool { lineup.contains { $0.day != nil } }
 
+    /// Artistas "por descubrir": los tiers chicos del cartel (intermedios y
+    /// emergentes). El modo descubrimiento del player reproduce solo estos —
+    /// a las cabezas de cartel y estelares el usuario ya los conoce.
+    func discoveryArtists(onDay day: Int? = nil) -> [LineupArtist] {
+        artists(onDay: day).filter { $0.tier == .mid || $0.tier == .emerging }
+    }
+
     /// Artistas que se muestran en la **portada** (silueta colapsada): solo las
     /// cabezas de cartel y los estelares. Los intermedios y el resto siguen en la
     /// misma simulación —invisibles en la portada— y aparecen en sus anillos al
