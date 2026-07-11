@@ -46,6 +46,13 @@ struct FestivalsScreen: View {
             .sorted { $0.billingWeight > $1.billingWeight }
     }
 
+    /// Pool del modo descubrimiento: solo intermedios y emergentes del día
+    /// seleccionado. Vacío = el botón de descubrimiento se oculta.
+    private func discoveryPool(for festival: Festival) -> [LineupArtist] {
+        festival.discoveryArtists(onDay: selectedDays[festival.id])
+            .sorted { $0.billingWeight > $1.billingWeight }
+    }
+
     var body: some View {
         ZStack(alignment: .bottom) {
             background
@@ -106,7 +113,12 @@ struct FestivalsScreen: View {
                                      play: { festival in
                                          activePlayerFestivalID = festival.id
                                          Task { await player.playMix(for: mixArtists(for: festival)) }
-                                     }, onOpenPlayer: { showNowPlaying = true })
+                                     },
+                                     playDiscovery: discoveryPool(for: current).isEmpty ? nil : { festival in
+                                         activePlayerFestivalID = festival.id
+                                         Task { await player.playMix(for: discoveryPool(for: festival)) }
+                                     },
+                                     onOpenPlayer: { showNowPlaying = true })
                     if feed.festivals.count > 1, !isExpanded {
                         PageDotsIndicator(labels: feed.festivals.map(\.name),
                                           selectedIndex: $selectedIndex)
@@ -722,6 +734,10 @@ struct SharedPlayButton: View {
     @ObservedObject var player: FestivalPlayer
     var activeFestivalID: String?
     var play: (Festival) -> Void
+    /// Modo descubrimiento: mix solo con los tiers chicos del cartel. `nil`
+    /// cuando el cartel (o el día elegido) no tiene artistas por descubrir —
+    /// el botón compañero se oculta.
+    var playDiscovery: ((Festival) -> Void)? = nil
     var onOpenPlayer: () -> Void = {}
 
     private var isThisActive: Bool {
@@ -747,15 +763,32 @@ struct SharedPlayButton: View {
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Reproducción no disponible")
             } else {
-                Button { play(festival) } label: {
-                    HStack {
-                        Image(systemName: "play.fill")
-                        Text(idleLabel).fontWeight(.semibold).lineLimit(1)
+                HStack(spacing: 10) {
+                    Button { play(festival) } label: {
+                        HStack {
+                            Image(systemName: "play.fill")
+                            Text(idleLabel).fontWeight(.semibold).lineLimit(1)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(festival.accentColor.gradient, in: Capsule())
+                        .foregroundStyle(.white)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(festival.accentColor.gradient, in: Capsule())
-                    .foregroundStyle(.white)
+                    // Modo descubrimiento: mix solo con intermedios y
+                    // emergentes (los nombres grandes ya se conocen).
+                    if let playDiscovery {
+                        Button { playDiscovery(festival) } label: {
+                            Image(systemName: "sparkles")
+                                .font(.headline)
+                                .foregroundStyle(.white)
+                                .frame(width: 52, height: 52)
+                                .background(.white.opacity(0.14), in: Circle())
+                                .overlay(Circle().strokeBorder(
+                                    festival.accentColor.opacity(0.7), lineWidth: 1.5))
+                        }
+                        .accessibilityLabel("Modo descubrimiento")
+                        .accessibilityHint("Reproduce solo artistas emergentes e intermedios del cartel")
+                    }
                 }
             }
         }
