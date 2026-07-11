@@ -162,31 +162,43 @@ enum SharePosterLayout {
                 placed[i].center.x -= dx / d * pull
                 placed[i].center.y -= dy / d * pull
             }
-            for i in 0..<placed.count {
-                for j in (i + 1)..<placed.count {
-                    let dx = placed[j].center.x - placed[i].center.x
-                    let dy = placed[j].center.y - placed[i].center.y
-                    var d = sqrt(dx * dx + dy * dy)
-                    let minD = placed[i].radius + placed[j].radius + 2
-                    guard d < minD else { continue }
-                    if d < 0.01 { d = 0.01 }
-                    let push = (minD - d) / 2
-                    let nx = dx / d, ny = dy / d
-                    placed[i].center.x -= nx * push
-                    placed[i].center.y -= ny * push
-                    placed[j].center.x += nx * push
-                    placed[j].center.y += ny * push
-                }
-            }
-            for i in placed.indices {
-                let r = placed[i].radius
-                placed[i].center.x = min(max(placed[i].center.x, region.minX + r),
-                                         region.maxX - r)
-                placed[i].center.y = min(max(placed[i].center.y, region.minY + r),
-                                         region.maxY - r)
-            }
+            separate(&placed, clampTo: region)
+        }
+        // Asentamiento final SIN el resorte: el empuje radial de cada iteración
+        // reintroduce solapes leves que una sola pasada de colisiones no
+        // alcanza a deshacer; estas iteraciones puras convergen a separación
+        // limpia (el test de solapes del póster lo verifica).
+        for _ in 0..<40 {
+            separate(&placed, clampTo: region)
         }
         return placed
+    }
+
+    /// Una pasada de separación de pares + recorte a la zona.
+    private static func separate(_ placed: inout [PlacedArtist], clampTo region: CGRect) {
+        for i in 0..<placed.count {
+            for j in (i + 1)..<placed.count {
+                let dx = placed[j].center.x - placed[i].center.x
+                let dy = placed[j].center.y - placed[i].center.y
+                var d = sqrt(dx * dx + dy * dy)
+                let minD = placed[i].radius + placed[j].radius + 2
+                guard d < minD else { continue }
+                if d < 0.01 { d = 0.01 }
+                let push = (minD - d) / 2
+                let nx = dx / d, ny = dy / d
+                placed[i].center.x -= nx * push
+                placed[i].center.y -= ny * push
+                placed[j].center.x += nx * push
+                placed[j].center.y += ny * push
+            }
+        }
+        for i in placed.indices {
+            let r = placed[i].radius
+            placed[i].center.x = min(max(placed[i].center.x, region.minX + r),
+                                     region.maxX - r)
+            placed[i].center.y = min(max(placed[i].center.y, region.minY + r),
+                                     region.maxY - r)
+        }
     }
 }
 
