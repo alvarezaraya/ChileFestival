@@ -471,6 +471,14 @@ private struct TappableBubble: View {
             // (spring de onSelect) que el zoom proximal, como una sola animación.
             .opacity(dimmed ? 0.22 : 1)
             .position(physicsBody.position)
+            // La posición NUNCA se anima: de moverla ya se encarga la física,
+            // frame a frame. Sin esto, la transacción animada del filtrado (que
+            // va sobre los ids, ver `bubbles`) arrastraba también los cambios de
+            // posición — y al expandir/colapsar el cartel, la reconfiguración
+            // reescala las posiciones al marco nuevo desde el origen (esquina
+            // superior izquierda), lo que se veía como una deriva diagonal de
+            // todos los círculos.
+            .animation(nil, value: physicsBody.position)
             .onTapGesture { onSelect(physicsBody.artist) }
             // En la portada (silueta) las burbujas son inertes al tacto: así
             // cualquier toque/deslizamiento atraviesa hasta el TabView (deslizar
