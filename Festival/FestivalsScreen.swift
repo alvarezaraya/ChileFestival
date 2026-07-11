@@ -473,33 +473,38 @@ struct FestivalPosterPage: View {
     }
 
     private var header: some View {
-        VStack(spacing: 3) {
+        VStack(spacing: 5) {
             Text(festival.name)
                 .font(.title2.bold())
                 .multilineTextAlignment(.center)
                 .opacity(festival.isPast ? 0.55 : 1)
+            // Metadatos en una sola fila: fecha y estado primero (lo que importa
+            // para decidir), recinto · ciudad como dato secundario (es lo único
+            // que puede truncarse si la fila no cabe) y el enlace a la página
+            // oficial —se abre en Safari— como ícono compacto al final.
             HStack(spacing: 6) {
                 Text(festival.dateRangeLabel)
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.white.opacity(festival.isPast ? 0.40 : 0.85))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white.opacity(festival.isPast ? 0.45 : 0.90))
+                    .fixedSize()
                 statusBadge
-            }
-            Text("\(festival.venue) · \(festival.city)")
-                .font(.caption2)
-                .foregroundStyle(.white.opacity(festival.isPast ? 0.35 : 0.55))
-            // Enlace a la página oficial del festival: se abre fuera de la app,
-            // en Safari. Solo si el feed trae la URL.
-            if let website = festival.websiteURL {
-                Button { openURL(website) } label: {
-                    Label("Sitio oficial", systemImage: "safari")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(.white.opacity(festival.isPast ? 0.50 : 0.85))
-                        .padding(.horizontal, 10).padding(.vertical, 5)
-                        .background(.white.opacity(0.12), in: Capsule())
+                    .fixedSize()
+                Text("\(festival.venue) · \(festival.city)")
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(festival.isPast ? 0.35 : 0.55))
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                if let website = festival.websiteURL {
+                    Button { openURL(website) } label: {
+                        Image(systemName: "safari")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.white.opacity(festival.isPast ? 0.50 : 0.85))
+                            .padding(5)
+                            .background(.white.opacity(0.12), in: Circle())
+                    }
+                    .accessibilityLabel("Sitio oficial de \(festival.name)")
+                    .accessibilityHint("Abre la página del festival en Safari")
                 }
-                .padding(.top, 4)
-                .accessibilityLabel("Sitio oficial de \(festival.name)")
-                .accessibilityHint("Abre la página del festival en Safari")
             }
         }
     }
