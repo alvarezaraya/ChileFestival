@@ -24,42 +24,38 @@ struct FestivalsScreen: View {
     /// se arma la fila de reproducción al tocar play.
     @State private var selectedDays: [String: Int] = [:]
     /// True mientras el carrusel muestra el archivo de ediciones pasadas en vez
-    /// de los festivales vigentes. Se entra/sale por los portales de los extremos.
+    /// de los festivales vigentes. Se entra/sale con el pull de los extremos.
     @State private var showsArchive = false
+    /// Arrastre acumulado del pull del archivo en curso (0 sin gesto activo).
+    @State private var pullOffset: CGFloat = 0
+    /// True cuando el pull cruzó el umbral: soltar cambia de modo.
+    @State private var pullArmed = false
+    /// Alto de la pantalla, para acotar la franja donde vale el pull.
+    @State private var pageHeight: CGFloat = 0
     @Namespace private var ns
 
     init(feed: FestivalFeed, onEditFollows: (() -> Void)? = nil) {
         self.feed = feed
         self.onEditFollows = onEditFollows
-        // Arrancar en el festival más próximo a realizarse (o el último vigente
-        // si todos los del carrusel principal ya pasaron). El offset salta el
-        // portal del archivo cuando ocupa la primera página.
+        // Arrancar en el festival más próximo a realizarse (o el último
+        // vigente si todos los del carrusel principal ya pasaron).
         let today = Date()
         let recent = feed.festivals.filter { !$0.isArchived }
-        let hasGate = !recent.isEmpty && recent.count < feed.festivals.count
         let visible = recent.isEmpty ? feed.festivals : recent
         let idx = visible.firstIndex { $0.endDate.addingTimeInterval(86_400) > today }
             ?? max(0, visible.count - 1)
-        _selectedIndex = State(initialValue: idx + (hasGate ? 1 : 0))
+        _selectedIndex = State(initialValue: idx)
     }
 
-    // MARK: Páginas del carrusel (festivales + portales del archivo)
-
-    /// Página del carrusel: un póster de festival o, en los extremos, un
-    /// "portal" que al alcanzarse deslizando cambia de modo con una animación.
-    private enum CarouselPage: Hashable {
-        case archiveGate            // modo principal: hacia las ediciones pasadas
-        case festival(Festival)
-        case returnGate             // modo archivo: de vuelta a los vigentes
-    }
+    // MARK: Archivo de ediciones pasadas
 
     /// Festivales vigentes: aún no ocurren o terminaron hace menos de una semana.
     private var recentFestivals: [Festival] { feed.festivals.filter { !$0.isArchived } }
     /// Ediciones pasadas (terminaron hace más de una semana), cronológicas.
     private var archivedFestivals: [Festival] { feed.festivals.filter(\.isArchived) }
-    /// Solo hay portales cuando existen ambos grupos: un archivo vacío no
+    /// Solo hay archivo cuando existen ambos grupos: un archivo vacío no
     /// necesita entrada, y si no queda nada vigente el carrusel principal
-    /// muestra todo (un portal hacia un carrusel vacío no tendría salida).
+    /// muestra todo (un archivo sin carrusel al que volver no tendría salida).
     private var hasArchive: Bool { !archivedFestivals.isEmpty && !recentFestivals.isEmpty }
     /// Festivales del modo activo.
     private var displayedFestivals: [Festival] {
@@ -67,37 +63,8 @@ struct FestivalsScreen: View {
         return showsArchive ? archivedFestivals : recentFestivals
     }
 
-    /// Las páginas del modo activo. El portal del archivo va ANTES del primer
-    /// festival vigente (las ediciones pasadas quedan "a la izquierda", como en
-    /// el orden cronológico) y el de vuelta DESPUÉS de la edición pasada más
-    /// reciente, así ambos gestos son simétricos.
-    private var pages: [CarouselPage] {
-        guard hasArchive else { return displayedFestivals.map { .festival($0) } }
-        return showsArchive
-            ? archivedFestivals.map { .festival($0) } + [.returnGate]
-            : [.archiveGate] + recentFestivals.map { .festival($0) }
-    }
-
-    /// Páginas que ocupa el portal antes del primer festival en el modo activo.
-    private var festivalPageOffset: Int { hasArchive && !showsArchive ? 1 : 0 }
-
-    private var safeIndex: Int { min(max(selectedIndex, 0), pages.count - 1) }
-
-    /// True cuando la página visible es un portal (sin festival propio).
-    private var onGatePage: Bool {
-        if case .festival = pages[safeIndex] { return false }
-        return true
-    }
-
-    /// Festival "actual" para el fondo, el player y el botón de reproducir: el
-    /// de la página visible o, sobre un portal, el del festival vecino (los
-    /// portales viven en los extremos, siempre tienen un vecino festival).
-    private var current: Festival {
-        if case .festival(let f) = pages[safeIndex] { return f }
-        if case .festival(let f) = pages[safeIndex == 0 ? 1 : safeIndex - 1] { return f }
-        return feed.festivals[0]
-    }
-
+    private var safeIndex: Int { min(max(selectedIndex, 0), displayedFestivals.count - 1) }
+    private var current: Festival { displayedFestivals[safeIndex] }
     private var isExpanded: Bool { expandedIndex != nil }
 
     /// Artistas con los que se genera el mix, según el día seleccionado del
@@ -118,43 +85,45 @@ struct FestivalsScreen: View {
         ZStack(alignment: .bottom) {
             background
 
-            // Carrusel de pósters (silueta colapsada). Muestra solo los
-            // festivales del modo activo; en los extremos, un portal que al
-            // alcanzarse deslizando cambia entre vigentes y ediciones pasadas.
+            // Carrusel de pósters (silueta colapsada) del modo activo. Tirar
+            // más allá del extremo (pull tipo pull-to-refresh horizontal)
+            // cambia entre los vigentes y el archivo de ediciones pasadas.
             TabView(selection: $selectedIndex) {
-                ForEach(Array(pages.enumerated()), id: \.element) { i, page in
-                    Group {
-                        switch page {
-                        case .festival(let festival):
-                            FestivalPosterPage(
-                                festival: festival,
-                                physics: physicsStore.model(for: festival.id),
-                                namespace: ns,
-                                isExpanded: expandedIndex == i,
-                                // Solo la página visible mantiene la física en marcha; los
-                                // vecinos del TabView se quedan vivos pero pausados para
-                                // no saturar el main thread con dos simulaciones.
-                                isVisible: i == safeIndex,
-                                selectedDay: Binding(
-                                    get: { selectedDays[festival.id] },
-                                    set: { selectedDays[festival.id] = $0 }
-                                ),
-                                onExpand: { withAnimation(.spring(response: 0.5, dampingFraction: 0.82)) {
-                                    expandedIndex = i
-                                } }
-                            )
-                            .opacity(expandedIndex == i ? 0 : 1)   // se oculta al expandir (matchedGeometry)
-                        case .archiveGate:
-                            ArchiveGatePage(toPast: true, count: archivedFestivals.count)
-                        case .returnGate:
-                            ArchiveGatePage(toPast: false, count: recentFestivals.count)
-                        }
-                    }
+                ForEach(Array(displayedFestivals.enumerated()), id: \.element.id) { i, festival in
+                    FestivalPosterPage(
+                        festival: festival,
+                        physics: physicsStore.model(for: festival.id),
+                        namespace: ns,
+                        isExpanded: expandedIndex == i,
+                        // Solo la página visible mantiene la física en marcha; los
+                        // vecinos del TabView se quedan vivos pero pausados para
+                        // no saturar el main thread con dos simulaciones.
+                        isVisible: i == safeIndex,
+                        selectedDay: Binding(
+                            get: { selectedDays[festival.id] },
+                            set: { selectedDays[festival.id] = $0 }
+                        ),
+                        onExpand: { withAnimation(.spring(response: 0.5, dampingFraction: 0.82)) {
+                            expandedIndex = i
+                        } }
+                    )
                     .tag(i)
+                    .opacity(expandedIndex == i ? 0 : 1)   // se oculta al expandir (matchedGeometry)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .disabled(isExpanded)
+            // El pull convive con el paginado: el rubber-band del extremo sigue
+            // siendo el del sistema, aquí solo se mide el arrastre.
+            .simultaneousGesture(archivePullGesture)
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { pageHeight = $0 }
+            // Salidas accesibles del gesto (VoiceOver no puede "tirar del borde").
+            .accessibilityAction(named: "Ediciones pasadas") {
+                if hasArchive, !showsArchive, !isExpanded { enterArchive() }
+            }
+            .accessibilityAction(named: "Próximos festivales") {
+                if showsArchive, !isExpanded { exitArchive() }
+            }
             // Al cambiar de modo el carrusel entero se reemplaza deslizándose:
             // el archivo entra/sale por la izquierda (el pasado vive "antes"
             // del primer festival vigente) y el principal por la derecha.
@@ -185,8 +154,7 @@ struct FestivalsScreen: View {
             }
 
             // Botón dinámico compartido + indicador de página (fuera de la silueta).
-            // Sobre un portal no hay festival propio: el bloque se retira.
-            if zoomArtist == nil, !onGatePage {
+            if zoomArtist == nil {
                 VStack(spacing: 10) {
                     SharedPlayButton(festival: current, player: player,
                                      activeFestivalID: activePlayerFestivalID,
@@ -200,14 +168,8 @@ struct FestivalsScreen: View {
                                      },
                                      onOpenPlayer: { showNowPlaying = true })
                     if displayedFestivals.count > 1, !isExpanded {
-                        // Los dots cuentan solo festivales: el binding corrige el
-                        // corrimiento del portal que ocupa la primera página.
                         PageDotsIndicator(labels: displayedFestivals.map(\.name),
-                                          selectedIndex: Binding(
-                                              get: { min(max(safeIndex - festivalPageOffset, 0),
-                                                         displayedFestivals.count - 1) },
-                                              set: { selectedIndex = $0 + festivalPageOffset }
-                                          ))
+                                          selectedIndex: $selectedIndex)
                     }
                 }
                 .padding(.horizontal)
@@ -216,8 +178,23 @@ struct FestivalsScreen: View {
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
 
+            // Indicador del pull del archivo: emerge del borde con el arrastre,
+            // como un pull-to-refresh horizontal.
+            if pullProgress > 0, !isExpanded, zoomArtist == nil {
+                PullPortalIndicator(toPast: !showsArchive,
+                                    progress: pullProgress,
+                                    armed: pullArmed,
+                                    accent: current.accentColor)
+                    .offset(x: showsArchive ? 70 - 82 * pullProgress
+                                            : -70 + 82 * pullProgress)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity,
+                           alignment: showsArchive ? .trailing : .leading)
+                    .allowsHitTesting(false)
+            }
+
             // Overlay a pantalla completa (silueta expandida, círculos tappables).
-            if let i = expandedIndex, case .festival(let festival) = pages[min(i, pages.count - 1)] {
+            if let i = expandedIndex, displayedFestivals.indices.contains(i) {
+                let festival = displayedFestivals[i]
                 FullscreenClusterOverlay(
                     festival: festival,
                     physics: physicsStore.model(for: festival.id),
@@ -271,17 +248,9 @@ struct FestivalsScreen: View {
         .onChange(of: player.isActive) { _, active in
             if !active { activePlayerFestivalID = nil }
         }
-        // Los portales actúan al llegar a ellos: cuando el swipe se asienta en
-        // la página del portal, el carrusel cambia de modo con la animación.
-        .onChange(of: selectedIndex) { _, newIndex in
-            guard newIndex >= 0, newIndex < pages.count else { return }
-            switch pages[newIndex] {
-            case .archiveGate: enterArchive()
-            case .returnGate:  exitArchive()
-            case .festival:    break
-            }
-        }
-        // Confirmación táctil al cruzar un portal (en ambos sentidos).
+        // Confirmación táctil al armar el pull (cruza el umbral) y al soltar
+        // cruzando el portal (en ambos sentidos).
+        .sensoryFeedback(.impact(weight: .light), trigger: pullArmed) { _, armed in armed }
         .sensoryFeedback(.impact(weight: .medium), trigger: showsArchive)
         .sheet(isPresented: $showNowPlaying) {
             NowPlayingView(player: player, accent: current.accentColor) {
@@ -291,8 +260,48 @@ struct FestivalsScreen: View {
         }
     }
 
+    // MARK: Pull del archivo (tipo pull-to-refresh horizontal)
+
+    /// Puntos de arrastre que arman el portal.
+    private static let pullThreshold: CGFloat = 90
+
+    /// Progreso 0…1 del pull en curso (1 = umbral alcanzado).
+    private var pullProgress: CGFloat { min(abs(pullOffset) / Self.pullThreshold, 1) }
+
+    /// Pull desde los extremos del carrusel: tirar hacia atrás del primer
+    /// festival vigente (o hacia adelante de la última edición archivada) hace
+    /// emerger el indicador con el arrastre; cruzado el umbral se arma y al
+    /// soltar cambia de modo. No hay página intermedia: el gesto convive con
+    /// el rubber-band del sistema como gesto simultáneo del TabView.
+    private var archivePullGesture: some Gesture {
+        DragGesture(minimumDistance: 10)
+            .onChanged { value in
+                guard hasArchive, !isExpanded, zoomArtist == nil else { return }
+                // Fuera de la franja del póster el arrastre no cuenta: arriba
+                // el selector de día y abajo los dots tienen scroll/scrub
+                // horizontal propio y dispararían falsos pulls.
+                let y = value.startLocation.y
+                if pageHeight > 0, y < pageHeight * 0.25 || y > pageHeight * 0.85 { return }
+                let dx = value.translation.width
+                let pulling = showsArchive
+                    ? (safeIndex == displayedFestivals.count - 1 && dx < 0)
+                    : (safeIndex == 0 && dx > 0)
+                pullOffset = pulling ? dx : 0
+                pullArmed = abs(pullOffset) >= Self.pullThreshold
+            }
+            .onEnded { _ in
+                let crossed = pullArmed
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    pullOffset = 0
+                    pullArmed = false
+                }
+                guard crossed else { return }
+                if showsArchive { exitArchive() } else { enterArchive() }
+            }
+    }
+
     /// Cambia al archivo dejando visible la edición pasada más reciente (la
-    /// vecina natural del portal por el que se entró).
+    /// vecina natural del extremo por el que se tiró).
     private func enterArchive() {
         withAnimation(.spring(response: 0.55, dampingFraction: 0.85)) {
             showsArchive = true
@@ -300,12 +309,12 @@ struct FestivalsScreen: View {
         }
     }
 
-    /// Vuelve a los vigentes dejando visible el primero (página 1: la 0 es el
-    /// portal), el vecino natural del portal de vuelta.
+    /// Vuelve a los vigentes dejando visible el primero, el vecino natural
+    /// del extremo del archivo desde el que se tiró.
     private func exitArchive() {
         withAnimation(.spring(response: 0.55, dampingFraction: 0.85)) {
             showsArchive = false
-            selectedIndex = 1
+            selectedIndex = 0
         }
     }
 
@@ -335,35 +344,47 @@ struct FestivalsScreen: View {
 
 }
 
-// MARK: - Portal del archivo
+// MARK: - Indicador del pull del archivo
 
-/// Página en el extremo del carrusel que hace de portal entre los festivales
-/// vigentes y las ediciones pasadas. No es tappable: basta llegar a ella
-/// deslizando para que el carrusel cambie de modo (la transición animada la
-/// dispara el onChange de la selección), así que su contenido se ve solo
-/// durante el gesto y el cruce.
-private struct ArchiveGatePage: View {
-    /// True: portal hacia las ediciones pasadas. False: de vuelta a los vigentes.
+/// Disco de material translúcido que emerge del borde durante el pull del
+/// archivo, como el spinner de un pull-to-refresh pero horizontal: crece y se
+/// asoma con el arrastre, el ícono rota con el progreso y, al cruzar el
+/// umbral, se "arma" (tinte de acento + etiqueta). Soltar armado cambia de
+/// modo; el disparo lo maneja el gesto, esta vista solo dibuja.
+private struct PullPortalIndicator: View {
+    /// True: emerge del borde izquierdo, hacia las ediciones pasadas.
+    /// False: del derecho, de vuelta a los próximos.
     let toPast: Bool
-    /// Cuántos festivales esperan al otro lado.
-    let count: Int
+    /// Progreso 0…1 del arrastre (1 = umbral).
+    let progress: CGFloat
+    /// True cuando soltar ya dispara el cambio de modo.
+    let armed: Bool
+    /// Color del festival visible, para teñir el estado armado.
+    let accent: Color
 
     var body: some View {
-        VStack(spacing: 14) {
-            Image(systemName: toPast ? "clock.arrow.circlepath" : "arrow.uturn.forward.circle")
-                .font(.system(size: 40))
-                .foregroundStyle(.white.opacity(0.7))
+        VStack(spacing: 8) {
+            ZStack {
+                Circle().fill(.ultraThinMaterial)
+                Circle().strokeBorder(.white.opacity(0.15), lineWidth: 1)
+                Image(systemName: toPast ? "clock.arrow.circlepath" : "arrow.uturn.forward")
+                    .font(.headline.weight(.semibold))
+                    .foregroundStyle(armed ? AnyShapeStyle(accent) : AnyShapeStyle(.white.opacity(0.8)))
+                    .rotationEffect(.degrees(Double(progress) * (toPast ? -180 : 180)))
+            }
+            .frame(width: 54, height: 54)
+            .shadow(color: .black.opacity(0.25), radius: 8, y: 4)
+
             Text(toPast ? "Ediciones pasadas" : "Próximos festivales")
-                .font(.headline)
-            Text("\(count) festival\(count == 1 ? "" : "es")")
-                .font(.caption)
-                .foregroundStyle(.white.opacity(0.55))
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.9))
+                .padding(.horizontal, 10).padding(.vertical, 4)
+                .background(.ultraThinMaterial, in: Capsule())
+                .opacity(armed ? 1 : 0)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .foregroundStyle(.white)
-        .accessibilityElement(children: .combine)
-        .accessibilityHint(toPast ? "Abre el archivo de ediciones pasadas"
-                                  : "Vuelve a los próximos festivales")
+        .scaleEffect(0.4 + 0.6 * progress)
+        .opacity(Double(progress))
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: armed)
     }
 }
 
