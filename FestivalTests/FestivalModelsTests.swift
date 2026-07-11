@@ -144,6 +144,20 @@ import SwiftUI
         #expect(futuro.isUpcoming && !futuro.isPast)
     }
 
+    @Test func archivadoSoloTrasUnaSemanaDelCierre() {
+        // Terminado hace años: archivado.
+        let antiguo = Fixtures.festival(id: "a-2023", dates: [Fixtures.day(2023, 11, 11)])
+        #expect(antiguo.isArchived)
+        // Terminado anteayer: pasado pero todavía vigente en el carrusel.
+        let cal = Fixtures.santiago
+        let anteayer = cal.startOfDay(for: cal.date(byAdding: .day, value: -2, to: .now)!)
+        let reciente = Fixtures.festival(id: "r-x", dates: [anteayer])
+        #expect(reciente.isPast && !reciente.isArchived)
+        // Futuro: nunca archivado.
+        let futuro = Fixtures.festival(id: "f-2099", dates: [Fixtures.day(2099, 3, 13)])
+        #expect(!futuro.isArchived)
+    }
+
     @Test func rangoDeFechasMismoMesConAñoDistinto() {
         let f = Fixtures.festival(id: "x-2025",
                                   dates: [Fixtures.day(2025, 11, 7), Fixtures.day(2025, 11, 8)])

@@ -46,6 +46,10 @@ struct Festival: Codable, Identifiable, Hashable, Sendable {
     var isOngoing: Bool  { !isPast && startDate <= Date() }
     /// True cuando todavía no empieza.
     var isUpcoming: Bool { startDate > Date() }
+    /// True cuando terminó hace más de una semana: sale del carrusel principal
+    /// y queda solo en el archivo de ediciones pasadas (sin enlace al sitio
+    /// oficial, que a esas alturas ya suele apuntar a la edición siguiente).
+    var isArchived: Bool { Date() >= endDate.addingTimeInterval(8 * 86_400) }
 
     /// Días enteros hasta el comienzo (negativo si ya pasó).
     var daysUntilStart: Int {
