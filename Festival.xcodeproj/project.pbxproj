@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		CF55EFD52FD64C530041AFFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF55EF9A2FD64C530041AFFB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CF55EFA12FD64C530041AFFB;
+			remoteInfo = Festival;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		CF55EFA22FD64C530041AFFB /* Festival.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Festival.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF55EFD02FD64C530041AFFB /* FestivalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FestivalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -29,10 +40,22 @@
 			path = Festival;
 			sourceTree = "<group>";
 		};
+		CF55EFD12FD64C530041AFFB /* FestivalTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FestivalTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		CF55EF9F2FD64C530041AFFB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF55EFD32FD64C530041AFFB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				CF55EFA42FD64C530041AFFB /* Festival */,
+				CF55EFD12FD64C530041AFFB /* FestivalTests */,
 				CF55EFA32FD64C530041AFFB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				CF55EFA22FD64C530041AFFB /* Festival.app */,
+				CF55EFD02FD64C530041AFFB /* FestivalTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,6 +108,28 @@
 			productReference = CF55EFA22FD64C530041AFFB /* Festival.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CF55EFD42FD64C530041AFFB /* FestivalTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF55EFD92FD64C560041AFFB /* Build configuration list for PBXNativeTarget "FestivalTests" */;
+			buildPhases = (
+				CF55EFD22FD64C530041AFFB /* Sources */,
+				CF55EFD32FD64C530041AFFB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CF55EFD62FD64C530041AFFB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CF55EFD12FD64C530041AFFB /* FestivalTests */,
+			);
+			name = FestivalTests;
+			packageProductDependencies = (
+			);
+			productName = FestivalTests;
+			productReference = CF55EFD02FD64C530041AFFB /* FestivalTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -95,6 +142,10 @@
 				TargetAttributes = {
 					CF55EFA12FD64C530041AFFB = {
 						CreatedOnToolsVersion = 26.5;
+					};
+					CF55EFD42FD64C530041AFFB = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = CF55EFA12FD64C530041AFFB;
 					};
 				};
 			};
@@ -113,9 +164,18 @@
 			projectRoot = "";
 			targets = (
 				CF55EFA12FD64C530041AFFB /* Festival */,
+				CF55EFD42FD64C530041AFFB /* FestivalTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXTargetDependency section */
+		CF55EFD62FD64C530041AFFB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CF55EFA12FD64C530041AFFB /* Festival */;
+			targetProxy = CF55EFD52FD64C530041AFFB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CF55EFA02FD64C530041AFFB /* Resources */ = {
@@ -129,6 +189,13 @@
 
 /* Begin PBXSourcesBuildPhase section */
 		CF55EF9E2FD64C530041AFFB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF55EFD22FD64C530041AFFB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -339,6 +406,50 @@
 			};
 			name = Release;
 		};
+		CF55EFD72FD64C560041AFFB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E29KYC4PP4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cl.alvarezaraya.FestivalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Festival.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Festival";
+			};
+			name = Debug;
+		};
+		CF55EFD82FD64C560041AFFB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E29KYC4PP4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cl.alvarezaraya.FestivalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Festival.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Festival";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -356,6 +467,15 @@
 			buildConfigurations = (
 				CF55EFB02FD64C560041AFFB /* Debug */,
 				CF55EFB12FD64C560041AFFB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CF55EFD92FD64C560041AFFB /* Build configuration list for PBXNativeTarget "FestivalTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF55EFD72FD64C560041AFFB /* Debug */,
+				CF55EFD82FD64C560041AFFB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -52,7 +52,9 @@ enum FestivalReminders {
 
     // MARK: Armado de recordatorios
 
-    private static func requests(for festival: Festival) -> [UNNotificationRequest] {
+    /// Interno (no private) para poder testear qué se agenda y qué no sin
+    /// pasar por UNUserNotificationCenter.
+    static func requests(for festival: Festival) -> [UNNotificationRequest] {
         var requests: [UNNotificationRequest] = []
         let now = Date()
 
