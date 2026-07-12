@@ -20,8 +20,25 @@ struct FestivalSelectionScreen: View {
 
     @State private var selectedKeys: [String] = []
     @State private var showPaywall = false
+    @State private var searchText = ""
 
     private var series: [FestivalSeries] { feed.series }
+
+    /// Series visibles en la lista. Sin búsqueda: las 5 más multitudinarias,
+    /// más las que el usuario ya sigue (para poder quitarlas sin buscarlas).
+    /// Con búsqueda: el catálogo completo filtrado por nombre (ignora
+    /// mayúsculas y acentos, cortesía de localizedStandardContains).
+    private var visibleSeries: [FestivalSeries] {
+        let query = searchText.trimmingCharacters(in: .whitespaces)
+        guard !query.isEmpty else {
+            let featured = feed.featuredSeries
+            let extras = series.filter { serie in
+                selectedKeys.contains(serie.key) && !featured.contains { $0.key == serie.key }
+            }
+            return featured + extras
+        }
+        return series.filter { $0.name.localizedStandardContains(query) }
+    }
     private var atFreeLimit: Bool {
         !entitlements.hasUnlimitedFollows && selectedKeys.count >= FollowStore.freeLimit
     }
@@ -34,13 +51,19 @@ struct FestivalSelectionScreen: View {
                 VStack(spacing: 24) {
                     header
                     VStack(spacing: 12) {
-                        ForEach(series) { serie in
+                        searchField
+                        ForEach(visibleSeries) { serie in
                             SeriesCard(
                                 series: serie,
                                 isSelected: selectedKeys.contains(serie.key),
                                 isLocked: atFreeLimit && !selectedKeys.contains(serie.key),
                                 action: { toggle(serie) }
                             )
+                        }
+                        if visibleSeries.isEmpty {
+                            noResults
+                        } else if searchText.isEmpty {
+                            searchHint
                         }
                     }
                     .padding(.horizontal)
@@ -102,13 +125,61 @@ struct FestivalSelectionScreen: View {
             }
             Text(mode == .onboarding ? "Sigue tus festivales" : "Tus festivales")
                 .font(.largeTitle.bold())
-            Text("Elige hasta \(FollowStore.freeLimit) gratis. Sus carteles, fechas y música te esperan en la app; puedes cambiarlos cuando quieras.")
+            Text("Estos son los 5 más multitudinarios de Chile; con el buscador llegas al catálogo completo. Elige hasta \(FollowStore.freeLimit) gratis y cámbialos cuando quieras.")
                 .font(.subheadline)
                 .foregroundStyle(.white.opacity(0.65))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 28)
             slotIndicator
         }
+    }
+
+    /// Cuadro de búsqueda sobre el catálogo completo de series (no solo las
+    /// 5 destacadas). Al escribir, la lista pasa a mostrar los resultados.
+    private var searchField: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(.white.opacity(0.45))
+            TextField("", text: $searchText,
+                      prompt: Text("Busca entre todos los festivales")
+                          .foregroundStyle(.white.opacity(0.45)))
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .foregroundStyle(.white)
+            if !searchText.isEmpty {
+                Button { searchText = "" } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.white.opacity(0.45))
+                }
+                .accessibilityLabel("Borrar búsqueda")
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 11)
+        .background(.white.opacity(0.08), in: Capsule())
+    }
+
+    private var noResults: some View {
+        VStack(spacing: 6) {
+            Text("Sin resultados para “\(searchText.trimmingCharacters(in: .whitespaces))”")
+                .font(.subheadline.weight(.medium))
+            Text("Prueba con otro nombre: el buscador recorre todos los festivales de la app.")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.55))
+        }
+        .frame(maxWidth: .infinity)
+        .multilineTextAlignment(.center)
+        .padding(.vertical, 28)
+    }
+
+    /// Recordatorio, bajo las 5 destacadas, de que el catálogo es más grande.
+    private var searchHint: some View {
+        Text("¿No aparece el tuyo? Hay \(series.count) festivales en la app: usa el buscador.")
+            .font(.caption)
+            .foregroundStyle(.white.opacity(0.45))
+            .frame(maxWidth: .infinity)
+            .multilineTextAlignment(.center)
+            .padding(.top, 4)
     }
 
     /// Tres cupos gratis dibujados como puntos; con la compra pasa a "Sin límite".
@@ -196,7 +267,7 @@ private struct SeriesCard: View {
                     Text(series.statusLabel)
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.65))
-                    Text("\(series.editions.count) edición\(series.editions.count == 1 ? "" : "es") en la app")
+                    Text("\(series.editions.count) \(series.editions.count == 1 ? "edición" : "ediciones") en la app")
                         .font(.caption2)
                         .foregroundStyle(.white.opacity(0.40))
                 }

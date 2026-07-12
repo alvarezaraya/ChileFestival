@@ -30,6 +30,10 @@ struct Festival: Codable, Identifiable, Hashable, Sendable {
     let accentColorHex: String  // "#E4002B"  (tema de la vista horizontal)
     let posterImageURL: URL?
     let websiteURL: URL?        // página oficial del festival (se abre en Safari)
+    /// Asistencia total estimada de la edición (personas, todas las jornadas).
+    /// Ausente cuando no hay cifra pública confiable. Ranquea las series en la
+    /// pantalla de selección; no se muestra como dato duro en la UI.
+    let attendance: Int?
     let lineup: [LineupArtist]
 
     var dayCount: Int { dates.count }

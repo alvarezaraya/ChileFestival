@@ -29,11 +29,13 @@ enum Fixtures {
     }
 
     static func festival(id: String, name: String = "Fest",
-                         dates: [Date], lineup: [LineupArtist] = []) -> Festival {
+                         dates: [Date], lineup: [LineupArtist] = [],
+                         attendance: Int? = nil) -> Festival {
         Festival(id: id, name: name, edition: nil,
                  venue: "Parque", city: "Santiago", region: "RM",
                  dates: dates, accentColorHex: "#E4002B",
-                 posterImageURL: nil, websiteURL: nil, lineup: lineup)
+                 posterImageURL: nil, websiteURL: nil,
+                 attendance: attendance, lineup: lineup)
     }
 
     /// Cartel variado: 2 cabezas de cartel, 3 estelares, resto intermedios.
