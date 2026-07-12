@@ -49,6 +49,9 @@ SKIP_IDS = {
     "isabella-serafini",  # DJ chilena (Creamfields 2024); único match es una cantante góspel
     "sepha",  # DJ chileno (Creamfields 2023); gana "Sepha." alternativo en inglés
     "blk",  # DJ hardstyle (Creamfields 2025); ganan homónimos "blk." dance y BLK rap ruso
+    "lopez",  # banda chilena (Cumbre 2018); el "López" del catálogo mezcla homónimos pop
+    "rulo",  # cantante chileno (Cumbre 2018); ganan un Rulo mexicano de cyphers y otros
+    "chances",  # banda chilena (REC 2025); gana CHANCES, trío canadiense en francés
 }
 
 # Artistas con homónimos en Apple Music resueltos a mano: el mejor match por
@@ -62,6 +65,8 @@ PINNED_IDS = {
     "nicole",       # pop chilena ("Esperando Nada") = 720145508; gana una Nicole new age
     "supernova",    # grupo pop chileno ("Maldito Amor") = 1529114473; gana un dúo house
     "laia",         # LAIA chilena ("Lo más bonito") = 1656577766; gana una Laia r&b en inglés
+    "saiko",        # banda chilena ("Informe Saiko") = 1628094763; gana el SAIKO urbano español
+    "criminal",     # thrash chileno ("Fear Itself") = 184204410; gana un rapero homónimo
 }
 
 

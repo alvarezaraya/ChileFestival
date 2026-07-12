@@ -24,6 +24,9 @@ struct FestivalSeries: Identifiable {
     /// Color de la edición más relevante: la próxima si existe, si no la última.
     var accentColor: Color { (nextEdition ?? latest)?.accentColor ?? .gray }
 
+    /// Mayor asistencia registrada entre las ediciones (0 si ninguna tiene cifra).
+    var maxAttendance: Int { editions.compactMap(\.attendance).max() ?? 0 }
+
     /// Línea de estado para las tarjetas de selección.
     var statusLabel: String {
         if let next = nextEdition {
@@ -72,6 +75,22 @@ extension FestivalFeed {
                 return (a.latest?.endDate ?? .distantPast) > (b.latest?.endDate ?? .distantPast)
             }
         }
+    }
+
+    /// Las cinco series más multitudinarias del catálogo, medidas por la mayor
+    /// asistencia registrada entre sus ediciones. Son la portada de la pantalla
+    /// de selección; el resto del catálogo se alcanza con el buscador. Empates:
+    /// primero la serie con edición próxima, luego orden alfabético, para que
+    /// el ranking sea estable entre lanzamientos.
+    var featuredSeries: [FestivalSeries] {
+        let ranked = series
+            .filter { $0.maxAttendance > 0 }
+            .sorted { a, b in
+                if a.maxAttendance != b.maxAttendance { return a.maxAttendance > b.maxAttendance }
+                if (a.nextEdition != nil) != (b.nextEdition != nil) { return a.nextEdition != nil }
+                return a.name.localizedStandardCompare(b.name) == .orderedAscending
+            }
+        return Array(ranked.prefix(5))
     }
 
     /// Feed reducido a las series seguidas. Si el cruce queda vacío (p. ej. un

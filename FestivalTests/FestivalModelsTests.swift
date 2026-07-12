@@ -65,6 +65,24 @@ import SwiftUI
         #expect(series[0].nextEdition?.id == "proximo-2099")
         #expect(series[1].nextEdition == nil)
     }
+
+    @Test func lasDestacadasSonLasCincoMasMultitudinarias() {
+        // Siete series con asistencia dispar; una sin cifra queda fuera aunque
+        // exista, y la serie toma la MAYOR asistencia entre sus ediciones.
+        let feed = FestivalFeed(version: 1, updatedAt: .now, festivals: [
+            Fixtures.festival(id: "gigante-2024", dates: [Fixtures.day(2024, 3, 1)], attendance: 360_000),
+            Fixtures.festival(id: "grande-2024", dates: [Fixtures.day(2024, 4, 1)], attendance: 240_000),
+            Fixtures.festival(id: "mediano-2011", dates: [Fixtures.day(2011, 11, 1)], attendance: 100_000),
+            Fixtures.festival(id: "mediano-2012", dates: [Fixtures.day(2012, 11, 1)], attendance: 70_000),
+            Fixtures.festival(id: "menor-2024", dates: [Fixtures.day(2024, 5, 1)], attendance: 90_000),
+            Fixtures.festival(id: "chico-2024", dates: [Fixtures.day(2024, 6, 1)], attendance: 35_000),
+            Fixtures.festival(id: "sexto-2024", dates: [Fixtures.day(2024, 7, 1)], attendance: 30_000),
+            Fixtures.festival(id: "sin-cifra-2024", dates: [Fixtures.day(2024, 8, 1)]),
+        ])
+        let featured = feed.featuredSeries
+        #expect(featured.map(\.key) == ["gigante", "grande", "mediano", "menor", "chico"])
+        #expect(featured.first?.maxAttendance == 360_000)
+    }
 }
 
 // MARK: - Festival (días, destacados, fechas)
