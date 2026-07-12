@@ -2,20 +2,19 @@ import SwiftUI
 
 // MARK: - Pantalla de selección de festivales
 //
-// Doble uso: onboarding (primer arranque, pantalla completa) y edición
-// posterior (sheet desde el carrusel). Se eligen hasta `FollowStore.freeLimit`
-// series gratis; el intento de agregar una más abre el paywall.
+// Una sola pantalla, idéntica en sus dos usos: onboarding (primer arranque,
+// pantalla completa) y edición posterior (sheet desde el carrusel). Se eligen
+// hasta `FollowStore.freeLimit` series gratis; el intento de agregar una más
+// abre el paywall. La única pieza contextual es el botón de cerrar, que
+// aparece cuando quien presenta entrega `onCancel`.
 
 struct FestivalSelectionScreen: View {
-    enum Mode { case onboarding, edit }
-
     let feed: FestivalFeed
-    let mode: Mode
     @ObservedObject var followStore: FollowStore
     @ObservedObject var entitlements: EntitlementStore
     /// Se llama después de guardar la selección.
     var onFinished: () -> Void
-    /// Solo en modo edición: cerrar sin guardar.
+    /// Si viene, se muestra el botón de cerrar sin guardar (edición en sheet).
     var onCancel: (() -> Void)? = nil
 
     @State private var selectedKeys: [String] = []
@@ -68,13 +67,13 @@ struct FestivalSelectionScreen: View {
                     }
                     .padding(.horizontal)
                 }
-                .padding(.top, mode == .onboarding ? 32 : 24)
+                .padding(.top, 32)
                 .padding(.bottom, 12)
             }
         }
         .safeAreaInset(edge: .bottom) { confirmButton }
         .overlay(alignment: .topTrailing) {
-            if mode == .edit, let onCancel {
+            if let onCancel {
                 Button(action: onCancel) {
                     Image(systemName: "xmark")
                         .font(.subheadline.weight(.semibold))
@@ -118,12 +117,10 @@ struct FestivalSelectionScreen: View {
 
     private var header: some View {
         VStack(spacing: 10) {
-            if mode == .onboarding {
-                Image(systemName: "music.mic.circle.fill")
-                    .font(.system(size: 52))
-                    .foregroundStyle(.white, .white.opacity(0.15))
-            }
-            Text(mode == .onboarding ? "Sigue tus festivales" : "Tus festivales")
+            Image(systemName: "music.mic.circle.fill")
+                .font(.system(size: 52))
+                .foregroundStyle(.white, .white.opacity(0.15))
+            Text("Sigue tus festivales")
                 .font(.largeTitle.bold())
             Text("Estos son los 5 más multitudinarios de Chile; con el buscador llegas al catálogo completo. Elige hasta \(FollowStore.freeLimit) gratis y cámbialos cuando quieras.")
                 .font(.subheadline)
@@ -217,7 +214,7 @@ struct FestivalSelectionScreen: View {
                 followStore.setFollowed(selectedKeys)
                 onFinished()
             } label: {
-                Text(mode == .onboarding ? "Comenzar" : "Guardar")
+                Text("Guardar")
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .padding()

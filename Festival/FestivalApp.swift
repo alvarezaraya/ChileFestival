@@ -39,7 +39,7 @@ struct RootView: View {
                     )
                     .sheet(isPresented: $showFollowEditor) {
                         FestivalSelectionScreen(
-                            feed: feed, mode: .edit,
+                            feed: feed,
                             followStore: followStore, entitlements: entitlements,
                             onFinished: { showFollowEditor = false },
                             onCancel: { showFollowEditor = false }
@@ -54,7 +54,7 @@ struct RootView: View {
                     }
                 } else {
                     FestivalSelectionScreen(
-                        feed: feed, mode: .onboarding,
+                        feed: feed,
                         followStore: followStore, entitlements: entitlements,
                         onFinished: { hasCompletedOnboarding = true }
                     )
