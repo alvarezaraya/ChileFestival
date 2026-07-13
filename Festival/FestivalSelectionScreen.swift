@@ -269,14 +269,8 @@ private struct SeriesCard: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 14) {
-                ZStack {
-                    Circle().fill(series.accentColor.gradient)
-                    Image(systemName: "music.mic")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                }
-                .frame(width: 46, height: 46)
-                .opacity(isLocked ? 0.45 : 1)
+                SeriesLogoView(series: series, size: 46)
+                    .opacity(isLocked ? 0.45 : 1)
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(series.name)
