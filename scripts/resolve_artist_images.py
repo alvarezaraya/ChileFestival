@@ -67,6 +67,9 @@ PINNED_IDS = {
     "laia",         # LAIA chilena ("Lo más bonito") = 1656577766; gana una Laia r&b en inglés
     "saiko",        # banda chilena ("Informe Saiko") = 1628094763; gana el SAIKO urbano español
     "criminal",     # thrash chileno ("Fear Itself") = 184204410; gana un rapero homónimo
+    "ha-ash",       # dúo mexicano = 17241280 ("Ha-Ash"); gana un "Haash" trap ajeno
+    "zumbale-primo",  # cumbia chilena = 1357702741 ("Grupo Zúmbale Primo", página
+                      # principal); gana un "Zùmbale Primo" duplicado con 1 single
 }
 
 
