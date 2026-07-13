@@ -20,16 +20,20 @@ struct FestivalSelectionScreen: View {
     @State private var selectedKeys: [String] = []
     @State private var showPaywall = false
     @State private var searchText = ""
+    @FocusState private var searchFocused: Bool
 
     private var series: [FestivalSeries] { feed.series }
 
-    /// Series visibles en la lista. Sin búsqueda: las 5 más multitudinarias,
-    /// más las que el usuario ya sigue (para poder quitarlas sin buscarlas).
-    /// Con búsqueda: el catálogo completo filtrado por nombre (ignora
-    /// mayúsculas y acentos, cortesía de localizedStandardContains).
+    /// Series visibles en la lista, como una búsqueda estándar:
+    /// - en reposo, las 5 más multitudinarias, más las que el usuario ya
+    ///   sigue (para poder quitarlas sin buscarlas);
+    /// - al activar el cuadro (aún sin texto), el catálogo completo;
+    /// - con texto, el catálogo filtrado por nombre (ignora mayúsculas y
+    ///   acentos, cortesía de localizedStandardContains).
     private var visibleSeries: [FestivalSeries] {
         let query = searchText.trimmingCharacters(in: .whitespaces)
         guard !query.isEmpty else {
+            if searchFocused { return series }
             let featured = feed.featuredSeries
             let extras = series.filter { serie in
                 selectedKeys.contains(serie.key) && !featured.contains { $0.key == serie.key }
@@ -61,10 +65,11 @@ struct FestivalSelectionScreen: View {
                         }
                         if visibleSeries.isEmpty {
                             noResults
-                        } else if searchText.isEmpty {
+                        } else if searchText.isEmpty && !searchFocused {
                             searchHint
                         }
                     }
+                    .animation(.snappy(duration: 0.25), value: visibleSeries.map(\.key))
                     .padding(.horizontal)
                 }
                 .padding(.top, 32)
@@ -131,29 +136,44 @@ struct FestivalSelectionScreen: View {
         }
     }
 
-    /// Cuadro de búsqueda sobre el catálogo completo de series (no solo las
-    /// 5 destacadas). Al escribir, la lista pasa a mostrar los resultados.
+    /// Cuadro de búsqueda estándar: al activarlo la lista pasa a mostrar el
+    /// catálogo completo de series (no solo las 5 destacadas) y el texto
+    /// filtra sobre él. "Cancelar" cierra el teclado y vuelve a las destacadas.
     private var searchField: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(.white.opacity(0.45))
-            TextField("", text: $searchText,
-                      prompt: Text("Busca entre todos los festivales")
-                          .foregroundStyle(.white.opacity(0.45)))
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .foregroundStyle(.white)
-            if !searchText.isEmpty {
-                Button { searchText = "" } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.white.opacity(0.45))
+        HStack(spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(.white.opacity(0.45))
+                TextField("", text: $searchText,
+                          prompt: Text("Busca entre todos los festivales")
+                              .foregroundStyle(.white.opacity(0.45)))
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .foregroundStyle(.white)
+                    .focused($searchFocused)
+                if !searchText.isEmpty {
+                    Button { searchText = "" } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.white.opacity(0.45))
+                    }
+                    .accessibilityLabel("Borrar búsqueda")
                 }
-                .accessibilityLabel("Borrar búsqueda")
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 11)
+            .background(.white.opacity(0.08), in: Capsule())
+
+            if searchFocused {
+                Button("Cancelar") {
+                    searchText = ""
+                    searchFocused = false
+                }
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.75))
+                .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 11)
-        .background(.white.opacity(0.08), in: Capsule())
+        .animation(.snappy(duration: 0.25), value: searchFocused)
     }
 
     private var noResults: some View {
