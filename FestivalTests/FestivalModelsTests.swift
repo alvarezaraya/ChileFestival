@@ -66,9 +66,10 @@ import SwiftUI
         #expect(series[1].nextEdition == nil)
     }
 
-    @Test func lasDestacadasSonLasCincoMasMultitudinarias() {
-        // Siete series con asistencia dispar; una sin cifra queda fuera aunque
-        // exista, y la serie toma la MAYOR asistencia entre sus ediciones.
+    @Test func lasDestacadasSonLasCincoMasMultitudinariasSinProximas() {
+        // Sin ediciones futuras, las destacadas caen a las 5 de mayor
+        // asistencia; una serie sin cifra queda fuera aunque exista, y la
+        // serie toma la MAYOR asistencia entre sus ediciones.
         let feed = FestivalFeed(version: 1, updatedAt: .now, festivals: [
             Fixtures.festival(id: "gigante-2024", dates: [Fixtures.day(2024, 3, 1)], attendance: 360_000),
             Fixtures.festival(id: "grande-2024", dates: [Fixtures.day(2024, 4, 1)], attendance: 240_000),
@@ -82,6 +83,40 @@ import SwiftUI
         let featured = feed.featuredSeries
         #expect(featured.map(\.key) == ["gigante", "grande", "mediano", "menor", "chico"])
         #expect(featured.first?.maxAttendance == 360_000)
+    }
+
+    @Test func lasDestacadasMezclanGigantesYProximas() {
+        // Con ediciones futuras: los 2 más multitudinarios van primero y los
+        // 3 próximos más cercanos después, aunque no tengan cifra.
+        let feed = FestivalFeed(version: 1, updatedAt: .now, festivals: [
+            Fixtures.festival(id: "gigante-2024", dates: [Fixtures.day(2024, 3, 1)], attendance: 360_000),
+            Fixtures.festival(id: "grande-2024", dates: [Fixtures.day(2024, 4, 1)], attendance: 240_000),
+            Fixtures.festival(id: "mediano-2011", dates: [Fixtures.day(2011, 11, 1)], attendance: 100_000),
+            Fixtures.festival(id: "prox-a-2099", dates: [Fixtures.day(2099, 1, 1)]),
+            Fixtures.festival(id: "prox-b-2099", dates: [Fixtures.day(2099, 2, 1)]),
+            Fixtures.festival(id: "prox-c-2099", dates: [Fixtures.day(2099, 3, 1)]),
+            Fixtures.festival(id: "prox-d-2099", dates: [Fixtures.day(2099, 4, 1)]),
+        ])
+        #expect(feed.featuredSeries.map(\.key)
+                == ["gigante", "grande", "prox-a", "prox-b", "prox-c"])
+    }
+
+    @Test func lasDestacadasRellenanCuandoUnGiganteEstaProximo() {
+        // Un gigante con edición futura ocupa un solo cupo: la lista se
+        // rellena con la siguiente serie por asistencia hasta llegar a 5.
+        let feed = FestivalFeed(version: 1, updatedAt: .now, festivals: [
+            Fixtures.festival(id: "gigante-2024", dates: [Fixtures.day(2024, 3, 1)], attendance: 360_000),
+            Fixtures.festival(id: "grande-2024", dates: [Fixtures.day(2024, 4, 1)], attendance: 240_000),
+            Fixtures.festival(id: "grande-2099", dates: [Fixtures.day(2099, 1, 15)], attendance: 240_000),
+            Fixtures.festival(id: "mediano-2011", dates: [Fixtures.day(2011, 11, 1)], attendance: 100_000),
+            Fixtures.festival(id: "chico-2024", dates: [Fixtures.day(2024, 6, 1)], attendance: 35_000),
+            Fixtures.festival(id: "prox-a-2099", dates: [Fixtures.day(2099, 2, 1)]),
+            Fixtures.festival(id: "prox-b-2099", dates: [Fixtures.day(2099, 3, 1)]),
+        ])
+        // "grande" es gigante Y próxima: aparece una vez, y "mediano" y
+        // "chico" completan los 5 cupos.
+        #expect(feed.featuredSeries.map(\.key)
+                == ["gigante", "grande", "prox-a", "prox-b", "mediano"])
     }
 }
 

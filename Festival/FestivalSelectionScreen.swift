@@ -25,8 +25,9 @@ struct FestivalSelectionScreen: View {
     private var series: [FestivalSeries] { feed.series }
 
     /// Series visibles en la lista, como una búsqueda estándar:
-    /// - en reposo, las 5 más multitudinarias, más las que el usuario ya
-    ///   sigue (para poder quitarlas sin buscarlas);
+    /// - en reposo, las destacadas (las más multitudinarias y las de edición
+    ///   próxima, ver `featuredSeries`), más las que el usuario ya sigue
+    ///   (para poder quitarlas sin buscarlas);
     /// - al activar el cuadro (aún sin texto), el catálogo completo;
     /// - con texto, el catálogo filtrado por nombre (ignora mayúsculas y
     ///   acentos, cortesía de localizedStandardContains).
@@ -127,7 +128,7 @@ struct FestivalSelectionScreen: View {
                 .foregroundStyle(.white, .white.opacity(0.15))
             Text("Sigue tus festivales")
                 .font(.largeTitle.bold())
-            Text("Estos son los 5 más multitudinarios de Chile; con el buscador llegas al catálogo completo. Elige hasta \(FollowStore.freeLimit) gratis y cámbialos cuando quieras.")
+            Text("Partimos con los más multitudinarios de Chile y los próximos en el calendario; con el buscador llegas al catálogo completo. Elige hasta \(FollowStore.freeLimit) gratis y cámbialos cuando quieras.")
                 .font(.subheadline)
                 .foregroundStyle(.white.opacity(0.65))
                 .multilineTextAlignment(.center)
