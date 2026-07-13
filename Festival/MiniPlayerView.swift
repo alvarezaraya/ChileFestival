@@ -3,7 +3,13 @@ import SwiftUI
 struct MiniPlayerView: View {
     @ObservedObject var player: FestivalPlayer
     let accent: Color
+    /// True cuando la píldora flota sobre el fondo claro del archivo: el texto
+    /// y los controles pasan a tinta oscura para no perderse sobre el vidrio.
+    var onLight: Bool = false
     var onTap: () -> Void = {}
+
+    /// Tinta de texto/íconos según el fondo.
+    private var ink: Color { onLight ? Color(white: 0.13) : .white }
 
     var body: some View {
         HStack(spacing: 12) {
@@ -14,10 +20,11 @@ struct MiniPlayerView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(titleText)
                         .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(ink)
                         .lineLimit(1)
                     Text(subtitleText)
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.7))
+                        .foregroundStyle(ink.opacity(0.7))
                         .lineLimit(1)
                 }
                 Spacer(minLength: 4)
@@ -65,7 +72,7 @@ struct MiniPlayerView: View {
             }
             .accessibilityLabel("Siguiente")
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(ink)
         .padding(.trailing, 6)
         .disabled(player.mode == .loading)
     }

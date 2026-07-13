@@ -141,9 +141,9 @@ struct FestivalsScreen: View {
                         Button(action: onEditFollows) {
                             Image(systemName: "slider.horizontal.3")
                                 .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(.white.opacity(0.85))
+                                .foregroundStyle(showsArchive ? Color(white: 0.13).opacity(0.85) : .white.opacity(0.85))
                                 .padding(10)
-                                .background(.white.opacity(0.12), in: Circle())
+                                .background((showsArchive ? Color.black.opacity(0.06) : Color.white.opacity(0.12)), in: Circle())
                         }
                         .accessibilityLabel("Elegir festivales a seguir")
                     }
@@ -169,7 +169,8 @@ struct FestivalsScreen: View {
                                      onOpenPlayer: { showNowPlaying = true })
                     if displayedFestivals.count > 1, !isExpanded {
                         PageDotsIndicator(labels: displayedFestivals.map(\.name),
-                                          selectedIndex: $selectedIndex)
+                                          selectedIndex: $selectedIndex,
+                                          onLight: showsArchive)
                     }
                 }
                 .padding(.horizontal)
@@ -336,10 +337,18 @@ struct FestivalsScreen: View {
     }
 
     private var background: some View {
-        LinearGradient(colors: [current.accentColor.opacity(0.35), .black],
+        // El archivo de ediciones pasadas usa un fondo claro casi blanco; el
+        // carrusel vigente, el negro de siempre. La tinta del festival se
+        // mantiene arriba en ambos: solo cambia la base sobre la que apoya.
+        let base: Color = showsArchive ? Color(white: 0.96) : .black
+        return LinearGradient(colors: [current.accentColor.opacity(0.35), base],
                        startPoint: .top, endPoint: .bottom)
+            // Base opaca: en el archivo evita que la tinta translúcida de
+            // arriba se componga sobre el negro del ZStack y vire a oscuro.
+            .background(base)
             .ignoresSafeArea()
             .animation(.easeInOut(duration: 0.6), value: current.accentColorHex)
+            .animation(.easeInOut(duration: 0.6), value: showsArchive)
     }
 
 }
@@ -400,6 +409,8 @@ private struct PageDotsIndicator: View {
     /// Nombres de los festivales, para el valor de VoiceOver.
     let labels: [String]
     @Binding var selectedIndex: Int
+    /// True en el archivo (fondo claro): los dots pasan de blanco a negro.
+    var onLight: Bool = false
 
     private static let dotSize: CGFloat = 7
     private static let activeWidth: CGFloat = 20   // cápsula del dot actual
@@ -441,7 +452,7 @@ private struct PageDotsIndicator: View {
         HStack(spacing: Self.gap) {
             ForEach(0..<n, id: \.self) { i in
                 Capsule()
-                    .fill(.white.opacity(opacity(for: i)))
+                    .fill((onLight ? Color.black : Color.white).opacity(opacity(for: i)))
                     .frame(width: i == safeIndex ? Self.activeWidth : Self.dotSize,
                            height: Self.dotSize)
                     .scaleEffect(scale(for: i))
@@ -555,6 +566,16 @@ struct FestivalPosterPage: View {
         festival.artists(onDay: selectedDay)
     }
 
+    /// En el archivo el fondo es casi blanco, así que el texto y los adornos
+    /// neutros pasan a tinta oscura para conservar el contraste; sobre el
+    /// carrusel vigente (fondo negro) siguen en blanco. El color de acento del
+    /// festival no cambia en ningún caso.
+    private var onLight: Bool { festival.isArchived }
+    private var ink: Color { onLight ? Color(white: 0.13) : .white }
+    /// Velo tras las etiquetas flotantes: oscuro sobre negro, apenas grisáceo
+    /// sobre el fondo claro del archivo.
+    private var chipScrim: Color { onLight ? .black.opacity(0.06) : .black.opacity(0.25) }
+
     var body: some View {
         VStack(spacing: 12) {
             header
@@ -564,13 +585,13 @@ struct FestivalPosterPage: View {
             // lineup está vacío o aún sin desglose por día, el selector no aporta
             // (serían chips deshabilitados) y se omite.
             if festival.hasDayBreakdown {
-                DaySelector(festival: festival, selectedDay: $selectedDay)
+                DaySelector(festival: festival, selectedDay: $selectedDay, onLight: onLight)
             }
             silhouette
             Spacer(minLength: 96)   // deja sitio al botón compartido flotante
         }
         .padding()
-        .foregroundStyle(.white)
+        .foregroundStyle(ink)
     }
 
     // La silueta rectangular que encierra los círculos (póster Apple Invites):
@@ -591,10 +612,10 @@ struct FestivalPosterPage: View {
                         .foregroundStyle(festival.accentColor.opacity(0.8))
                     Text("Lineup próximamente")
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(ink)
                     Text("Los artistas de este festival aún no han sido anunciados.")
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.55))
+                        .foregroundStyle(ink.opacity(0.55))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 32)
                 }
@@ -624,9 +645,9 @@ struct FestivalPosterPage: View {
                     Spacer()
                     Label("Toca para explorar", systemImage: "arrow.up.left.and.arrow.down.right")
                         .font(.caption.weight(.medium))
-                        .foregroundStyle(.white.opacity(0.85))
+                        .foregroundStyle(ink.opacity(0.85))
                         .padding(.horizontal, 12).padding(.vertical, 6)
-                        .background(.black.opacity(0.25), in: Capsule())
+                        .background(chipScrim, in: Capsule())
                         .padding(.bottom, 12)
                 }
                 .allowsHitTesting(false)
@@ -655,13 +676,13 @@ struct FestivalPosterPage: View {
             HStack(spacing: 6) {
                 Text(festival.dateRangeLabel)
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.white.opacity(festival.isPast ? 0.45 : 0.90))
+                    .foregroundStyle(ink.opacity(festival.isPast ? (onLight ? 0.65 : 0.45) : 0.90))
                     .fixedSize()
                 statusBadge
                     .fixedSize()
                 Text("\(festival.venue) · \(festival.city)")
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(festival.isPast ? 0.35 : 0.55))
+                    .foregroundStyle(ink.opacity(festival.isPast ? (onLight ? 0.5 : 0.35) : 0.55))
                     .lineLimit(1)
                     .truncationMode(.tail)
                 if let website = festival.websiteURL, !festival.isArchived {
@@ -683,9 +704,9 @@ struct FestivalPosterPage: View {
         if festival.isPast {
             Text("Pasado")
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.50))
+                .foregroundStyle(ink.opacity(onLight ? 0.6 : 0.50))
                 .padding(.horizontal, 7).padding(.vertical, 3)
-                .background(.white.opacity(0.10), in: Capsule())
+                .background((onLight ? Color.black.opacity(0.08) : Color.white.opacity(0.10)), in: Capsule())
         } else if festival.isOngoing {
             Text("En curso")
                 .font(.caption2.weight(.semibold))
@@ -919,11 +940,15 @@ struct SharedPlayButton: View {
         player.isActive && festival.id == activeFestivalID
     }
 
+    /// El bloque de controles flota sobre el fondo claro del archivo cuando el
+    /// festival visible está archivado: ahí los adornos neutros pasan a oscuro.
+    private var onLight: Bool { festival.isArchived }
+
     var body: some View {
         Group {
             if isThisActive {
                 MiniPlayerView(player: player, accent: festival.accentColor,
-                               onTap: onOpenPlayer)
+                               onLight: onLight, onTap: onOpenPlayer)
             } else if festival.lineup.isEmpty {
                 // Sin lineup anunciado: no hay nada que reproducir. Botón apagado y
                 // no tappable (es un contenedor estático, no un Button).
@@ -933,8 +958,8 @@ struct SharedPlayButton: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(.white.opacity(0.12), in: Capsule())
-                .foregroundStyle(.white.opacity(0.45))
+                .background((onLight ? Color.black.opacity(0.07) : Color.white.opacity(0.12)), in: Capsule())
+                .foregroundStyle(onLight ? Color.black.opacity(0.4) : .white.opacity(0.45))
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Reproducción no disponible")
             } else {
@@ -955,9 +980,9 @@ struct SharedPlayButton: View {
                         Button { playDiscovery(festival) } label: {
                             Image(systemName: "sparkles")
                                 .font(.headline)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(onLight ? festival.accentColor : .white)
                                 .frame(width: 52, height: 52)
-                                .background(.white.opacity(0.14), in: Circle())
+                                .background((onLight ? Color.black.opacity(0.06) : Color.white.opacity(0.14)), in: Circle())
                                 .overlay(Circle().strokeBorder(
                                     festival.accentColor.opacity(0.7), lineWidth: 1.5))
                         }
@@ -1008,14 +1033,17 @@ private struct CloseCircleButton: View {
 private struct DaySelector: View {
     let festival: Festival
     @Binding var selectedDay: Int?
+    /// True cuando la fila se dibuja sobre el fondo claro del archivo (portada);
+    /// en el cartel expandido, sobre el cúmulo oscuro, queda en false.
+    var onLight: Bool = false
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                Chip(title: "Todos", selected: selectedDay == nil) { selectedDay = nil }
+                Chip(title: "Todos", selected: selectedDay == nil, onLight: onLight) { selectedDay = nil }
                 ForEach(1...max(festival.dayCount, 1), id: \.self) { day in
                     let hasData = festival.lineup.contains { $0.day == day }
-                    Chip(title: "Día \(day)", selected: selectedDay == day, disabled: !hasData) {
+                    Chip(title: "Día \(day)", selected: selectedDay == day, disabled: !hasData, onLight: onLight) {
                         selectedDay = day
                     }
                 }
@@ -1130,7 +1158,19 @@ private struct Chip: View {
     let title: String
     let selected: Bool
     var disabled: Bool = false
+    /// Sobre fondo claro (archivo) los chips invierten a tinta oscura para no
+    /// desaparecer; el color de acento no interviene.
+    var onLight: Bool = false
     let action: () -> Void
+
+    private var fill: Color {
+        if onLight { return selected ? Color(white: 0.15) : .black.opacity(0.07) }
+        return selected ? .white.opacity(0.9) : .white.opacity(0.15)
+    }
+    private var textColor: Color {
+        if onLight { return selected ? .white : Color(white: 0.2) }
+        return selected ? .black : .white
+    }
 
     var body: some View {
         Button(action: action) {
@@ -1138,8 +1178,8 @@ private struct Chip: View {
                 .font(.subheadline.weight(.medium))
                 .padding(.horizontal, 14)
                 .padding(.vertical, 7)
-                .background(selected ? .white.opacity(0.9) : .white.opacity(0.15), in: Capsule())
-                .foregroundStyle(selected ? .black : .white)
+                .background(fill, in: Capsule())
+                .foregroundStyle(textColor)
         }
         .opacity(disabled ? 0.30 : 1)
         .disabled(disabled)
