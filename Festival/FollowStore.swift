@@ -77,9 +77,11 @@ extension FestivalFeed {
         }
     }
 
-    /// Las cinco series más multitudinarias del catálogo, medidas por la mayor
-    /// asistencia registrada entre sus ediciones. Son la portada de la pantalla
-    /// de selección; el resto del catálogo se alcanza con el buscador. Empates:
+    /// Portada de la pantalla de selección: siempre al menos las 2 series más
+    /// multitudinarias (mayor asistencia registrada entre sus ediciones) y las
+    /// 3 con edición futura más cercana, rellenando hasta 5 con las siguientes
+    /// por asistencia cuando ambos grupos se superponen (o faltan próximas).
+    /// El resto del catálogo se alcanza con el buscador. Empates de asistencia:
     /// primero la serie con edición próxima, luego orden alfabético, para que
     /// el ranking sea estable entre lanzamientos.
     var featuredSeries: [FestivalSeries] {
@@ -90,7 +92,19 @@ extension FestivalFeed {
                 if (a.nextEdition != nil) != (b.nextEdition != nil) { return a.nextEdition != nil }
                 return a.name.localizedStandardCompare(b.name) == .orderedAscending
             }
-        return Array(ranked.prefix(5))
+        // feed.series ya viene con las series de edición próxima primero,
+        // ordenadas por cercanía; basta con tomar las 3 primeras que califican.
+        let upcoming = series.filter { $0.nextEdition != nil }.prefix(3)
+
+        var featured = Array(ranked.prefix(2))
+        for serie in upcoming where !featured.contains(where: { $0.key == serie.key }) {
+            featured.append(serie)
+        }
+        for serie in ranked.dropFirst(2) {
+            guard featured.count < 5 else { break }
+            if !featured.contains(where: { $0.key == serie.key }) { featured.append(serie) }
+        }
+        return featured
     }
 
     /// Feed reducido a las series seguidas. Si el cruce queda vacío (p. ej. un
