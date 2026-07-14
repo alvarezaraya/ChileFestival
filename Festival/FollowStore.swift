@@ -42,12 +42,15 @@ struct FestivalSeries: Identifiable {
 }
 
 extension Festival {
-    /// Slug de la serie: el id sin el sufijo "-YYYY".
-    /// "fauna-primavera-2025" → "fauna-primavera".
+    /// Slug de la serie: el id truncado en el año.
+    /// "fauna-primavera-2025" → "fauna-primavera". Un sufijo tras el año
+    /// distingue dos ediciones del mismo año sin partir la serie:
+    /// "frontera-festival-2023-dic" → "frontera-festival".
     var seriesKey: String {
         let parts = id.split(separator: "-")
-        if let last = parts.last, last.count == 4, last.allSatisfy(\.isNumber) {
-            return parts.dropLast().joined(separator: "-")
+        if let yearIndex = parts.lastIndex(where: { $0.count == 4 && $0.allSatisfy(\.isNumber) }),
+           yearIndex > 0 {
+            return parts[..<yearIndex].joined(separator: "-")
         }
         return id
     }
