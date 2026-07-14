@@ -52,6 +52,9 @@ SKIP_IDS = {
     "lopez",  # banda chilena (Cumbre 2018); el "López" del catálogo mezcla homónimos pop
     "rulo",  # cantante chileno (Cumbre 2018); ganan un Rulo mexicano de cyphers y otros
     "chances",  # banda chilena (REC 2025); gana CHANCES, trío canadiense en francés
+    "carmen-linqueo",  # cantora mapuche (Womad 2022); gana Carmen Linares, cantaora flamenca
+    "groove-and",  # percusión coreana "groove&" (Womad 2023); gana un "Groove" rapero
+    "dj-who",  # DJ chileno (Frontera dic 2023); gana un DJ Who de remixes de Doctor Who
 }
 
 # Artistas con homónimos en Apple Music resueltos a mano: el mejor match por
@@ -70,6 +73,8 @@ PINNED_IDS = {
     "ha-ash",       # dúo mexicano = 17241280 ("Ha-Ash"); gana un "Haash" trap ajeno
     "zumbale-primo",  # cumbia chilena = 1357702741 ("Grupo Zúmbale Primo", página
                       # principal); gana un "Zùmbale Primo" duplicado con 1 single
+    "evaristo",     # Evaristo Páramos (La Polla Records) = 722826181; gana un
+                    # trovador cubano homónimo ("Milonga Habana")
 }
 
 

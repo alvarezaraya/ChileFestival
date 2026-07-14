@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-12",
+  "updatedAt": "2026-07-13",
   "festivals": [
     {
       "id": "primavera-sound-santiago-2022",
@@ -9866,6 +9866,1407 @@
           "appleMusicArtistID": "1216723438",
           "setlistfmMBID": null,
           "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/8a/f6/19/8af619ed-2fd0-0ee0-8d5a-da0cbb4c1ffd/197188546557.jpg/600x600cc.png"
+        }
+      ]
+    },
+    {
+      "id": "womad-chile-2022",
+      "name": "Womad Chile",
+      "edition": "2022",
+      "venue": "Plaza La Paz",
+      "city": "Recoleta",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2022-04-01",
+        "2022-04-02",
+        "2022-04-03"
+      ],
+      "accentColorHex": "#F26522",
+      "posterImageURL": null,
+      "websiteURL": "https://womad.cl",
+      "lineup": [
+        {
+          "id": "chico-trujillo",
+          "name": "Chico Trujillo",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "cumbia chilena"
+          ],
+          "appleMusicArtistID": "303722456",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/e1/f1/90/e1f19063-6f65-b7d3-bc0c-5634145e5802/mzl.qxwzqebe.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "inti-illimani",
+          "name": "Inti-Illimani",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "folclore chileno",
+            "nueva canción"
+          ],
+          "appleMusicArtistID": "35981885",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/44/24/2f/44242fe8-449f-c8c3-b485-d64bb76e5668/ami-identity-3a037d074d37dfb91b5053aa7a5e13f6-2025-07-24T20-25-29.151Z_cropped.png/600x600cc.png",
+          "accentColorHex": "#EEECCE"
+        },
+        {
+          "id": "nano-stern",
+          "name": "Nano Stern",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "trova chilena"
+          ],
+          "appleMusicArtistID": "389586969",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/b3/66/44/b3664465-3381-9577-c935-cfeba230668e/pr_source.png/600x600cc.png",
+          "accentColorHex": "#110B0B"
+        },
+        {
+          "id": "pascuala-ilabaca-y-fauna",
+          "name": "Pascuala Ilabaca y Fauna",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "fusión folclórica chilena"
+          ],
+          "appleMusicArtistID": "443143562",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features112/v4/96/43/52/964352f4-51a7-ff43-b916-517f7c6fc608/mzl.mnnvxgeo.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "newen-afrobeat",
+          "name": "Newen Afrobeat",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "afrobeat chileno"
+          ],
+          "appleMusicArtistID": "1023313707",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/70/47/8a/70478aec-ab66-ed2b-e9a7-82b859a8b3c9/mzl.nxlvxrof.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "bia-ferreira",
+          "name": "Bía Ferreira",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "mpb",
+            "soul"
+          ],
+          "appleMusicArtistID": "1375818092",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/98/70/f1/9870f107-537e-7065-e914-a9503bd76404/mzl.ghtlggdu.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "la-notte-della-taranta",
+          "name": "Orchestra Popolare La Notte della Taranta",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "pizzica italiana"
+          ],
+          "appleMusicArtistID": "275096202",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music/8e/85/8e/mzi.yyxnvdut.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "puuluup",
+          "name": "Puuluup",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "neofolk estonio"
+          ],
+          "appleMusicArtistID": "1369577047",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/f0/0c/dd/f00cdd79-3e90-81cb-f272-87b43111f6c3/198000273712.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "the-synaptik",
+          "name": "The Synaptik",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "hip hop palestino"
+          ],
+          "appleMusicArtistID": "1248967430",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/6e/cb/1d/6ecb1d8b-3309-427d-7ac5-fe2aaac119ae/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "virgem-suta",
+          "name": "Virgem Suta",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "pop portugués"
+          ],
+          "appleMusicArtistID": "317571095",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/ff/6f/bc/ff6fbc59-1a1a-4529-7a22-210152372a58/mzl.boklxcgn.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "estusha",
+          "name": "Estusha",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "folk mexicano"
+          ],
+          "appleMusicArtistID": "1080895347",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/06/ab/52/06ab52b9-2905-9278-59a6-d7374f847320/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "reptila",
+          "name": "Reptila",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "rock chileno"
+          ],
+          "appleMusicArtistID": "1516578714",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/f7/05/59/f7055966-e621-5823-9002-1282ef3bb984/0.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "carmen-linqueo",
+          "name": "Carmen Linqueo",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "canto mapuche"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "foex",
+          "name": "Foex",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "electrónica chilena"
+          ],
+          "appleMusicArtistID": "618107242",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/b9/0a/18/b90a1854-0273-2b94-1350-11eb41f68b50/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "womad-chile-2023",
+      "name": "Womad Chile",
+      "edition": "2023",
+      "venue": "Plaza La Paz",
+      "city": "Recoleta",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2023-03-31",
+        "2023-04-01",
+        "2023-04-02"
+      ],
+      "accentColorHex": "#F26522",
+      "posterImageURL": null,
+      "websiteURL": "https://womad.cl",
+      "lineup": [
+        {
+          "id": "juana-molina",
+          "name": "Juana Molina",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "folktrónica argentina"
+          ],
+          "appleMusicArtistID": "64807727",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/6b/f6/0b/6bf60b49-0e62-e477-84d8-4d7953b799a3/ami-identity-b6633e7838192caf847c8181ab78cc30-2025-09-28T14-03-19.531Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "chico-cesar",
+          "name": "Chico César",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "mpb"
+          ],
+          "appleMusicArtistID": "14780399",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/cd/0f/e6/cd0fe63d-8dd6-6dea-9890-1e3fb8ede585/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "inti-illimani-historico",
+          "name": "Inti-Illimani Histórico",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "nueva canción chilena",
+            "folclore"
+          ],
+          "appleMusicArtistID": "40547661",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/08/a3/56/08a356c3-692c-9f6b-5c92-ed601e59987e/s06.ysfyecml.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "joe-vasconcellos",
+          "name": "Joe Vasconcellos",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "rock chileno",
+            "pop"
+          ],
+          "appleMusicArtistID": "105160127",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/fb/8e/4e/fb8e4e57-8e1c-6687-c7b0-eb993f4afc6f/mzl.kjzgsbxv.png/600x600cc.png",
+          "accentColorHex": "#0D0F0A"
+        },
+        {
+          "id": "modena-city-ramblers",
+          "name": "Modena City Ramblers",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "folk rock italiano"
+          ],
+          "appleMusicArtistID": "27448480",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/26/f9/fa/26f9fa4c-492e-a15b-8080-2eb1154ed701/00731452292629.rgb.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "nano-stern",
+          "name": "Nano Stern",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "trova chilena"
+          ],
+          "appleMusicArtistID": "389586969",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/b3/66/44/b3664465-3381-9577-c935-cfeba230668e/pr_source.png/600x600cc.png",
+          "accentColorHex": "#110B0B"
+        },
+        {
+          "id": "pascuala-ilabaca-y-fauna",
+          "name": "Pascuala Ilabaca y Fauna",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "fusión folclórica chilena"
+          ],
+          "appleMusicArtistID": "443143562",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features112/v4/96/43/52/964352f4-51a7-ff43-b916-517f7c6fc608/mzl.mnnvxgeo.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "isabel-parra",
+          "name": "Isabel Parra",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "nueva canción chilena"
+          ],
+          "appleMusicArtistID": "79526078",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/6a/53/72/6a53721f-c33b-9f95-104d-772e1d14bb60/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "la-chiva-gantiva",
+          "name": "La Chiva Gantiva",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "funk afrocolombiano"
+          ],
+          "appleMusicArtistID": "455159081",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/e3/64/2e/e3642e20-1f2d-bf39-6b6e-ea93d44782c4/ami-identity-4613d4fafd0ce3dded124442bba98776-2025-03-12T10-34-55.325Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "lionel-kizaba",
+          "name": "Lionel Kizaba",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "afrobeat congoleño"
+          ],
+          "appleMusicArtistID": "972731141",
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "edmar-castaneda",
+          "name": "Edmar Castañeda",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "jazz colombiano",
+            "arpa"
+          ],
+          "appleMusicArtistID": "462267532",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/d5/04/50/d5045018-e3cf-48a8-89a9-6952e6976cef/199066847176.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "the-synaptik",
+          "name": "The Synaptik",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "hip hop palestino"
+          ],
+          "appleMusicArtistID": "1248967430",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/6e/cb/1d/6ecb1d8b-3309-427d-7ac5-fe2aaac119ae/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "groove-and",
+          "name": "groove&",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "percusión tradicional coreana"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "rockodromo-2022",
+      "name": "Rockódromo",
+      "edition": "2022",
+      "venue": "Parque Alejo Barrios",
+      "city": "Valparaíso",
+      "region": "Región de Valparaíso",
+      "dates": [
+        "2022-12-15",
+        "2022-12-16",
+        "2022-12-17",
+        "2022-12-18"
+      ],
+      "accentColorHex": "#1E88E5",
+      "posterImageURL": null,
+      "websiteURL": "https://escuelasderock.cultura.gob.cl",
+      "lineup": [
+        {
+          "id": "los-jaivas",
+          "name": "Los Jaivas",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "rock chileno",
+            "progresivo"
+          ],
+          "appleMusicArtistID": "85846724",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/f0/88/0d/f0880d39-4d28-303a-2430-717deaf9740e/file_cropped.png/600x600cc.png",
+          "accentColorHex": "#000000"
+        },
+        {
+          "id": "los-tres",
+          "name": "Los Tres",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "rock chileno"
+          ],
+          "appleMusicArtistID": "183261401",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/17/29/a0/1729a0a7-7e0e-aa9d-0036-2fe24d23a003/pr_source.png/600x600cc.png",
+          "accentColorHex": "#1E231B"
+        },
+        {
+          "id": "illapu",
+          "name": "Illapu",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "nueva canción chilena",
+            "folclore"
+          ],
+          "appleMusicArtistID": "88956",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/d7/8f/62/d78f622d-fe5d-cc77-b953-bef793745138/698142759124_cover.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "camila-moreno",
+          "name": "Camila Moreno",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "indie chileno"
+          ],
+          "appleMusicArtistID": "425672761",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/65/42/43/6542431f-ade6-ea1f-8c7b-fdb941a786ae/mzl.hibbtlag.png/600x600cc.png",
+          "accentColorHex": "#174740"
+        },
+        {
+          "id": "javiera-mena",
+          "name": "Javiera Mena",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "electropop chileno"
+          ],
+          "appleMusicArtistID": "160525641",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/69/34/67/6934673a-cf01-c7f8-68d1-cbb9b63e8c25/pr_source.png/600x600cc.png",
+          "accentColorHex": "#171A21"
+        },
+        {
+          "id": "chancho-en-piedra",
+          "name": "Chancho en Piedra",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "funk rock chileno"
+          ],
+          "appleMusicArtistID": "321754175",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/ed/9c/5e/ed9c5e85-9691-c3e7-1160-3743668852f1/mzl.kkwwycom.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "princesa-alba",
+          "name": "Princesa Alba",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "pop chileno",
+            "urbano"
+          ],
+          "appleMusicArtistID": "1265324498",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/7d/4a/26/7d4a26ca-d5a9-e0e3-e34c-13f1a22ea493/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "rockodromo-2023",
+      "name": "Rockódromo",
+      "edition": "2023",
+      "venue": "Parque Alejo Barrios",
+      "city": "Valparaíso",
+      "region": "Región de Valparaíso",
+      "dates": [
+        "2023-11-30",
+        "2023-12-01",
+        "2023-12-02",
+        "2023-12-03"
+      ],
+      "accentColorHex": "#1E88E5",
+      "posterImageURL": null,
+      "websiteURL": "https://escuelasderock.cultura.gob.cl",
+      "lineup": [
+        {
+          "id": "chico-trujillo",
+          "name": "Chico Trujillo",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "cumbia chilena"
+          ],
+          "appleMusicArtistID": "303722456",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/e1/f1/90/e1f19063-6f65-b7d3-bc0c-5634145e5802/mzl.qxwzqebe.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "lucybell",
+          "name": "Lucybell",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "rock chileno"
+          ],
+          "appleMusicArtistID": "18234237",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/b9/9c/33/b99c33ac-f123-2a4f-af49-d92944bf7c0f/pr_source.png/600x600cc.png",
+          "accentColorHex": "#1C1C23"
+        },
+        {
+          "id": "gepe",
+          "name": "Gepe",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "pop chileno",
+            "folk"
+          ],
+          "appleMusicArtistID": "81908727",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/70/49/39/70493935-81b9-70ab-ef4e-b09b99ec6636/ami-identity-fde36167314a0e26950df21519dcee44-2026-04-14T14-44-16.390Z_cropped.png/600x600cc.png",
+          "accentColorHex": "#184369"
+        },
+        {
+          "id": "nicole",
+          "name": "Nicole",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "pop rock chileno"
+          ],
+          "appleMusicArtistID": "720145508",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features4/v4/09/35/e5/0935e51d-a726-86af-cc4b-f7be46dc9da6/mzl.skqvbgrw.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "congreso",
+          "name": "Congreso",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "fusión latinoamericana",
+            "jazz rock"
+          ],
+          "appleMusicArtistID": "135236017",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/61/1a/3e/611a3ebe-640e-61d3-74cc-612e7486fdd7/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "los-macs",
+          "name": "Los Mac's",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "rock psicodélico chileno"
+          ],
+          "appleMusicArtistID": "686473184",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/50/e5/56/50e556c5-bb41-73e5-9298-87e4d3973717/1827849956799_cover.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "las-manos-de-filippi",
+          "name": "Las Manos de Filippi",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "punk rock argentino"
+          ],
+          "appleMusicArtistID": "561487460",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music30/v4/3e/cd/3d/3ecd3d42-11c9-f71e-f6e5-6d59268d7cff/214661_cover.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "black-pantera",
+          "name": "Black Pantera",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "crossover brasileño"
+          ],
+          "appleMusicArtistID": "1309161019",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features211/v4/67/fa/a8/67faa8ce-a643-9ba9-4516-fe90e8deb7c3/mzl.mjfllrpj.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "arte-elegante",
+          "name": "Arte Elegante",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "hip hop chileno"
+          ],
+          "appleMusicArtistID": "1027115544",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/c2/51/5b/c2515b92-35ef-607e-ee77-6c7cbcab1023/mzl.vpcikgqz.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "la-tabare",
+          "name": "La Tabaré",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "rock uruguayo"
+          ],
+          "appleMusicArtistID": "261832711",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music/9f/e9/6b/mzi.syufbyrj.jpg/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "rockodromo-2024",
+      "name": "Rockódromo",
+      "edition": "2024",
+      "venue": "Plaza Sotomayor y teatros municipales",
+      "city": "Valparaíso",
+      "region": "Región de Valparaíso",
+      "dates": [
+        "2024-12-11",
+        "2024-12-12",
+        "2024-12-13",
+        "2024-12-14",
+        "2024-12-15"
+      ],
+      "accentColorHex": "#1E88E5",
+      "posterImageURL": null,
+      "websiteURL": "https://escuelasderock.cultura.gob.cl",
+      "lineup": [
+        {
+          "id": "los-angeles-negros",
+          "name": "Los Ángeles Negros",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "balada rock",
+            "bolero psicodélico"
+          ],
+          "appleMusicArtistID": "473386",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/0a/3b/94/0a3b94be-82d6-b126-0d67-f08aad3e8bf6/mzl.lqdrqqvk.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "gondwana",
+          "name": "Gondwana",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "reggae"
+          ],
+          "appleMusicArtistID": "3204668",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/11/fd/36/11fd36dc-77ce-77c0-62c4-ecc13226f90b/mzl.lfdubvkz.jpg/600x600cc.png",
+          "accentColorHex": "#E8E8DE"
+        },
+        {
+          "id": "alex-anwandter",
+          "name": "Álex Anwandter",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "pop chileno",
+            "synth pop"
+          ],
+          "appleMusicArtistID": "467526239",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/f9/5c/5b/f95c5b71-fe4b-b137-7fa2-55c8ac2c735c/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "pettinellis",
+          "name": "Pettinellis",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "rock chileno"
+          ],
+          "appleMusicArtistID": "1450886247",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/90/cc/09/90cc0988-4b73-1e9e-a6c1-9a52e683bd5c/1afd671e-4c45-419d-b170-b08e69022b45.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "manuel-garcia",
+          "name": "Manuel García",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "trova chilena"
+          ],
+          "appleMusicArtistID": "254425111",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/90/a5/84/90a58446-e76c-c7fb-bc17-b4c2deb60a2b/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "evelyn-cornejo",
+          "name": "Evelyn Cornejo",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "folclore chileno",
+            "cantautora"
+          ],
+          "appleMusicArtistID": "458358289",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/b4/5e/73/b45e73c3-5252-2429-e464-51c0c765033b/8433391416051_cover.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "yorka",
+          "name": "Yorka",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "pop chileno"
+          ],
+          "appleMusicArtistID": "1266604913",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a1/1e/86/a11e86a4-5778-94a9-843d-17693add7768/199066133361.jpg/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "frontera-festival-2023",
+      "name": "Frontera Festival",
+      "edition": "Enero 2023",
+      "venue": "Movistar Arena",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2023-01-14",
+        "2023-01-15"
+      ],
+      "accentColorHex": "#00897B",
+      "posterImageURL": null,
+      "websiteURL": null,
+      "lineup": [
+        {
+          "id": "natiruts",
+          "name": "Natiruts",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "reggae brasileño"
+          ],
+          "appleMusicArtistID": "90233657",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features122/v4/1b/ed/3b/1bed3b57-1821-1c18-fb23-24dacc16c4bb/mzl.qarkyvjq.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "el-cuarteto-de-nos",
+          "name": "El Cuarteto de Nos",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "rock uruguayo"
+          ],
+          "appleMusicArtistID": "200369589",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages122/v4/38/58/2e/38582ecd-b2c7-4c3d-d48c-6bb06a87567a/4ce3587b-025e-482b-9b97-00cb00c3ece5_ami-identity-faf69d85b920cb708449883d575b53ae-2024-03-22T12-40-11.308Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "damas-gratis",
+          "name": "Damas Gratis",
+          "tier": "headliner",
+          "day": null,
+          "genres": [
+            "cumbia villera"
+          ],
+          "appleMusicArtistID": "180787506",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/8f/dc/dd/8fdcdd16-c944-c0ea-b917-3c0bdc671fea/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "los-cafres",
+          "name": "Los Cafres",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "reggae argentino"
+          ],
+          "appleMusicArtistID": "128904969",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/96/b2/1e/96b21e44-7963-1842-d51e-eaf786617423/mzl.dgjqasvf.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "los-pericos",
+          "name": "Los Pericos",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "reggae argentino"
+          ],
+          "appleMusicArtistID": "559050",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/cf/2b/60/cf2b60f6-a4e6-2f71-814c-8844cd7a68a0/mzl.tophkehx.jpg/600x600cc.png",
+          "accentColorHex": "#FFFFFF"
+        },
+        {
+          "id": "rawayana",
+          "name": "Rawayana",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "latin indie",
+            "reggae"
+          ],
+          "appleMusicArtistID": "442661985",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/d6/25/21/d6252103-5190-03c8-63d1-fd9006ea2b57/file_cropped.png/600x600cc.png",
+          "accentColorHex": "#653410"
+        },
+        {
+          "id": "javiera-mena",
+          "name": "Javiera Mena",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "electropop chileno"
+          ],
+          "appleMusicArtistID": "160525641",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/69/34/67/6934673a-cf01-c7f8-68d1-cbb9b63e8c25/pr_source.png/600x600cc.png",
+          "accentColorHex": "#171A21"
+        },
+        {
+          "id": "lucybell",
+          "name": "Lucybell",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "rock chileno"
+          ],
+          "appleMusicArtistID": "18234237",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/b9/9c/33/b99c33ac-f123-2a4f-af49-d92944bf7c0f/pr_source.png/600x600cc.png",
+          "accentColorHex": "#1C1C23"
+        },
+        {
+          "id": "l-gante",
+          "name": "L-Gante",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "cumbia 420"
+          ],
+          "appleMusicArtistID": "1367631628",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/61/37/e7/6137e772-b6aa-c616-9470-579b2585c450/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "young-cister",
+          "name": "Young Cister",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "urbano chileno",
+            "r&b"
+          ],
+          "appleMusicArtistID": "1185835987",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/58/13/06/58130662-b1e3-cf02-3ebb-1813f67af0dc/pr_source.png/600x600cc.png",
+          "accentColorHex": "#0591A9"
+        },
+        {
+          "id": "ca7riel-y-paco-amoroso",
+          "name": "Ca7riel & Paco Amoroso",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "trap argentino",
+            "funk"
+          ],
+          "appleMusicArtistID": "1725159717",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features221/v4/c9/82/24/c982249b-6c8d-6d73-5d5c-8f372794a897/mzl.xajtjqql.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "el-mato-a-un-policia-motorizado",
+          "name": "El Mató a un Policía Motorizado",
+          "tier": "main",
+          "day": null,
+          "genres": [
+            "indie rock argentino"
+          ],
+          "appleMusicArtistID": "477506590",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/47/99/72/47997227-6123-092d-335e-10d200683b69/mzl.tislwcfj.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "ases-falsos",
+          "name": "Ases Falsos",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "indie chileno",
+            "pop rock"
+          ],
+          "appleMusicArtistID": "596047332",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/72/49/d3/7249d3c5-ed41-0d58-c87d-0b2564dd081a/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "the-skatalites",
+          "name": "The Skatalites",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "ska jamaicano"
+          ],
+          "appleMusicArtistID": "122024",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/09/1d/51/091d5129-1885-3859-c739-acb7de69fc9a/803680888704.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "los-espiritus",
+          "name": "Los Espíritus",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "rock psicodélico argentino"
+          ],
+          "appleMusicArtistID": "1450666952",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/4f/b2/c0/4fb2c098-ead3-b85a-957c-4fecb61e4658/191061666080_cover.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "akapellah",
+          "name": "Akapellah",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "rap venezolano"
+          ],
+          "appleMusicArtistID": "935514904",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/be/15/6c/be156c43-fabd-8dbb-5b22-565ccd915105/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "kuervos-del-sur",
+          "name": "Kuervos del Sur",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "rock chileno",
+            "raíz folclórica"
+          ],
+          "appleMusicArtistID": "399450502",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/2f/46/b0/2f46b090-57fd-79a9-3b37-8065a1998c39/8447053016800.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "soulfia",
+          "name": "Soulfía",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "urbano chileno"
+          ],
+          "appleMusicArtistID": "1276832786",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages221/v4/c1/8a/5e/c18a5e1f-764a-7a82-3e3e-54f02ad4ab48/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "we-are-the-grand",
+          "name": "We Are The Grand",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "indie rock chileno"
+          ],
+          "appleMusicArtistID": "374242435",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/cb/57/58/cb5758cf-1e53-ec48-2172-fd74d60bc661/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "todos-tus-muertos",
+          "name": "Todos Tus Muertos",
+          "tier": "mid",
+          "day": null,
+          "genres": [
+            "punk reggae argentino"
+          ],
+          "appleMusicArtistID": "4163960",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features114/v4/77/e7/d0/77e7d0a7-1a8a-4c15-6b43-cd221e92d095/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "ninos-del-cerro",
+          "name": "Niños del Cerro",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "indie chileno",
+            "folk"
+          ],
+          "appleMusicArtistID": "950065658",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/9f/b2/a8/9fb2a880-98b3-3d1b-7786-fcd094c719e5/mzl.kxscrurz.png/600x600cc.png",
+          "accentColorHex": "#202428"
+        },
+        {
+          "id": "protistas",
+          "name": "Protistas",
+          "tier": "emerging",
+          "day": null,
+          "genres": [
+            "indie chileno"
+          ],
+          "appleMusicArtistID": "512539447",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/72/98/f7/7298f7c9-53e9-beba-6ecc-bd61b3233ed8/0.jpg/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "frontera-festival-2023-dic",
+      "name": "Frontera Festival",
+      "edition": "Diciembre 2023",
+      "venue": "Movistar Arena",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2023-12-16"
+      ],
+      "accentColorHex": "#00897B",
+      "posterImageURL": null,
+      "websiteURL": null,
+      "lineup": [
+        {
+          "id": "cultura-profetica",
+          "name": "Cultura Profética",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "reggae en español"
+          ],
+          "appleMusicArtistID": "49815266",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages126/v4/05/c4/a5/05c4a580-ff25-0e05-18ae-ed6f1897f0e0/01a82aa6-e39f-4229-926a-7cddaadbb845_ami-identity-23e0caeda5d1611654f635499d75bfa1-2023-03-16T17-29-40.980Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "bomba-estereo",
+          "name": "Bomba Estéreo",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "electrónica tropical",
+            "cumbia"
+          ],
+          "appleMusicArtistID": "250837405",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/20/0b/51/200b518f-b39e-0760-b014-c035f10af00a/ami-identity-c98c9f033b102e3d42f53b776fe5fdac-2025-02-11T20-34-30.722Z_cropped.png/600x600cc.png",
+          "accentColorHex": "#F7F0EE"
+        },
+        {
+          "id": "francisca-valenzuela",
+          "name": "Francisca Valenzuela",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop chileno",
+            "piano pop"
+          ],
+          "appleMusicArtistID": "277140196",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/4b/d0/6c/4bd06cba-01d2-660e-ad5a-c4dcef93e6e9/ami-identity-a082f2bc2496c6f6dde6bf28fc992aca-2026-04-06T07-34-34.182Z_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "alex-anwandter",
+          "name": "Álex Anwandter",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "pop chileno",
+            "synth pop"
+          ],
+          "appleMusicArtistID": "467526239",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/f9/5c/5b/f95c5b71-fe4b-b137-7fa2-55c8ac2c735c/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "javiera-mena",
+          "name": "Javiera Mena",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "electropop chileno"
+          ],
+          "appleMusicArtistID": "160525641",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/69/34/67/6934673a-cf01-c7f8-68d1-cbb9b63e8c25/pr_source.png/600x600cc.png",
+          "accentColorHex": "#171A21"
+        },
+        {
+          "id": "fother-muckers",
+          "name": "Fother Muckers",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "indie chileno"
+          ],
+          "appleMusicArtistID": "839935304",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/18/6f/9c/186f9cf6-8bdc-2bea-dcd5-438d5ebd77ed/3614972675400_cover.jpg/600x600cc.png",
+          "accentColorHex": "#AC9869"
+        },
+        {
+          "id": "como-asesinar-a-felipes",
+          "name": "Cómo Asesinar a Felipes",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "hip hop experimental chileno",
+            "jazz rap"
+          ],
+          "appleMusicArtistID": "286954831",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/5d/9c/fa/5d9cfa78-1c20-64f3-3a04-27d8c57fae56/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "cristobal-briceno",
+          "name": "Cristóbal Briceño",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "indie chileno"
+          ],
+          "appleMusicArtistID": "839935315",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e8/31/b9/e831b9b1-a312-273c-b54c-75f509b8af7d/3614972300654_cover.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "shirel",
+          "name": "Shirel",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "pop chileno"
+          ],
+          "appleMusicArtistID": "1514170364",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages211/v4/23/3b/70/233b70e1-9173-c85d-73a1-06f8b26d860d/file_cropped.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "dj-who",
+          "name": "DJ Who",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "electrónica chilena"
+          ],
+          "appleMusicArtistID": null,
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "plumas",
+          "name": "Plumas",
+          "tier": "emerging",
+          "day": 1,
+          "genres": [
+            "pop chileno"
+          ],
+          "appleMusicArtistID": "573755122",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/21/5f/0e/215f0e03-fa53-6749-1b05-12cf512a1eeb/mzl.tbovylsi.jpg/600x600cc.png",
+          "accentColorHex": null
+        }
+      ]
+    },
+    {
+      "id": "rockout-festival-2026",
+      "name": "Rockout Festival",
+      "edition": "2026",
+      "venue": "Estadio Santa Laura",
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "dates": [
+        "2026-04-25"
+      ],
+      "accentColorHex": "#E63946",
+      "posterImageURL": null,
+      "websiteURL": null,
+      "lineup": [
+        {
+          "id": "bad-religion",
+          "name": "Bad Religion",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "punk rock"
+          ],
+          "appleMusicArtistID": "150160",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/a0/1e/75/a01e756e-d118-7629-10e6-ba299fb5a4f8/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "evaristo",
+          "name": "Evaristo",
+          "tier": "headliner",
+          "day": 1,
+          "genres": [
+            "punk español"
+          ],
+          "appleMusicArtistID": "722826181",
+          "setlistfmMBID": null,
+          "imageURL": null,
+          "accentColorHex": null
+        },
+        {
+          "id": "la-vela-puerca",
+          "name": "La Vela Puerca",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "rock uruguayo"
+          ],
+          "appleMusicArtistID": "351396",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/4e/cc/c2/4eccc2b6-f7ff-f0df-7131-0a9365affee8/mzl.fkturraa.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "soziedad-alkoholika",
+          "name": "Soziedad Alkoholika",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "hardcore vasco"
+          ],
+          "appleMusicArtistID": "74887803",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features114/v4/b3/23/56/b3235606-bee8-b313-d064-e76ff18c52dc/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "animal",
+          "name": "A.N.I.M.A.L.",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "groove metal argentino"
+          ],
+          "appleMusicArtistID": "1563972",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/f2/a8/54/f2a8548a-9aaf-18f1-3e09-56f3e183deb3/mzl.wmtsritg.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "doyle",
+          "name": "Doyle",
+          "tier": "main",
+          "day": 1,
+          "genres": [
+            "horror punk"
+          ],
+          "appleMusicArtistID": "153568146",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/64/58/2f/64582f80-f805-7b7d-28c7-92d43db2a594/700220561908_cover.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "eterna-inocencia",
+          "name": "Eterna Inocencia",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "punk argentino"
+          ],
+          "appleMusicArtistID": "1023516934",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/5c/02/c5/5c02c556-24c8-aad8-5dee-2385c5f4c95f/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "non-servium",
+          "name": "Non Servium",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "punk español"
+          ],
+          "appleMusicArtistID": "889425671",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Features125/v4/d1/95/48/d195480e-d8be-c030-b234-050d771a3c76/pr_source.png/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "skaparapid",
+          "name": "Skaparapid",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "ska punk español"
+          ],
+          "appleMusicArtistID": "308611062",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/c0/19/74/c0197493-dc17-b4ff-d818-e80eff325744/192562472187.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "tenemos-explosivos",
+          "name": "Tenemos Explosivos",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "post-hardcore chileno"
+          ],
+          "appleMusicArtistID": "990523576",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music49/v4/54/d2/82/54d282ea-0c51-795a-4494-614af349b764/artwork.jpg/600x600cc.png",
+          "accentColorHex": null
+        },
+        {
+          "id": "mano-de-obra",
+          "name": "Mano de Obra",
+          "tier": "mid",
+          "day": 1,
+          "genres": [
+            "hardcore punk chileno"
+          ],
+          "appleMusicArtistID": "1453761033",
+          "setlistfmMBID": null,
+          "imageURL": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/56/9b/e5/569be5f4-e079-60f1-9abd-6a5fd20bf025/5059033318625_cover.jpg/600x600cc.png",
+          "accentColorHex": null
         }
       ]
     }
